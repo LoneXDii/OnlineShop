@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Database;
+using UserService.Infrastructure.Services.Authentication;
 using UserService.Infrastructure.Services.BlobStorage;
 
 namespace UserService.Infrastructure;
@@ -25,6 +26,8 @@ public static class DependencyInjection
 
 		services.AddScoped<IBlobService, BlobService>()
 				.AddScoped(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
+
+		services.AddScoped<ITokenService, TokenService>();
 
 		return services;
 	}
