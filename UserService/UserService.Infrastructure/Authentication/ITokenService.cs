@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using UserService.Domain.Entities;
+﻿using UserService.Domain.Entities;
+using UserService.Infrastructure.Models;
 
 namespace UserService.Infrastructure.Authentication;
 
 internal interface ITokenService
 {
-	Task<string> GetAccessToken(AppUser user);
-
-	Task<string> GetRefreshToken(AppUser user);
-
+	Task<TokensDTO> GetTokens(AppUser user);
 	Task<string> RefreshAccessToken(string refreshToken);
 }

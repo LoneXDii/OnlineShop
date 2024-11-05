@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UserService.Domain.Entities;
+using UserService.Infrastructure.Models;
 
 namespace UserService.Infrastructure.Authentication;
 
@@ -19,7 +20,28 @@ internal class TokenService : ITokenService
 		_userManager = userManager;
 	}
 
-	public async Task<string> GetAccessToken(AppUser user)
+	public async Task<TokensDTO> GetTokens(AppUser user)
+	{
+		var tokens = new TokensDTO();
+
+		tokens.AccessToken = await GetAccessToken(user);
+		tokens.RefreshToken = await GetRefreshToken(user);
+
+		return tokens;
+	}
+
+	public async Task<string> RefreshAccessToken(string refreshToken)
+	{
+		var user = _userManager.Users.FirstOrDefault(u => u.RefreshTokenValue == refreshToken);
+		if (user is null)
+		{
+			throw new NotImplementedException();
+		}
+		var token = await GetAccessToken(user);
+		return token;
+	}
+
+	private async Task<string> GetAccessToken(AppUser user)
 	{
 		var claims = new List<Claim>
 		{
@@ -35,23 +57,24 @@ internal class TokenService : ITokenService
 		var credentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
 		var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JWT:AccessTokenExpiryMinutes"]));
 
-		var token = new JwtSecurityToken(
+		var token = new JwtSecurityToken
+			(
 				issuer: _configuration["JWT:Issuer"],
 				audience: _configuration["JWT:Audience"],
 				expires: expires,
 				claims: claims,
-				signingCredentials: credentials);
+				signingCredentials: credentials
+			);
 
 		return new JwtSecurityTokenHandler().WriteToken(token);
 	}
 
-	public Task<string> GetRefreshToken(AppUser user)
+	private async Task<string> GetRefreshToken(AppUser user)
 	{
-		throw new NotImplementedException();
-	}
-
-	public Task<string> RefreshAccessToken(string refreshToken)
-	{
-		throw new NotImplementedException();
+		user.RefreshTokenValue = Guid.NewGuid().ToString();
+		user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
+		await _userManager.UpdateAsync(user);
+		
+		return user.RefreshTokenValue;
 	}
 }
