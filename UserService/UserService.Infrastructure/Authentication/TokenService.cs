@@ -20,28 +20,28 @@ internal class TokenService : ITokenService
 		_userManager = userManager;
 	}
 
-	public async Task<TokensDTO> GetTokens(AppUser user)
+	public async Task<TokensDTO> GetTokensAsync(AppUser user)
 	{
 		var tokens = new TokensDTO();
 
-		tokens.AccessToken = await GetAccessToken(user);
-		tokens.RefreshToken = await GetRefreshToken(user);
+		tokens.AccessToken = await GetAccessTokenAsync(user);
+		tokens.RefreshToken = await GetRefreshTokenAsync(user);
 
 		return tokens;
 	}
 
-	public async Task<string> RefreshAccessToken(string refreshToken)
+	public async Task<string> RefreshAccessTokenAsync(string refreshToken)
 	{
 		var user = _userManager.Users.FirstOrDefault(u => u.RefreshTokenValue == refreshToken);
 		if (user is null)
 		{
 			throw new NotImplementedException();
 		}
-		var token = await GetAccessToken(user);
+		var token = await GetAccessTokenAsync(user);
 		return token;
 	}
 
-	private async Task<string> GetAccessToken(AppUser user)
+	private async Task<string> GetAccessTokenAsync(AppUser user)
 	{
 		var claims = new List<Claim>
 		{
@@ -69,7 +69,7 @@ internal class TokenService : ITokenService
 		return new JwtSecurityTokenHandler().WriteToken(token);
 	}
 
-	private async Task<string> GetRefreshToken(AppUser user)
+	private async Task<string> GetRefreshTokenAsync(AppUser user)
 	{
 		user.RefreshTokenValue = Guid.NewGuid().ToString();
 		user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));

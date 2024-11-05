@@ -5,6 +5,6 @@ namespace UserService.Infrastructure.Authentication;
 
 internal interface ITokenService
 {
-	Task<TokensDTO> GetTokens(AppUser user);
-	Task<string> RefreshAccessToken(string refreshToken);
+	Task<TokensDTO> GetTokensAsync(AppUser user);
+	Task<string> RefreshAccessTokenAsync(string refreshToken);
 }
