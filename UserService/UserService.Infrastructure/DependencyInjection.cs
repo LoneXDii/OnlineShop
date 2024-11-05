@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserService.Domain.Entities;
-using UserService.Infrastructure.BlobStorage;
 using UserService.Infrastructure.Database;
+using UserService.Infrastructure.Services.BlobStorage;
 
 namespace UserService.Infrastructure;
 
@@ -23,8 +23,8 @@ public static class DependencyInjection
 				.AddEntityFrameworkStores<AppDbContext>()
 				.AddDefaultTokenProviders();
 
-		services.AddSingleton<IBlobService, BlobService>()
-				.AddSingleton(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
+		services.AddScoped<IBlobService, BlobService>()
+				.AddScoped(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
 
 		return services;
 	}
