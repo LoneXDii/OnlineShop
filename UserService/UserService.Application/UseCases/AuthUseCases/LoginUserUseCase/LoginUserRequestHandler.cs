@@ -3,6 +3,7 @@ using UserService.Infrastructure.Services.Authentication;
 using UserService.Domain.Entities;
 using MediatR;
 using UserService.Infrastructure.Models;
+using UserService.Domain.Exceptions;
 
 namespace UserService.Application.UseCases.AuthUseCases.LoginUserUseCase;
 
@@ -15,7 +16,7 @@ internal class LoginUserRequestHandler(SignInManager<AppUser> signInManager, Use
 
 		if (!signInResult.Succeeded)
 		{
-			throw new NotImplementedException();
+			throw new LoginException("Incorrect email or password");
 		}
 
 		var user = await userManager.FindByEmailAsync(request.LoginModel.Email);
