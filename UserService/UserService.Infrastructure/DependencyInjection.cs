@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 using System.Text;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Database;
 using UserService.Infrastructure.Services.Authentication;
 using UserService.Infrastructure.Services.BlobStorage;
+using UserService.Infrastructure.Services.EmailNotifications;
 
 namespace UserService.Infrastructure;
 
@@ -49,7 +52,9 @@ public static class DependencyInjection
 		services.AddScoped<IBlobService, BlobService>()
 			.AddScoped(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
 
-		services.AddScoped<ITokenService, TokenService>();
+		services.AddScoped<ITokenService, TokenService>()
+			.AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
+			.AddScoped<IEmailService, EmailService>();
 
 		return services;
 	}
