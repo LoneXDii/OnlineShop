@@ -60,7 +60,7 @@ internal class TokenService : ITokenService
 
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
         var credentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JWT:AccessTokenExpiryMinutes"]));
+		var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JWT:AccessExpireMinutes"]));
 
         var token = new JwtSecurityToken
             (
