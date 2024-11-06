@@ -1,6 +1,5 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
-using SendGrid.Helpers.Mail.Model;
 
 namespace UserService.Infrastructure.Services.EmailNotifications;
 

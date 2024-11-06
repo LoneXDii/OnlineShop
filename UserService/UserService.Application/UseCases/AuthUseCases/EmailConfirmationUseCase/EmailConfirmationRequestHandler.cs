@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.Web;
 using UserService.Domain.Entities;
+using UserService.Domain.Exceptions;
 using UserService.Infrastructure.Services.EmailNotifications;
 
 namespace UserService.Application.UseCases.AuthUseCases.EmailConfirmationUseCase;
@@ -14,7 +15,7 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
 		var user = await userManager.FindByEmailAsync(request.email);
 		if (user is null)
 		{
-			throw new NotImplementedException();
+			throw new NotFoundException("No user with such email");
 		}
 
 		var code = HttpUtility.UrlDecode(request.code);
@@ -23,7 +24,7 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
 
 		if (!result.Succeeded)
 		{
-			throw new NotImplementedException();
+			throw new BadRequestException($"{result.Errors}");
 		}
 
 		await emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email);

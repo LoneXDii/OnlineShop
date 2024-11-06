@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Web;
 using UserService.Domain.Entities;
+using UserService.Domain.Exceptions;
 using UserService.Infrastructure.Services.BlobStorage;
 using UserService.Infrastructure.Services.EmailNotifications;
 
@@ -36,7 +37,7 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 		}
 		else
 		{
-			throw new NotImplementedException();
+			throw new RegisterException($"Cannot register user: {result.Errors}");
 		}
 	}
 }

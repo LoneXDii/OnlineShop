@@ -36,6 +36,9 @@ public class ExceptionMiddleware
 			{
 				LoginException => StatusCodes.Status400BadRequest,
 				InvalidTokenException => StatusCodes.Status401Unauthorized,
+				BadRequestException => StatusCodes.Status400BadRequest,
+				NotFoundException => StatusCodes.Status404NotFound,
+				RegisterException => StatusCodes.Status400BadRequest,
 				_ => StatusCodes.Status500InternalServerError
 			}
 		};
