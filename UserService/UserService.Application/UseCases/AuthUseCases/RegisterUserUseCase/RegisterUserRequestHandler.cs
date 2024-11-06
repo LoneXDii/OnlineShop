@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System.Web;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Services.BlobStorage;
+using UserService.Infrastructure.Services.EmailNotifications;
 
 namespace UserService.Application.UseCases.AuthUseCases.RegisterUserUseCase;
 
-internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService)
-	: IRequestHandler<RegisterUserRequest>
+internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
+	IEmailService emailService) : IRequestHandler<RegisterUserRequest>
 {
 	public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
 	{
@@ -23,6 +25,18 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 			user.AvatarUrl = imageUrl;
 		}
 
-		await userManager.CreateAsync(user, request.RegisterModel.Password);
+		var result = await userManager.CreateAsync(user, request.RegisterModel.Password);
+		if (result.Succeeded)
+		{
+			var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+			code = HttpUtility.UrlEncode(code);
+			var email = HttpUtility.UrlEncode(user.Email);
+			var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
+			await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
+		}
+		else
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.Models;
+using UserService.Application.UseCases.AuthUseCases.EmailConfirmationUseCase;
 using UserService.Application.UseCases.AuthUseCases.LoginUserUseCase;
 using UserService.Application.UseCases.AuthUseCases.RegisterUserUseCase;
 using UserService.Infrastructure.Models;
@@ -34,4 +35,11 @@ public class AccountController : ControllerBase
 		return Ok(tokens);
 	}
 
+	[HttpGet]
+	[Route("confirm/email={email}&code={code}")]
+	public async Task<IActionResult> ConfirmEmail(string email, string code)
+	{
+		await _mediator.Send(new EmailConfirmationRequest(email, code));
+		return Ok("Email confirmed");
+	}
 }

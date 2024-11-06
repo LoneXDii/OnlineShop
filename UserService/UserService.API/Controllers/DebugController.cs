@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Infrastructure.Services.EmailNotifications;
 
 namespace UserService.API.Controllers;
 
