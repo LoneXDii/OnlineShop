@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json;
 using System.Web;
 using UserService.Domain.Entities;
 using UserService.Domain.Exceptions;
@@ -37,7 +38,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 		}
 		else
 		{
-			throw new RegisterException($"Cannot register user: {result.Errors}");
+			var errors = JsonSerializer.Serialize(result.Errors);
+			throw new RegisterException($"Cannot register user: {errors}");
 		}
 	}
 }

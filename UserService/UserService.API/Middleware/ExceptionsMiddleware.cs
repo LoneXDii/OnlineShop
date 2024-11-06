@@ -35,7 +35,7 @@ public class ExceptionMiddleware
 			StatusCode = ex switch
 			{
 				LoginException => StatusCodes.Status400BadRequest,
-				InvalidTokenException => StatusCodes.Status401Unauthorized,
+				InvalidTokenException => StatusCodes.Status404NotFound,
 				BadRequestException => StatusCodes.Status400BadRequest,
 				NotFoundException => StatusCodes.Status404NotFound,
 				RegisterException => StatusCodes.Status400BadRequest,
