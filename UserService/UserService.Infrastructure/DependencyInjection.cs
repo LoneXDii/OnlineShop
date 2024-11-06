@@ -1,16 +1,15 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Text;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Database;
+using UserService.Infrastructure.Database.DbInitializer;
 using UserService.Infrastructure.Services.Authentication;
 using UserService.Infrastructure.Services.BlobStorage;
 using UserService.Infrastructure.Services.EmailNotifications;
@@ -54,7 +53,8 @@ public static class DependencyInjection
 
 		services.AddScoped<ITokenService, TokenService>()
 			.AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
-			.AddScoped<IEmailService, EmailService>();
+			.AddScoped<IEmailService, EmailService>()
+			.AddScoped<IDbInitializer, DbInitializer>();
 
 		return services;
 	}

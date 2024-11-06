@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.Models;
+using UserService.Application.DTO;
 using UserService.Application.UseCases.AuthUseCases.EmailConfirmationUseCase;
 using UserService.Application.UseCases.AuthUseCases.LoginUserUseCase;
 using UserService.Application.UseCases.AuthUseCases.RegisterUserUseCase;
@@ -21,7 +21,7 @@ public class AccountController : ControllerBase
 
 	[HttpPost]
 	[Route("register")]
-	public async Task<IActionResult> Register([FromForm] RegisterModel registerModel)
+	public async Task<IActionResult> Register([FromForm] RegisterDTO registerModel)
 	{
 		await _mediator.Send(new RegisterUserRequest(registerModel));
 		return Ok();
@@ -29,7 +29,7 @@ public class AccountController : ControllerBase
 
 	[HttpPost]
 	[Route("login")]
-	public async Task<ActionResult<TokensDTO>> Login(LoginModel loginModel)
+	public async Task<ActionResult<TokensDTO>> Login(LoginDTO loginModel)
 	{
 		var tokens = await _mediator.Send(new LoginUserRequest(loginModel));
 		return Ok(tokens);

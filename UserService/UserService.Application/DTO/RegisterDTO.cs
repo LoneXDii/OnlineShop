@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace UserService.Application.Models;
+namespace UserService.Application.DTO;
 
-public class RegisterModel
+public class RegisterDTO
 {
 	public string FirstName { get; set; }
 	public string LastName { get; set; }

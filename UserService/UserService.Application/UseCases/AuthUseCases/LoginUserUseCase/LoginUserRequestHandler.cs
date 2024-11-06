@@ -21,6 +21,11 @@ internal class LoginUserRequestHandler(SignInManager<AppUser> signInManager, Use
 
 		var user = await userManager.FindByEmailAsync(request.LoginModel.Email);
 
+		if (!user!.EmailConfirmed)
+		{
+			throw new LoginException("Email is not verified");
+		}
+
 		var tokens = await tokenService.GetTokensAsync(user);
 		return tokens;
 	}

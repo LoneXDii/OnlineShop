@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using UserService.Application.Models;
+using UserService.Application.DTO;
 
 namespace UserService.Application.UseCases.AuthUseCases.RegisterUserUseCase;
 
-public sealed record RegisterUserRequest(RegisterModel RegisterModel) : IRequest { }
+public sealed record RegisterUserRequest(RegisterDTO RegisterModel) : IRequest { }
