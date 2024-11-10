@@ -12,5 +12,7 @@ internal class AppMappingProfile : Profile
 			.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
 		CreateMap<AppUser, UserInfoDTO>();
+
+		CreateMap<UpdateUserDTO, AppUser>();
 	}
 }
