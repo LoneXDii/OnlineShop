@@ -46,16 +46,23 @@ internal class TokenService : ITokenService
         return token;
     }
 
-    private async Task<string> GetAccessTokenAsync(AppUser user)
+    public async Task InvalidateRefreshTokenAsync(AppUser user)
+    {
+        user.RefreshTokenValue = null;
+		await _userManager.UpdateAsync(user);
+	}
+
+	private async Task<string> GetAccessTokenAsync(AppUser user)
     {
         var claims = new List<Claim>
         {
              new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
              new(ClaimTypes.Email, user.Email),
-             new("Avatar", user.AvatarUrl ?? "")
+             new("Avatar", user.AvatarUrl ?? ""),
+             new("Id" , user.Id)
         };
 
-        var roles = await _userManager.GetRolesAsync(user);
+		var roles = await _userManager.GetRolesAsync(user);
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.DTO;
 using UserService.Application.UseCases.AuthUseCases.EmailConfirmationUseCase;
 using UserService.Application.UseCases.AuthUseCases.LoginUserUseCase;
+using UserService.Application.UseCases.AuthUseCases.LogoutUserUseCase;
 using UserService.Application.UseCases.AuthUseCases.RegisterUserUseCase;
 using UserService.Infrastructure.Models;
 
@@ -41,5 +43,15 @@ public class AccountController : ControllerBase
 	{
 		await _mediator.Send(new EmailConfirmationRequest(email, code));
 		return Ok("Email confirmed");
+	}
+
+	[HttpGet]
+	[Route("logout")]
+	[Authorize]
+	public async Task<IActionResult> Logout()
+	{
+		var userId = HttpContext.User.FindFirst("Id").Value;
+		await _mediator.Send(new LogoutUserRequest(userId));
+		return Ok();
 	}
 }
