@@ -6,6 +6,7 @@ using UserService.Application.DTO;
 using UserService.Application.Models;
 using UserService.Application.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 using UserService.Application.UseCases.UserUseCases.UpdateEmailUseCase;
+using UserService.Application.UseCases.UserUseCases.UpdatePasswordUseCase;
 using UserService.Application.UseCases.UserUseCases.UpdateUserUseCase;
 
 namespace UserService.API.Controllers;
@@ -39,6 +40,16 @@ public class UsersController : ControllerBase
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		await _mediator.Send(new UpdateEmailRequest(newEmail, userId));
 		return Ok();
+	}
+
+	[HttpPost]
+	[Route("update/password")]
+	[Authorize]
+	public async Task<ActionResult<string>> UpdatePassword(UpdatePasswordDTO updatePasswordDTO)
+	{
+		var userId = HttpContext.User.FindFirst("Id").Value;
+		var token = await _mediator.Send(new UpdatePasswordRequest(updatePasswordDTO, userId));
+		return Ok(token);
 	}
 
 	[HttpGet]

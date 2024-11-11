@@ -52,6 +52,15 @@ internal class TokenService : ITokenService
 		await _userManager.UpdateAsync(user);
 	}
 
+	public async Task<string> GetRefreshTokenAsync(AppUser user)
+	{
+		user.RefreshTokenValue = Guid.NewGuid().ToString();
+		user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
+		await _userManager.UpdateAsync(user);
+
+		return user.RefreshTokenValue;
+	}
+
 	private async Task<string> GetAccessTokenAsync(AppUser user)
     {
         var claims = new List<Claim>
@@ -79,14 +88,5 @@ internal class TokenService : ITokenService
             );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    private async Task<string> GetRefreshTokenAsync(AppUser user)
-    {
-        user.RefreshTokenValue = Guid.NewGuid().ToString();
-        user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
-        await _userManager.UpdateAsync(user);
-
-        return user.RefreshTokenValue;
     }
 }

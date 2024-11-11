@@ -28,7 +28,7 @@ internal class EmailService : IEmailService
 
 	public async Task SendEmailConfirmationSucceededNotificationAsync(string email)
 	{
-		var subject = "Email succesfully verificated!";
+		var subject = "Email succesfully verified!";
 		var plainTextContent = $"Thank you for registration in our shop!";
 		var htmlContent = $"<span>{plainTextContent}</span>";
 		var to = new EmailAddress(email);
