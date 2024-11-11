@@ -1,5 +1,5 @@
 ﻿namespace OrderService.Domain.Abstractions;
 
-public interface IDatabaseService
+public interface IDbService
 {
 }

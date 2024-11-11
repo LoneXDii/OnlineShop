@@ -6,7 +6,7 @@ using OrderService.Infrastructure.MongoModels;
 
 namespace OrderService.Infrastructure.Services;
 
-internal class MongoDBService : IDatabaseService
+internal class MongoDBService : IDbService
 {
 	private readonly IMongoCollection<MongoOrder> _ordersCollection;
 

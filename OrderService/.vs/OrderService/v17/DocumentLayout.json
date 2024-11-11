@@ -1,12 +1,156 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|solutionrelative:orderservice.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222EF1AB-8F12-4DE2-B1DB-EAE66C3DD92E}|OrderService.Domain\\OrderService.Domain.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.domain\\abstractions\\idbservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222EF1AB-8F12-4DE2-B1DB-EAE66C3DD92E}|OrderService.Domain\\OrderService.Domain.csproj|solutionrelative:orderservice.domain\\abstractions\\idbservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD632093-50CE-43E6-BB21-5B19A3C1C8B3}|OrderService.API\\OrderService.API.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FD632093-50CE-43E6-BB21-5B19A3C1C8B3}|OrderService.API\\OrderService.API.csproj|solutionrelative:orderservice.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.infrastructure\\services\\mongodbservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|solutionrelative:orderservice.infrastructure\\services\\mongodbservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.infrastructure\\mongomodels\\mongoorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|solutionrelative:orderservice.infrastructure\\mongomodels\\mongoorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.infrastructure\\configuration\\mongodbsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DC8D222F-A98B-4829-9443-A116DD150BBC}|OrderService.Infrastructure\\OrderService.Infrastructure.csproj|solutionrelative:orderservice.infrastructure\\configuration\\mongodbsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222EF1AB-8F12-4DE2-B1DB-EAE66C3DD92E}|OrderService.Domain\\OrderService.Domain.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.domain\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222EF1AB-8F12-4DE2-B1DB-EAE66C3DD92E}|OrderService.Domain\\OrderService.Domain.csproj|solutionrelative:orderservice.domain\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222EF1AB-8F12-4DE2-B1DB-EAE66C3DD92E}|OrderService.Domain\\OrderService.Domain.csproj|d:\\internship\\modsen\\onlineshop\\orderservice\\orderservice.domain\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222EF1AB-8F12-4DE2-B1DB-EAE66C3DD92E}|OrderService.Domain\\OrderService.Domain.csproj|solutionrelative:orderservice.domain\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "OrderService.Infrastructure\\DependencyInjection.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\DependencyInjection.cs",
+              "RelativeToolTip": "OrderService.Infrastructure\\DependencyInjection.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:24:28.099Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MongoDBSettings.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\Configuration\\MongoDBSettings.cs",
+              "RelativeDocumentMoniker": "OrderService.Infrastructure\\Configuration\\MongoDBSettings.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\Configuration\\MongoDBSettings.cs",
+              "RelativeToolTip": "OrderService.Infrastructure\\Configuration\\MongoDBSettings.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:17:03.945Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MongoOrder.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\MongoModels\\MongoOrder.cs",
+              "RelativeDocumentMoniker": "OrderService.Infrastructure\\MongoModels\\MongoOrder.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\MongoModels\\MongoOrder.cs",
+              "RelativeToolTip": "OrderService.Infrastructure\\MongoModels\\MongoOrder.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:13:33.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Order.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Domain\\Models\\Order.cs",
+              "RelativeDocumentMoniker": "OrderService.Domain\\Models\\Order.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Domain\\Models\\Order.cs",
+              "RelativeToolTip": "OrderService.Domain\\Models\\Order.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:09:04.847Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Product.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Domain\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "OrderService.Domain\\Models\\Product.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Domain\\Models\\Product.cs",
+              "RelativeToolTip": "OrderService.Domain\\Models\\Product.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:08:20.155Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MongoDBService.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\Services\\MongoDBService.cs",
+              "RelativeDocumentMoniker": "OrderService.Infrastructure\\Services\\MongoDBService.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Infrastructure\\Services\\MongoDBService.cs*",
+              "RelativeToolTip": "OrderService.Infrastructure\\Services\\MongoDBService.cs*",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABAAAABYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:04:47.226Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IDbService.cs",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Domain\\Abstractions\\IDbService.cs",
+              "RelativeDocumentMoniker": "OrderService.Domain\\Abstractions\\IDbService.cs",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.Domain\\Abstractions\\IDbService.cs*",
+              "RelativeToolTip": "OrderService.Domain\\Abstractions\\IDbService.cs*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T09:04:03.669Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.API\\appsettings.json",
+              "RelativeDocumentMoniker": "OrderService.API\\appsettings.json",
+              "ToolTip": "D:\\Internship\\Modsen\\OnlineShop\\OrderService\\OrderService.API\\appsettings.json",
+              "RelativeToolTip": "OrderService.API\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAACAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-11T08:58:45.676Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
