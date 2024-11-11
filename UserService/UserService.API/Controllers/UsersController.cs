@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.DTO;
 using UserService.Application.Models;
+using UserService.Application.UseCases.UserUseCases.GetUserInfoUseCase;
 using UserService.Application.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 using UserService.Application.UseCases.UserUseCases.UpdateEmailUseCase;
 using UserService.Application.UseCases.UserUseCases.UpdatePasswordUseCase;
@@ -59,5 +60,24 @@ public class UsersController : ControllerBase
 	{
 		var users = await _mediator.Send(new ListUsersWithPaginationRequest(pageNo, pageSize));
 		return Ok(users);
+	}
+
+	[HttpGet]
+	[Route("info")]
+	[Authorize]
+	public async Task<ActionResult<UserInfoDTO>> GetUserInfo()
+	{
+		var userId = HttpContext.User.FindFirst("Id").Value;
+		var user = await _mediator.Send(new GetUserInfoRequest(userId));
+		return user;
+	}
+
+	[HttpGet]
+	[Route("info/id={userId}")]
+	[Authorize(Policy = "admin")]
+	public async Task<ActionResult<UserInfoDTO>> GetUserInfo(string userId)
+	{
+		var user = await _mediator.Send(new GetUserInfoRequest(userId));
+		return user;
 	}
 }
