@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using UserService.Application.DTO;
 using UserService.Application.Models;
 using UserService.Application.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
+using UserService.Application.UseCases.UserUseCases.UpdateEmailUseCase;
 using UserService.Application.UseCases.UserUseCases.UpdateUserUseCase;
 
 namespace UserService.API.Controllers;
@@ -23,10 +24,20 @@ public class UsersController : ControllerBase
 	[HttpPost]
 	[Route("update")]
 	[Authorize]
-	public async Task<IActionResult> UpdateUser(UpdateUserDTO userDTO)
+	public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDTO userDTO)
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		await _mediator.Send(new UpdateUserRequest(userDTO, userId));
+		return Ok();
+	}
+
+	[HttpPost]
+	[Route("update/email")]
+	[Authorize]
+	public async Task<IActionResult> UpdateEmail(string newEmail)
+	{
+		var userId = HttpContext.User.FindFirst("Id").Value;
+		await _mediator.Send(new UpdateEmailRequest(newEmail, userId));
 		return Ok();
 	}
 
