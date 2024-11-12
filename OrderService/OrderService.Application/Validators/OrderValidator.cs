@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using OrderService.Application.DTO;
 using OrderService.Domain.Common.Statuses;
-using System;
 
 namespace OrderService.Application.Validators;
 

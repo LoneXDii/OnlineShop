@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Domain.Abstractions;
 using OrderService.Domain.Entities;
@@ -14,6 +15,20 @@ public class TestController : ControllerBase
 	public TestController(IDbService dbService)
 	{
 		_dbService = dbService;
+	}
+
+	[HttpGet]
+	[Authorize]
+	public async Task<IActionResult> Test()
+	{
+		return Ok();
+	}
+
+	[HttpGet]
+	[Authorize(Policy = "admin")]
+	public async Task<IActionResult> TestAdmin()
+	{
+		return Ok();
 	}
 
 	[HttpPost]
