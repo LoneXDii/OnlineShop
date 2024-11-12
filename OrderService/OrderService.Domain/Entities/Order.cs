@@ -9,8 +9,8 @@ public class Order
 	[BsonId]
 	[BsonRepresentation(BsonType.ObjectId)]
 	public string? Id { get; set; }
-	public OrderStatuses OrderStatus { get; set; }
-	public PaymentStatuses PaymentStatus { get; set; }
+	public OrderStatuses OrderStatus { get; set; } = OrderStatuses.Created;
+	public PaymentStatuses PaymentStatus { get; set; } = PaymentStatuses.NotPaid;
 	public string UserId { get; set; }
 	public double TotalPrice { get; set; }
 	public DateTime CreatedDate { get; set; }

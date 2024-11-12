@@ -35,8 +35,9 @@ public class ExceptionMiddleware
 			Details = ex.StackTrace,
 			StatusCode = ex switch
 			{
-				AddToCartException => StatusCodes.Status400BadRequest,
+				CartException => StatusCodes.Status400BadRequest,
 				ValidationException => StatusCodes.Status400BadRequest,
+				OrderException => StatusCodes.Status400BadRequest,
 				_ => StatusCodes.Status500InternalServerError
 			}
 		};

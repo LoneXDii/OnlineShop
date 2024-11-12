@@ -111,8 +111,6 @@ internal class FakeProductService : IProductService
 
 		if(product?.Quantity >= quantity)
 		{
-			product.Quantity -= quantity;
-
 			returnProduct = new Product
 			{
 				Id = product.Id,
@@ -125,5 +123,34 @@ internal class FakeProductService : IProductService
 		await Task.Delay(100);
 
 		return returnProduct;
+	}
+
+	public async Task<IEnumerable<Product>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<Product> products)
+	{
+		var retProducts = new List<Product>();
+		foreach (var product in products)
+		{
+			var dbProduct = _products.FirstOrDefault(p => p.Id == product.Id);
+			if (dbProduct?.Quantity >= product.Quantity)
+			{
+				var retProduct = new Product
+				{
+					Id = product.Id,
+					Name = product.Name,
+					Price = product.Price,
+					ImageUrl = product.ImageUrl,
+					Quantity = product.Quantity
+				};
+				retProducts.Add(retProduct);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		await Task.Delay(100);
+
+		return retProducts;
 	}
 }
