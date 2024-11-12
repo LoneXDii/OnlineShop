@@ -25,11 +25,18 @@ internal class SessionCart : Cart
 		base.AddToCart(product);
 		Session?.Set<SessionCart>("cart", this);
 	}
+	public override void ReduceInCart(int id, int quantity)
+	{
+		base.ReduceInCart(id, quantity);
+		Session?.Set<SessionCart>("cart", this);
+	}
+
 	public override void RemoveItems(int id)
 	{
 		base.RemoveItems(id);
 		Session?.Set<SessionCart>("cart", this);
 	}
+
 	public override void ClearAll()
 	{
 		base.ClearAll();

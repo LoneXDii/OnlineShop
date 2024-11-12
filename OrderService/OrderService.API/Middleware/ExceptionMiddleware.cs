@@ -38,6 +38,7 @@ public class ExceptionMiddleware
 				CartException => StatusCodes.Status400BadRequest,
 				ValidationException => StatusCodes.Status400BadRequest,
 				OrderException => StatusCodes.Status400BadRequest,
+				NotInCartException => StatusCodes.Status404NotFound,
 				_ => StatusCodes.Status500InternalServerError
 			}
 		};

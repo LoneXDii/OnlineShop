@@ -15,7 +15,7 @@ internal class CreateOrderRequestHandler(Cart cart, IProductService productServi
 
 		if (!products.Any()) 
 		{
-			throw new OrderException("Your cart is empty");
+			throw new NotInCartException("Your cart is empty");
 		}
 
 		var orderProducts = await productService.TakeProductsIfSufficientQuantityAsync(products);

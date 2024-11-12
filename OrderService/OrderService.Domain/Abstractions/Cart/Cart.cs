@@ -28,6 +28,18 @@ public abstract class Cart
 		}
 	}
 
+	public virtual void ReduceInCart(int id, int quantity)
+	{
+		if (Items.ContainsKey(id))
+		{
+			Items[id].Quantity -= quantity;
+			if (Items[id].Quantity < 0)
+			{
+				RemoveItems(id);
+			}
+		}
+	}
+
 	public virtual void RemoveItems(int id)
 	{
 		Items.Remove(id);
