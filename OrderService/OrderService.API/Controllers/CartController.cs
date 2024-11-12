@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.DTO;
 using OrderService.Application.UseCases.CartUseCases.AddProductToCartUseCase;
@@ -19,6 +18,7 @@ public class CartController : ControllerBase
 	}
 
 	[HttpGet]
+	//[Authorize]
 	public async Task<ActionResult<CartDTO>> GetCart()
 	{
 		var cart = await _mediator.Send(new GetCartRequest()); 
@@ -26,7 +26,8 @@ public class CartController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> AddToCart(AddProductToCartDTO product)
+	//[Authorize]
+	public async Task<IActionResult> AddToCart(CartProductDTO product)
 	{
 		await _mediator.Send(new AddProductToCartRequest(product));
 		return Ok();

@@ -1,6 +1,6 @@
 ﻿namespace OrderService.Application.DTO;
 
-public class AddProductToCartDTO
+public class CartProductDTO
 {
 	public int Id { get; set; }
 	public int Quantity { get; set; }

@@ -2,7 +2,7 @@
 
 namespace OrderService.Application.Extensions;
 
-public static class EnumExtension
+internal static class EnumExtension
 {
 	public static string GetDescription<T>(this T value) where T : Enum
 	{

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using OrderService.API.Middleware;
 using OrderService.Application;
 using OrderService.Infrastructure;
 using System.Text;
@@ -41,6 +42,8 @@ builder.Services.AddAuthorization(opt =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

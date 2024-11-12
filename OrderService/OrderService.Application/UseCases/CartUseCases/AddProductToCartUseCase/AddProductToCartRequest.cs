@@ -3,4 +3,4 @@ using OrderService.Application.DTO;
 
 namespace OrderService.Application.UseCases.CartUseCases.AddProductToCartUseCase;
 
-public sealed record AddProductToCartRequest(AddProductToCartDTO product) : IRequest { }
+public sealed record AddProductToCartRequest(CartProductDTO product) : IRequest { }
