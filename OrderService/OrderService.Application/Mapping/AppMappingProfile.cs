@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using OrderService.Application.DTO;
 using OrderService.Application.Extensions;
+using OrderService.Domain.Abstractions.Cart;
 using OrderService.Domain.Common.Statuses;
 using OrderService.Domain.Entities;
-using System;
 
 namespace OrderService.Application.Mapping;
 
@@ -22,5 +22,9 @@ internal class AppMappingProfile : Profile
 				opt => opt.MapFrom(src => (OrderStatuses)src.OrderStatus))
 			.ForMember(dest => dest.PaymentStatus,
 				opt => opt.MapFrom(src => (PaymentStatuses)src.PaymentStatus));
+
+		CreateMap<Cart, CartDTO>()
+			.ForMember(dest => dest.Products,
+				opt => opt.MapFrom(src => src.Items.Values.ToList()));
 	}
 }

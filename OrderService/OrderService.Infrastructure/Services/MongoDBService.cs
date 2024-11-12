@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using OrderService.Domain.Abstractions;
+using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Common.Models;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;

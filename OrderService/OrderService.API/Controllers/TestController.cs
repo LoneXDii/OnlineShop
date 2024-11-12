@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Domain.Abstractions;
+using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 
 namespace OrderService.API.Controllers;
@@ -18,6 +18,7 @@ public class TestController : ControllerBase
 	}
 
 	[HttpGet]
+	[Route("user")]
 	[Authorize]
 	public async Task<IActionResult> Test()
 	{
@@ -25,6 +26,7 @@ public class TestController : ControllerBase
 	}
 
 	[HttpGet]
+	[Route("admin")]
 	[Authorize(Policy = "admin")]
 	public async Task<IActionResult> TestAdmin()
 	{

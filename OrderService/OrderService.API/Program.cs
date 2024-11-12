@@ -14,7 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication()
-	.AddInfrastructure(builder.Configuration);
+	.AddInfrastructure(builder.Configuration)
+	.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
 	{
@@ -52,6 +53,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllers();
 

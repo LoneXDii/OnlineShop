@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\OrderUseCases\" />
+    <Folder Include="UseCases\OrderUseCases\CreateOrderUseCase\" />
   </ItemGroup>
 
 </Project>
