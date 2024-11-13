@@ -40,6 +40,8 @@ public class ExceptionMiddleware
 				OrderException => StatusCodes.Status400BadRequest,
 				NotInCartException => StatusCodes.Status404NotFound,
 				PaginationException => StatusCodes.Status404NotFound,
+				NotFoundException => StatusCodes.Status404NotFound,
+				AccessDeniedException => StatusCodes.Status403Forbidden,
 				_ => StatusCodes.Status500InternalServerError
 			}
 		};

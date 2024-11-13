@@ -5,7 +5,6 @@ using OrderService.Application.DTO;
 using OrderService.Application.Exceptions;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Common.Models;
-using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 

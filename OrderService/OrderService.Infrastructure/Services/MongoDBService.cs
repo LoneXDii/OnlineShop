@@ -26,6 +26,12 @@ internal class MongoDBService : IDbService
 		return;
 	}
 
+	public async Task<Order?> GetOrderByIdAsync(string id)
+	{
+		var order = await _ordersCollection.Find(order => order.Id == id).FirstOrDefaultAsync();
+		return order;
+	}
+
 	public async Task<PaginatedListModel<Order>> ListOrdersWithPaginationAsync(int pageNo = 1, int pageSize = 10, 
 		params Expression<Func<Order, bool>>[] filters)
 	{
@@ -57,22 +63,5 @@ internal class MongoDBService : IDbService
 		};
 
 		return data;
-	}
-
-	public async Task AddProductToOrderAsync(string orderId, Product product)
-	{
-		var filter = Builders<Order>.Filter.Eq(order => order.Id, orderId);
-		var update = Builders<Order>.Update.AddToSet(order => order.Products, product);
-
-		await _ordersCollection.UpdateOneAsync(filter, update);
-	}
-
-	public async Task DeleteProductFromOrderAsync(string orderId, int productId)
-	{
-		var filter = Builders<Order>.Filter.Eq(order => order.Id, orderId);
-		var update = Builders<Order>.Update.PullFilter(order => order.Products,
-			product => product.Id == productId);
-
-		await _ordersCollection.UpdateOneAsync(filter, update);
 	}
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.DTO;
 using OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
+using OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 using OrderService.Domain.Common.Models;
 
@@ -53,6 +54,25 @@ public class OrderController : ControllerBase
 	public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetAllOrders(int pageNo = 1, int pageSize = 10)
 	{
 		var data = await _mediator.Send(new GetAllOrdersRequest(pageNo, pageSize));
+		return Ok(data);
+	}
+
+	[HttpGet]
+	[Authorize]
+	[Route("orderId={orderId}")]
+	public async Task<ActionResult<GetOrderDTO>> GetOrder(string orderId)
+	{
+		var userId = HttpContext.User.FindFirst("Id")?.Value;
+		var data = await _mediator.Send(new GetOrderByIdRequest(orderId, userId));
+		return Ok(data);
+	}
+
+	[HttpGet]
+	[Route("admin/orderId={orderId}")]
+	//[Authorize(Policy = "admin")]
+	public async Task<ActionResult<GetOrderDTO>> GetOrderAdmin(string orderId)
+	{
+		var data = await _mediator.Send(new GetOrderByIdRequest(orderId));
 		return Ok(data);
 	}
 }
