@@ -133,6 +133,8 @@ internal class FakeProductService : IProductService
 			var dbProduct = _products.FirstOrDefault(p => p.Id == product.Id);
 			if (dbProduct?.Quantity >= product.Quantity)
 			{
+				dbProduct.Quantity -= product.Quantity;
+
 				var retProduct = new Product
 				{
 					Id = product.Id,

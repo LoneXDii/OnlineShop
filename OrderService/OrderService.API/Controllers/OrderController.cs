@@ -1,7 +1,11 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OrderService.Application.DTO;
 using OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
+using OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
+using OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
+using OrderService.Domain.Common.Models;
 
 namespace OrderService.API.Controllers;
 
@@ -20,8 +24,35 @@ public class OrderController : ControllerBase
 	//[Authorize]
 	public async Task<IActionResult> CreateOrder()
 	{
-		//var userId = HttpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
-		await _mediator.Send(new CreateOrderRequest("test"));
+		//var userId = HttpContext.User.FindFirst("Id")?.Value;
+		await _mediator.Send(new CreateOrderRequest("2"));
 		return Ok();
+	}
+
+	[HttpGet]
+	[Authorize]
+	public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetOrders(int pageNo = 1, int pageSize = 10)
+	{
+		var userId = HttpContext.User.FindFirst("Id")?.Value;
+		var data = await _mediator.Send(new GetUserOrdersRequest(userId, pageNo, pageSize));
+		return Ok(data);
+	}
+
+	[HttpGet]
+	[Route("userId={userId}")]
+	//[Authorize(Policy = "admin")]
+	public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetOrders(string userId, int pageNo = 1, int pageSize = 10)
+	{
+		var data = await _mediator.Send(new GetUserOrdersRequest(userId, pageNo, pageSize));
+		return Ok(data);
+	}
+
+	[HttpGet]
+	[Route("all")]
+	//[Authorize(Policy = "admin")]
+	public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetAllOrders(int pageNo = 1, int pageSize = 10)
+	{
+		var data = await _mediator.Send(new GetAllOrdersRequest(pageNo, pageSize));
+		return Ok(data);
 	}
 }

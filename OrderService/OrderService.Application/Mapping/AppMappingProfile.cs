@@ -2,6 +2,7 @@
 using OrderService.Application.DTO;
 using OrderService.Application.Extensions;
 using OrderService.Domain.Abstractions.Cart;
+using OrderService.Domain.Common.Models;
 using OrderService.Domain.Common.Statuses;
 using OrderService.Domain.Entities;
 
@@ -26,5 +27,7 @@ internal class AppMappingProfile : Profile
 		CreateMap<Cart, CartDTO>()
 			.ForMember(dest => dest.Products,
 				opt => opt.MapFrom(src => src.Items.Values.ToList()));
+
+		CreateMap<PaginatedListModel<Order>, PaginatedListModel<GetOrderDTO>>();
 	}
 }

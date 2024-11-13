@@ -5,6 +5,7 @@ using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Common.Models;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;
+using System.Linq.Expressions;
 
 namespace OrderService.Infrastructure.Services;
 
@@ -25,15 +26,28 @@ internal class MongoDBService : IDbService
 		return;
 	}
 
-	public async Task<PaginatedListModel<Order>> ListOrdersWithPaginationAsync(int pageNo = 1, int pageSize = 10)
+	public async Task<PaginatedListModel<Order>> ListOrdersWithPaginationAsync(int pageNo = 1, int pageSize = 10, 
+		params Expression<Func<Order, bool>>[] filters)
 	{
-		var orders = await _ordersCollection.Find(Builders<Order>.Filter.Empty)
+		var mongoFilters = new List<FilterDefinition<Order>>();
+
+		foreach (var filter in filters)
+		{
+			var mongoFilter = Builders<Order>.Filter.Where(filter);
+			mongoFilters.Add(mongoFilter);
+		}
+
+		var combinedFilter = mongoFilters.Any()
+			? Builders<Order>.Filter.And(mongoFilters)
+			: Builders<Order>.Filter.Empty;
+
+		var orders = await _ordersCollection.Find(combinedFilter)
 			.SortBy(order => order.CreatedDate)
 			.Skip((pageNo - 1) * pageSize)
 			.Limit(pageSize)
 			.ToListAsync();
 
-		var count = await _ordersCollection.CountDocumentsAsync(Builders<Order>.Filter.Empty);
+		var count = await _ordersCollection.CountDocumentsAsync(combinedFilter);
 
 		var data = new PaginatedListModel<Order>
 		{
