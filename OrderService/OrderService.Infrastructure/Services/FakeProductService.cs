@@ -155,4 +155,18 @@ internal class FakeProductService : IProductService
 
 		return retProducts;
 	}
+
+	public async Task ReturnProductsAsync(IEnumerable<Product> products)
+	{
+		foreach (var product in products)
+		{
+			var dbProduct = _products.FirstOrDefault(p => p.Id == product.Id);
+			if(dbProduct is not null)
+			{
+				dbProduct.Quantity += product.Quantity;
+			}
+		}
+
+		await Task.Delay(100);
+	}
 }

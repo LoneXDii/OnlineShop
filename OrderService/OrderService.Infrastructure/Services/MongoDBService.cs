@@ -23,7 +23,6 @@ internal class MongoDBService : IDbService
 	public async Task CreateOrderAsync(Order order)
 	{
 		await _ordersCollection.InsertOneAsync(order);
-		return;
 	}
 
 	public async Task<Order?> GetOrderByIdAsync(string id)
@@ -48,7 +47,7 @@ internal class MongoDBService : IDbService
 			: Builders<Order>.Filter.Empty;
 
 		var orders = await _ordersCollection.Find(combinedFilter)
-			.SortBy(order => order.CreatedDate)
+			.SortByDescending(order => order.CreatedDate)
 			.Skip((pageNo - 1) * pageSize)
 			.Limit(pageSize)
 			.ToListAsync();
@@ -63,5 +62,11 @@ internal class MongoDBService : IDbService
 		};
 
 		return data;
+	}
+
+	public async Task UpdateOrderAsync(Order order)
+	{
+		var filter = Builders<Order>.Filter.Where(o => o.Id == order.Id);
+		await _ordersCollection.ReplaceOneAsync(filter, order);
 	}
 }
