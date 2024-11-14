@@ -4,7 +4,7 @@ namespace OrderService.Domain.Abstractions.Data;
 
 public interface IProductService
 {
-	Task<Product?> GetByIdIfSufficientQuantityAsync(int id, int quantity);
-	Task<IEnumerable<Product>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<Product> products);
-	Task ReturnProductsAsync(IEnumerable<Product> products);
+	Task<ProductEntity?> GetByIdIfSufficientQuantityAsync(int id, int quantity);
+	Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products);
+	Task ReturnProductsAsync(IEnumerable<ProductEntity> products);
 }

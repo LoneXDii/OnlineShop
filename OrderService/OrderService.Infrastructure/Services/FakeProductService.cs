@@ -6,118 +6,129 @@ namespace OrderService.Infrastructure.Services;
 //This class will be replaced by ProductService after gRPC implementation
 internal class FakeProductService : IProductService
 {
-	private List<Product> _products;
+	public List<ProductEntity> _products;
 
 	public FakeProductService()
 	{
-		_products = new List<Product>
+		_products = new List<ProductEntity>
 		{
-			new Product
+			new ProductEntity
 			{
 				Id = 1,
 				Name = "Product1",
 				Price = 99.99,
 				Quantity = 10,
-				ImageUrl = "Image1"
+				ImageUrl = "Image1",
+				PriceId = "price_1QL9asCLnke0wpIT8ZGevnAn"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 2,
 				Name = "Product2",
 				Price = 59.99,
 				Quantity = 3,
-				ImageUrl = "Image2"
+				ImageUrl = "Image2",
+				PriceId = "price_1QL9asCLnke0wpITEms9kRvm"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 3,
 				Name = "Product3",
 				Price = 12.49,
 				Quantity = 14,
-				ImageUrl = "Image3"
+				ImageUrl = "Image3",
+				PriceId = "price_1QL9atCLnke0wpITN3oF1dpC"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 4,
 				Name = "Product4",
 				Price = 49.99,
 				Quantity = 4,
-				ImageUrl = "Image4"
+				ImageUrl = "Image4",
+				PriceId = "price_1QL9atCLnke0wpITqZMUJGP0"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 5,
 				Name = "Product5",
 				Price = 25.00,
 				Quantity = 20,
-				ImageUrl = "Image5"
+				ImageUrl = "Image5",
+				PriceId = "price_1QL9auCLnke0wpITAY9ejpxO"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 6,
 				Name = "Product6",
 				Price = 15.75,
 				Quantity = 8,
-				ImageUrl = "Image6"
+				ImageUrl = "Image6",
+				PriceId = "price_1QL9avCLnke0wpITAY1dv1ny"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 7,
 				Name = "Product7",
 				Price = 89.99,
 				Quantity = 2,
-				ImageUrl = "Image7"
+				ImageUrl = "Image7",
+				PriceId = "price_1QL9avCLnke0wpITUgWjX96Q"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 8,
 				Name = "Product8",
 				Price = 34.99,
 				Quantity = 6,
-				ImageUrl = "Image8"
+				ImageUrl = "Image8",
+				PriceId = "price_1QL9awCLnke0wpITzZSZ7Hep"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 9,
 				Name = "Product9",
 				Price = 19.99,
 				Quantity = 12,
-				ImageUrl = "Image9"
+				ImageUrl = "Image9",
+				PriceId = "price_1QL9awCLnke0wpIT57T8zqvC"
 			},
 
-			new Product
+			new ProductEntity
 			{
 				Id = 10,
 				Name = "Product10",
 				Price = 74.99,
 				Quantity = 5,
-				ImageUrl = "Image10"
+				ImageUrl = "Image10",
+				PriceId = "price_1QL9axCLnke0wpITZKXdy4L2"
 			},
 		};
 	}
 
-	public async Task<Product?> GetByIdIfSufficientQuantityAsync(int id, int quantity)
+	public async Task<ProductEntity?> GetByIdIfSufficientQuantityAsync(int id, int quantity)
 	{
 		var product = _products.FirstOrDefault(p => p.Id == id);
-		Product? returnProduct = null;
+		ProductEntity? returnProduct = null;
 
 		if(product?.Quantity >= quantity)
 		{
-			returnProduct = new Product
+			returnProduct = new ProductEntity
 			{
 				Id = product.Id,
 				Name = product.Name,
 				Price = product.Price,
 				ImageUrl = product.ImageUrl,
-				Quantity = quantity
+				Quantity = quantity,
+				PriceId = product.PriceId
 			};
 		}
 		await Task.Delay(100);
@@ -125,9 +136,9 @@ internal class FakeProductService : IProductService
 		return returnProduct;
 	}
 
-	public async Task<IEnumerable<Product>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<Product> products)
+	public async Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products)
 	{
-		var retProducts = new List<Product>();
+		var retProducts = new List<ProductEntity>();
 		foreach (var product in products)
 		{
 			var dbProduct = _products.FirstOrDefault(p => p.Id == product.Id);
@@ -135,13 +146,14 @@ internal class FakeProductService : IProductService
 			{
 				dbProduct.Quantity -= product.Quantity;
 
-				var retProduct = new Product
+				var retProduct = new ProductEntity
 				{
 					Id = product.Id,
 					Name = product.Name,
 					Price = product.Price,
 					ImageUrl = product.ImageUrl,
-					Quantity = product.Quantity
+					Quantity = product.Quantity,
+					PriceId = product.PriceId
 				};
 				retProducts.Add(retProduct);
 			}
@@ -156,7 +168,7 @@ internal class FakeProductService : IProductService
 		return retProducts;
 	}
 
-	public async Task ReturnProductsAsync(IEnumerable<Product> products)
+	public async Task ReturnProductsAsync(IEnumerable<ProductEntity> products)
 	{
 		foreach (var product in products)
 		{

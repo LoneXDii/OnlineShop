@@ -11,7 +11,7 @@ internal class AppMappingProfile : Profile
 {
 	public AppMappingProfile()
 	{
-		CreateMap<Order, GetOrderDTO>()
+		CreateMap<OrderEntity, GetOrderDTO>()
 			.ForMember(dest => dest.OrderStatusDescription,
 				opt => opt.MapFrom(src => src.OrderStatus.GetDescription()))
 			.ForMember(dest => dest.PaymentStatusDescription,
@@ -21,6 +21,6 @@ internal class AppMappingProfile : Profile
 			.ForMember(dest => dest.Products,
 				opt => opt.MapFrom(src => src.Items.Values.ToList()));
 
-		CreateMap<PaginatedListModel<Order>, PaginatedListModel<GetOrderDTO>>();
+		CreateMap<PaginatedListModel<OrderEntity>, PaginatedListModel<GetOrderDTO>>();
 	}
 }

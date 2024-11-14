@@ -22,6 +22,11 @@ internal class CompleteOrderRequestHandler(IDbService dbService)
 			throw new OrderException("Can complete only confirmed orders");
 		}
 
+		if (order.PaymentStatus == PaymentStatuses.NotPaid)
+		{
+			throw new OrderException("Can't complete unpaid order'");
+		}
+
 		order.OrderStatus = OrderStatuses.Completed;
 		await dbService.UpdateOrderAsync(order);
 	}

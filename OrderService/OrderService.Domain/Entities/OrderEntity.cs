@@ -4,7 +4,7 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Domain.Entities;
 
-public class Order
+public class OrderEntity
 {
 	[BsonId]
 	[BsonRepresentation(BsonType.ObjectId)]
@@ -14,5 +14,5 @@ public class Order
 	public string UserId { get; set; }
 	public double TotalPrice { get; set; }
 	public DateTime CreatedDate { get; set; }
-	public List<Product> Products { get; set; }
+	public List<ProductEntity> Products { get; set; }
 }

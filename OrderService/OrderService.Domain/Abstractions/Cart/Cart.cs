@@ -4,7 +4,7 @@ namespace OrderService.Domain.Abstractions.Cart;
 
 public abstract class Cart
 {
-	public Dictionary<int, Product> Items { get; set; } = new();
+	public Dictionary<int, ProductEntity> Items { get; set; } = new();
 
 	public int Count
 	{
@@ -16,7 +16,7 @@ public abstract class Cart
 		get => Items.Sum(item => item.Value.Price * item.Value.Quantity);
 	}
 
-	public virtual void AddToCart(Product product)
+	public virtual void AddToCart(ProductEntity product)
 	{
 		if (Items.ContainsKey(product.Id))
 		{

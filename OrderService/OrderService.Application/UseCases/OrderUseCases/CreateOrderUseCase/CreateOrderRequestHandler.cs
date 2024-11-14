@@ -24,7 +24,7 @@ internal class CreateOrderRequestHandler(Cart cart, IProductService productServi
 			throw new OrderException("Not enought products in stock");
 		}
 
-		var order = new Order { 
+		var order = new OrderEntity { 
 			CreatedDate = DateTime.Now,
 			Products = orderProducts.ToList(),
 			TotalPrice = cart.TotalCost,
