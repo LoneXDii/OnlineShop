@@ -3,13 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using OrderService.Application.Extensions;
 using OrderService.Domain.Abstractions.Cart;
 using OrderService.Domain.Entities;
-using System.Text.Json.Serialization;
 
 namespace OrderService.Application.Sessions;
 
 internal class SessionCart : Cart
 {
-	[JsonIgnore]
 	public ISession? Session { get; set; }
 
 	public static Cart GetCart(IServiceProvider services)

@@ -25,6 +25,11 @@ internal class CancelOrderRequestHandler(IDbService dbService, IProductService p
 			}
 		}
 
+		if(order.OrderStatus == OrderStatuses.Completed)
+		{
+			throw new OrderException("Cannot cancel completed order");
+		}
+
 		order.OrderStatus = OrderStatuses.Cancelled;
 		await dbService.UpdateOrderAsync(order);
 		await productService.ReturnProductsAsync(order.Products);

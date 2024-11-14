@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.DTO;
 using OrderService.Application.UseCases.OrderUseCases.CancelOrderUseCase;
+using OrderService.Application.UseCases.OrderUseCases.CompleteOrderUseCase;
+using OrderService.Application.UseCases.OrderUseCases.ConfirmOrderUseCase;
 using OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
@@ -95,6 +97,24 @@ public class OrderController : ControllerBase
 	public async Task<IActionResult> CancelOrderAdmin(string orderId)
 	{
 		await _mediator.Send(new CancelOrderRequest(orderId));
+		return Ok();
+	}
+
+	[HttpPut]
+	[Route("confirm")]
+	//[Authorize(Policy = "admin")]
+	public async Task<IActionResult> ConfirmOrder(string orderId)
+	{
+		await _mediator.Send(new ConfirmOrderRequest(orderId));
+		return Ok();
+	}
+
+	[HttpPut]
+	[Route("complete")]
+	//[Authorize(Policy = "admin")]
+	public async Task<IActionResult> CompleteOrder(string orderId)
+	{
+		await _mediator.Send(new CompleteOrderRequest(orderId));
 		return Ok();
 	}
 }
