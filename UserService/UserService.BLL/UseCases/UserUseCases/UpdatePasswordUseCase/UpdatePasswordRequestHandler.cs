@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
-using System.Text.RegularExpressions;
 using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.Authentication;
@@ -25,10 +24,12 @@ internal class UpdatePasswordRequestHandler(UserManager<AppUser> userManager, IT
 		if (!changePasswordResult.Succeeded)
 		{
 			var errors = new StringBuilder();
+
 			foreach (var error in changePasswordResult.Errors)
 			{
 				errors.AppendLine(error.Description);
 			}
+
 			throw new BadRequestException(errors.ToString());
 		}
 

@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace UserService.DAL.Services.BlobStorage;
 

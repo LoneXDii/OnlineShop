@@ -34,6 +34,7 @@ internal class TokenService : ITokenService
     public async Task<string?> RefreshAccessTokenAsync(string refreshToken)
     {
         var user = _userManager.Users.FirstOrDefault(u => u.RefreshTokenValue == refreshToken);
+
         if(user is null || user?.RefreshTokenExpiresAt < DateTime.Now)
         {
             return null;
