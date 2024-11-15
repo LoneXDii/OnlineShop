@@ -40,7 +40,7 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         {
             var errors = JsonSerializer.Serialize(result.Errors);
 
-            throw new RegisterException($"Cannot register user: {errors}");
+            throw new BadRequestException($"Cannot register user: {errors}");
         }
     }
 }

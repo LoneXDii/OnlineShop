@@ -16,14 +16,14 @@ internal class LoginUserRequestHandler(SignInManager<AppUser> signInManager, Use
 
         if (!signInResult.Succeeded)
         {
-            throw new LoginException("Incorrect email or password");
+            throw new BadRequestException("Incorrect email or password");
         }
 
         var user = await userManager.FindByEmailAsync(request.LoginModel.Email);
 
         if (!user!.EmailConfirmed)
         {
-            throw new LoginException("Email is not verified");
+            throw new BadRequestException("Email is not verified");
         }
 
         var tokens = await tokenService.GetTokensAsync(user);

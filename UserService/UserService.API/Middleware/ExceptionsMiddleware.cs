@@ -34,11 +34,9 @@ public class ExceptionMiddleware
             Details = ex.StackTrace,
             StatusCode = ex switch
             {
-                LoginException => StatusCodes.Status400BadRequest,
                 InvalidTokenException => StatusCodes.Status404NotFound,
                 BadRequestException => StatusCodes.Status400BadRequest,
                 NotFoundException => StatusCodes.Status404NotFound,
-                RegisterException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             }
         };
