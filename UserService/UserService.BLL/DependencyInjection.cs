@@ -8,17 +8,17 @@ namespace UserService.BLL;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddApplication(this IServiceCollection services)
-	{
-		services.AddAutoMapper(typeof(AppMappingProfile))
-			.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
-			.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
-			.AddFluentValidationAutoValidation(cfg =>
-			{
-				cfg.EnableFormBindingSourceAutomaticValidation = true;
-				cfg.EnableBodyBindingSourceAutomaticValidation = true;
-			});
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(AppMappingProfile))
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
+            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+            .AddFluentValidationAutoValidation(cfg =>
+            {
+                cfg.EnableFormBindingSourceAutomaticValidation = true;
+                cfg.EnableBodyBindingSourceAutomaticValidation = true;
+            });
 
-		return services;
-	}
+        return services;
+    }
 }

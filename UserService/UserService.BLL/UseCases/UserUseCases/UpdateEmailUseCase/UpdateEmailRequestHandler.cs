@@ -9,40 +9,40 @@ using UserService.DAL.Services.EmailNotifications;
 namespace UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
 
 internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmailService emailService)
-	: IRequestHandler<UpdateEmailRequest>
+    : IRequestHandler<UpdateEmailRequest>
 {
-	public async Task Handle(UpdateEmailRequest request, CancellationToken cancellationToken)
-	{
-		if (!Regex.IsMatch(request.newEmail, @"^\S+@\S+\.\S+$"))
-		{
-			throw new BadRequestException("Incorrect email");
-		}
+    public async Task Handle(UpdateEmailRequest request, CancellationToken cancellationToken)
+    {
+        if (!Regex.IsMatch(request.newEmail, @"^\S+@\S+\.\S+$"))
+        {
+            throw new BadRequestException("Incorrect email");
+        }
 
-		var userWithNewEmail = await userManager.FindByEmailAsync(request.newEmail);
+        var userWithNewEmail = await userManager.FindByEmailAsync(request.newEmail);
 
-		if (userWithNewEmail is not null)
-		{
-			throw new BadRequestException("This email is already in use");
-		}
+        if (userWithNewEmail is not null)
+        {
+            throw new BadRequestException("This email is already in use");
+        }
 
-		var user = await userManager.FindByIdAsync(request.userId);
+        var user = await userManager.FindByIdAsync(request.userId);
 
-		if (user is null)
-		{
-			throw new NotFoundException("No such user");
-		}
+        if (user is null)
+        {
+            throw new NotFoundException("No such user");
+        }
 
-		user.Email = request.newEmail;
-		user.UserName = request.newEmail;
-		user.EmailConfirmed = false;
-		await userManager.UpdateAsync(user);
+        user.Email = request.newEmail;
+        user.UserName = request.newEmail;
+        user.EmailConfirmed = false;
+        await userManager.UpdateAsync(user);
 
-		var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-		code = HttpUtility.UrlEncode(code);
-		var email = HttpUtility.UrlEncode(user.Email);
-		var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
+        code = HttpUtility.UrlEncode(code);
+        var email = HttpUtility.UrlEncode(user.Email);
+        var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
 
-		await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
-	}
+        await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
+    }
 }

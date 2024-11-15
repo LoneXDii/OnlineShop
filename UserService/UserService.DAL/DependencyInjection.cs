@@ -18,44 +18,44 @@ namespace UserService.DAL;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddDbContext<AppDbContext>(opt =>
-						opt.UseMySql(configuration["ConnectionStrings:MySQLConnection"],
-						new MySqlServerVersion(new Version(8, 0, 36)),
-					opt => opt.EnableRetryOnFailure()),
-					ServiceLifetime.Scoped);
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<AppDbContext>(opt =>
+                        opt.UseMySql(configuration["ConnectionStrings:MySQLConnection"],
+                        new MySqlServerVersion(new Version(8, 0, 36)),
+                    opt => opt.EnableRetryOnFailure()),
+                    ServiceLifetime.Scoped);
 
-		services.AddIdentity<AppUser, IdentityRole>()
-			.AddEntityFrameworkStores<AppDbContext>()
-			.AddDefaultTokenProviders();
+        services.AddIdentity<AppUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
-		services.AddAuthentication(options => 
-			{
-				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-			})
-			.AddJwtBearer(opt =>
-				opt.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
-					ValidIssuer = configuration["JWT:Issuer"],
-					ValidAudience = configuration["JWT:Audience"],
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-				});
+        services.AddAuthentication(options => 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidAudience = configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+                });
 
-		services.AddScoped<IBlobService, BlobService>()
-			.AddScoped(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
+        services.AddScoped<IBlobService, BlobService>()
+            .AddScoped(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
 
-		services.AddScoped<ITokenService, TokenService>()
-			.AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
-			.AddScoped<IEmailService, EmailService>()
-			.AddScoped<IDbInitializer, DbInitializer>();
+        services.AddScoped<ITokenService, TokenService>()
+            .AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
+            .AddScoped<IEmailService, EmailService>()
+            .AddScoped<IDbInitializer, DbInitializer>();
 
-		return services;
-	}
+        return services;
+    }
 }

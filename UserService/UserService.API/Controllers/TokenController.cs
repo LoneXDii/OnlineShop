@@ -8,19 +8,19 @@ namespace UserService.API.Controllers;
 [ApiController]
 public class TokenController : ControllerBase
 {
-	private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
 
-	public TokenController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+    public TokenController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-	[HttpGet]
-	[Route("refresh/token={refreshToken}")]
-	public async Task<ActionResult<string>> RefreshAccessToken(string refreshToken)
-	{
-		var token = await _mediator.Send(new RefreshAccessTokenRequest(refreshToken));
+    [HttpGet]
+    [Route("refresh/token={refreshToken}")]
+    public async Task<ActionResult<string>> RefreshAccessToken(string refreshToken)
+    {
+        var token = await _mediator.Send(new RefreshAccessTokenRequest(refreshToken));
 
-		return Ok(token);
-	}
+        return Ok(token);
+    }
 }

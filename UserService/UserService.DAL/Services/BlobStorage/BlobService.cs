@@ -25,8 +25,8 @@ internal class BlobService : IBlobService
         await blobClient.UploadAsync(stream,
             new BlobHttpHeaders { ContentType = contentType });
 
-		//Later will be replace by Ocelot endpoint
-		var fileUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{fileId}";
+        //Later will be replace by Ocelot endpoint
+        var fileUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{fileId}";
 
         return fileUrl;
     }
@@ -35,8 +35,8 @@ internal class BlobService : IBlobService
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
 
-		var fileId = fileUrl.Split("/").Last();
-		var blobClient = containerClient.GetBlobClient(fileId);
+        var fileId = fileUrl.Split("/").Last();
+        var blobClient = containerClient.GetBlobClient(fileId);
 
         await blobClient.DeleteIfExistsAsync();
     }

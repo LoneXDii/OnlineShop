@@ -8,35 +8,35 @@ using UserService.DAL.Services.Authentication;
 namespace UserService.BLL.UseCases.UserUseCases.UpdatePasswordUseCase;
 
 internal class UpdatePasswordRequestHandler(UserManager<AppUser> userManager, ITokenService tokenService)
-	: IRequestHandler<UpdatePasswordRequest, string>
+    : IRequestHandler<UpdatePasswordRequest, string>
 {
-	public async Task<string> Handle(UpdatePasswordRequest request, CancellationToken cancellationToken)
-	{
-		var user = await userManager.FindByIdAsync(request.userId);
+    public async Task<string> Handle(UpdatePasswordRequest request, CancellationToken cancellationToken)
+    {
+        var user = await userManager.FindByIdAsync(request.userId);
 
-		if (user is null)
-		{
-			throw new NotFoundException("No such user");
-		}
+        if (user is null)
+        {
+            throw new NotFoundException("No such user");
+        }
 
-		var changePasswordResult = await userManager.ChangePasswordAsync(user, request.updatePasswordDTO.OldPassword, request.updatePasswordDTO.NewPassword);
+        var changePasswordResult = await userManager.ChangePasswordAsync(user, request.updatePasswordDTO.OldPassword, request.updatePasswordDTO.NewPassword);
 
-		if (!changePasswordResult.Succeeded)
-		{
-			var errors = new StringBuilder();
+        if (!changePasswordResult.Succeeded)
+        {
+            var errors = new StringBuilder();
 
-			foreach (var error in changePasswordResult.Errors)
-			{
-				errors.AppendLine(error.Description);
-			}
+            foreach (var error in changePasswordResult.Errors)
+            {
+                errors.AppendLine(error.Description);
+            }
 
-			throw new BadRequestException(errors.ToString());
-		}
+            throw new BadRequestException(errors.ToString());
+        }
 
-		await tokenService.InvalidateRefreshTokenAsync(user);
+        await tokenService.InvalidateRefreshTokenAsync(user);
 
-		var refreshToken = await tokenService.GetRefreshTokenAsync(user);
+        var refreshToken = await tokenService.GetRefreshTokenAsync(user);
 
-		return refreshToken;
-	}
+        return refreshToken;
+    }
 }

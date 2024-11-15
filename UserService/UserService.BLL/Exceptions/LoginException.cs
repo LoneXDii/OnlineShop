@@ -2,5 +2,5 @@
 
 public class LoginException : Exception
 {
-	public LoginException(string message) : base(message) { }
+    public LoginException(string message) : base(message) { }
 }

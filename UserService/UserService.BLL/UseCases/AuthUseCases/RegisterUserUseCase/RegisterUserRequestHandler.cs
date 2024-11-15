@@ -11,36 +11,36 @@ using UserService.DAL.Services.EmailNotifications;
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
 internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
-	IEmailService emailService) : IRequestHandler<RegisterUserRequest>
+    IEmailService emailService) : IRequestHandler<RegisterUserRequest>
 {
-	public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
-	{
-		var user = mapper.Map<AppUser>(request.RegisterModel);
+    public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
+    {
+        var user = mapper.Map<AppUser>(request.RegisterModel);
 
-		if(request.RegisterModel.Avatar is not null)
-		{
-			using Stream stream = request.RegisterModel.Avatar.OpenReadStream();
+        if(request.RegisterModel.Avatar is not null)
+        {
+            using Stream stream = request.RegisterModel.Avatar.OpenReadStream();
 
-			user.AvatarUrl = await blobService.UploadAsync(stream, request.RegisterModel.Avatar.ContentType);
-		}
+            user.AvatarUrl = await blobService.UploadAsync(stream, request.RegisterModel.Avatar.ContentType);
+        }
 
-		var result = await userManager.CreateAsync(user, request.RegisterModel.Password);
+        var result = await userManager.CreateAsync(user, request.RegisterModel.Password);
 
-		if (result.Succeeded)
-		{
-			var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        if (result.Succeeded)
+        {
+            var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-			code = HttpUtility.UrlEncode(code);
-			var email = HttpUtility.UrlEncode(user.Email);
-			var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
+            code = HttpUtility.UrlEncode(code);
+            var email = HttpUtility.UrlEncode(user.Email);
+            var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
 
-			await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
-		}
-		else
-		{
-			var errors = JsonSerializer.Serialize(result.Errors);
+            await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
+        }
+        else
+        {
+            var errors = JsonSerializer.Serialize(result.Errors);
 
-			throw new RegisterException($"Cannot register user: {errors}");
-		}
-	}
+            throw new RegisterException($"Cannot register user: {errors}");
+        }
+    }
 }

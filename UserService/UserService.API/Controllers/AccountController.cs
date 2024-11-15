@@ -14,49 +14,49 @@ namespace UserService.API.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-	private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
 
-	public AccountController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+    public AccountController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-	[HttpPost]
-	[Route("register")]
-	public async Task<IActionResult> Register([FromForm] RegisterDTO registerModel)
-	{
-		await _mediator.Send(new RegisterUserRequest(registerModel));
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> Register([FromForm] RegisterDTO registerModel)
+    {
+        await _mediator.Send(new RegisterUserRequest(registerModel));
 
-		return Ok();
-	}
+        return Ok();
+    }
 
-	[HttpPost]
-	[Route("login")]
-	public async Task<ActionResult<TokensDTO>> Login(LoginDTO loginModel)
-	{
-		var tokens = await _mediator.Send(new LoginUserRequest(loginModel));
+    [HttpPost]
+    [Route("login")]
+    public async Task<ActionResult<TokensDTO>> Login(LoginDTO loginModel)
+    {
+        var tokens = await _mediator.Send(new LoginUserRequest(loginModel));
 
-		return Ok(tokens);
-	}
+        return Ok(tokens);
+    }
 
-	[HttpGet]
-	[Route("confirm/email={email}&code={code}")]
-	public async Task<IActionResult> ConfirmEmail(string email, string code)
-	{
-		await _mediator.Send(new EmailConfirmationRequest(email, code));
+    [HttpGet]
+    [Route("confirm/email={email}&code={code}")]
+    public async Task<IActionResult> ConfirmEmail(string email, string code)
+    {
+        await _mediator.Send(new EmailConfirmationRequest(email, code));
 
-		return Ok("Email confirmed");
-	}
+        return Ok("Email confirmed");
+    }
 
-	[HttpGet]
-	[Route("logout")]
-	[Authorize]
-	public async Task<IActionResult> Logout()
-	{
-		var userId = HttpContext.User.FindFirst("Id").Value;
+    [HttpGet]
+    [Route("logout")]
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = HttpContext.User.FindFirst("Id").Value;
 
-		await _mediator.Send(new LogoutUserRequest(userId));
+        await _mediator.Send(new LogoutUserRequest(userId));
 
-		return Ok();
-	}
+        return Ok();
+    }
 }

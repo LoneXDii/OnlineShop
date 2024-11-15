@@ -8,11 +8,11 @@ using UserService.BLL.Exceptions;
 namespace UserService.BLL.UseCases.UserUseCases.GetUserInfoUseCase;
 
 internal class GetUserInfoRequestHandler(UserManager<AppUser> userManager, IMapper mapper)
-	: IRequestHandler<GetUserInfoRequest, UserInfoDTO>
+    : IRequestHandler<GetUserInfoRequest, UserInfoDTO>
 {
-	public async Task<UserInfoDTO> Handle(GetUserInfoRequest request, CancellationToken cancellationToken)
-	{
-		var user = await userManager.FindByIdAsync(request.userId);
+    public async Task<UserInfoDTO> Handle(GetUserInfoRequest request, CancellationToken cancellationToken)
+    {
+        var user = await userManager.FindByIdAsync(request.userId);
 
         if (user is null)
         {

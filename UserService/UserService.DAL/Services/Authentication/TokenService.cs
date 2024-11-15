@@ -49,20 +49,20 @@ internal class TokenService : ITokenService
     {
         user.RefreshTokenValue = null;
 
-		await _userManager.UpdateAsync(user);
-	}
+        await _userManager.UpdateAsync(user);
+    }
 
-	public async Task<string> GetRefreshTokenAsync(AppUser user)
-	{
-		user.RefreshTokenValue = Guid.NewGuid().ToString();
-		user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
+    public async Task<string> GetRefreshTokenAsync(AppUser user)
+    {
+        user.RefreshTokenValue = Guid.NewGuid().ToString();
+        user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
 
-		await _userManager.UpdateAsync(user);
+        await _userManager.UpdateAsync(user);
 
-		return user.RefreshTokenValue;
-	}
+        return user.RefreshTokenValue;
+    }
 
-	private async Task<string> GetAccessTokenAsync(AppUser user)
+    private async Task<string> GetAccessTokenAsync(AppUser user)
     {
         var claims = new List<Claim>
         {
@@ -72,13 +72,13 @@ internal class TokenService : ITokenService
              new("Id" , user.Id)
         };
 
-		var roles = await _userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
         var credentials = new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
-		var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JWT:AccessExpireMinutes"]));
+        var expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JWT:AccessExpireMinutes"]));
 
         var token = new JwtSecurityToken
             (
