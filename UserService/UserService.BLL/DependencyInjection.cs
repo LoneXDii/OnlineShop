@@ -10,7 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(AppMappingProfile))
+        services.AddAutoMapper(typeof(RegisterDTOToAppUserMappingProfile), typeof(AppUserToUserInfoDTOMappingProfile), typeof(UpdateUserDTOToAppUserMappingProfile))
             .AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddFluentValidationAutoValidation(cfg =>
