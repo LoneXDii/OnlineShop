@@ -54,6 +54,7 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> Logout()
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
+
 		await _mediator.Send(new LogoutUserRequest(userId));
 
 		return Ok();

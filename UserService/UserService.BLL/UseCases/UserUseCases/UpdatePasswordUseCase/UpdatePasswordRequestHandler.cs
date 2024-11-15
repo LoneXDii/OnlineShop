@@ -14,6 +14,7 @@ internal class UpdatePasswordRequestHandler(UserManager<AppUser> userManager, IT
 	public async Task<string> Handle(UpdatePasswordRequest request, CancellationToken cancellationToken)
 	{
 		var user = await userManager.FindByIdAsync(request.userId);
+
 		if (user is null)
 		{
 			throw new NotFoundException("No such user");
@@ -32,6 +33,7 @@ internal class UpdatePasswordRequestHandler(UserManager<AppUser> userManager, IT
 		}
 
 		await tokenService.InvalidateRefreshTokenAsync(user);
+
 		var refreshToken = await tokenService.GetRefreshTokenAsync(user);
 
 		return refreshToken;

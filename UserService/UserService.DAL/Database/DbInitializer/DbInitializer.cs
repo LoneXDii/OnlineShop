@@ -41,7 +41,9 @@ internal class DbInitializer : IDbInitializer
 			FirstName = "Admin",
 			LastName = "Admin"
 		};
+
 		await _userManager.CreateAsync(adminUser, "Qwe123*");
+
 		await _userManager.AddToRoleAsync(adminUser, "admin");
 
 		AppUser customerUser = new()
@@ -52,6 +54,7 @@ internal class DbInitializer : IDbInitializer
 			FirstName = "Customer",
 			LastName = "Customer"
 		};
+
 		await _userManager.CreateAsync(customerUser, "Qwe123*");
 	}
 }

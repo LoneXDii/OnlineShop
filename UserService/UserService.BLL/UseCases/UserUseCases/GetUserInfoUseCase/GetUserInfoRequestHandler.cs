@@ -13,6 +13,7 @@ internal class GetUserInfoRequestHandler(UserManager<AppUser> userManager, IMapp
 	public async Task<UserInfoDTO> Handle(GetUserInfoRequest request, CancellationToken cancellationToken)
 	{
 		var user = await userManager.FindByIdAsync(request.userId);
+
         if (user is null)
         {
             throw new NotFoundException("No such user");

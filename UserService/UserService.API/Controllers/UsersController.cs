@@ -29,6 +29,7 @@ public class UsersController : ControllerBase
 	public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDTO userDTO)
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
+
 		await _mediator.Send(new UpdateUserRequest(userDTO, userId));
 
 		return Ok();
@@ -40,6 +41,7 @@ public class UsersController : ControllerBase
 	public async Task<IActionResult> UpdateEmail(string newEmail)
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
+
 		await _mediator.Send(new UpdateEmailRequest(newEmail, userId));
 
 		return Ok();
@@ -51,6 +53,7 @@ public class UsersController : ControllerBase
 	public async Task<ActionResult<string>> UpdatePassword(UpdatePasswordDTO updatePasswordDTO)
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
+
 		var token = await _mediator.Send(new UpdatePasswordRequest(updatePasswordDTO, userId));
 
 		return Ok(token);
@@ -72,6 +75,7 @@ public class UsersController : ControllerBase
 	public async Task<ActionResult<UserInfoDTO>> GetUserInfo()
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
+
 		var user = await _mediator.Send(new GetUserInfoRequest(userId));
 
 		return user;

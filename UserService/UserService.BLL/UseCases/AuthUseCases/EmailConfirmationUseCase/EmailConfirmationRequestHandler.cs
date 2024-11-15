@@ -13,6 +13,7 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
 	public async Task Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
 	{
 		var user = await userManager.FindByEmailAsync(request.email);
+
 		if (user is null)
 		{
 			throw new NotFoundException("No user with such email");
@@ -20,6 +21,7 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
 
 		var code = HttpUtility.UrlDecode(request.code);
 		code = code.Replace(" ", "+");
+
 		var result = await userManager.ConfirmEmailAsync(user, code);
 
 		if (!result.Succeeded)

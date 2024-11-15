@@ -25,6 +25,7 @@ internal class TokenService : ITokenService
         var tokens = new TokensDTO();
 
         tokens.AccessToken = await GetAccessTokenAsync(user);
+
         tokens.RefreshToken = await GetRefreshTokenAsync(user);
 
         return tokens;
@@ -46,6 +47,7 @@ internal class TokenService : ITokenService
     public async Task InvalidateRefreshTokenAsync(AppUser user)
     {
         user.RefreshTokenValue = null;
+
 		await _userManager.UpdateAsync(user);
 	}
 
@@ -53,6 +55,7 @@ internal class TokenService : ITokenService
 	{
 		user.RefreshTokenValue = Guid.NewGuid().ToString();
 		user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
+
 		await _userManager.UpdateAsync(user);
 
 		return user.RefreshTokenValue;
@@ -69,6 +72,7 @@ internal class TokenService : ITokenService
         };
 
 		var roles = await _userManager.GetRolesAsync(user);
+
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));

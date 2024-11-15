@@ -15,6 +15,7 @@ internal class ListUsersWithPaginationRequestHandler(UserManager<AppUser> userMa
 	public async Task<PaginatedListModel<UserInfoDTO>> Handle(ListUsersWithPaginationRequest request, CancellationToken cancellationToken)
 	{
 		int count = await userManager.Users.CountAsync();
+
 		var totalPages = (int)Math.Ceiling(count / (double)request.pageSize);
 
 		if(request.pageNo > totalPages)

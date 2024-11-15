@@ -19,12 +19,14 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
 		}
 
 		var userWithNewEmail = await userManager.FindByEmailAsync(request.newEmail);
+
 		if (userWithNewEmail is not null)
 		{
 			throw new BadRequestException("This email is already in use");
 		}
 
 		var user = await userManager.FindByIdAsync(request.userId);
+
 		if (user is null)
 		{
 			throw new NotFoundException("No such user");
@@ -36,9 +38,11 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
 		await userManager.UpdateAsync(user);
 
 		var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
 		code = HttpUtility.UrlEncode(code);
 		var email = HttpUtility.UrlEncode(user.Email);
 		var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
+
 		await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
 	}
 }

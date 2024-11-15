@@ -25,17 +25,21 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 		}
 
 		var result = await userManager.CreateAsync(user, request.RegisterModel.Password);
+
 		if (result.Succeeded)
 		{
 			var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
 			code = HttpUtility.UrlEncode(code);
 			var email = HttpUtility.UrlEncode(user.Email);
 			var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
+
 			await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
 		}
 		else
 		{
 			var errors = JsonSerializer.Serialize(result.Errors);
+
 			throw new RegisterException($"Cannot register user: {errors}");
 		}
 	}

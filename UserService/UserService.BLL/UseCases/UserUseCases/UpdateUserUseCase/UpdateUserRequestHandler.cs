@@ -13,6 +13,7 @@ internal class UpdateUserRequestHandler(UserManager<AppUser> userManager, IMappe
 	public async Task Handle(UpdateUserRequest request, CancellationToken cancellationToken)
 	{
 		var user = await userManager.FindByIdAsync(request.userId);
+
 		if (user is null)
 		{
 			throw new NotFoundException("No such user");
