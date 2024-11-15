@@ -9,7 +9,6 @@ using SendGrid;
 using System.Text;
 using UserService.DAL.Entities;
 using UserService.DAL.Database;
-using UserService.DAL.Database.DbInitializer;
 using UserService.DAL.Services.Authentication;
 using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
@@ -53,8 +52,7 @@ public static class DependencyInjection
 
         services.AddScoped<ITokenService, TokenService>()
             .AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
-            .AddScoped<IEmailService, EmailService>()
-            .AddScoped<IDbInitializer, DbInitializer>();
+            .AddScoped<IEmailService, EmailService>();
 
         return services;
     }

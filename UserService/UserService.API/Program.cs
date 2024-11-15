@@ -1,7 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using UserService.API.Middleware;
 using UserService.BLL;
 using UserService.DAL;
-using UserService.DAL.Database.DbInitializer;
+using UserService.DAL.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +39,9 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var DbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-    await DbInitializer.SeedDataAsync();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    await dbContext.Database.MigrateAsync();
 }
 
 app.Run();
