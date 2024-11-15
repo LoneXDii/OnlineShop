@@ -27,6 +27,7 @@ internal class LoginUserRequestHandler(SignInManager<AppUser> signInManager, Use
 		}
 
 		var tokens = await tokenService.GetTokensAsync(user);
+
 		return tokens;
 	}
 }

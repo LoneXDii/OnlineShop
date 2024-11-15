@@ -26,6 +26,7 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> Register([FromForm] RegisterDTO registerModel)
 	{
 		await _mediator.Send(new RegisterUserRequest(registerModel));
+
 		return Ok();
 	}
 
@@ -34,6 +35,7 @@ public class AccountController : ControllerBase
 	public async Task<ActionResult<TokensDTO>> Login(LoginDTO loginModel)
 	{
 		var tokens = await _mediator.Send(new LoginUserRequest(loginModel));
+
 		return Ok(tokens);
 	}
 
@@ -42,6 +44,7 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> ConfirmEmail(string email, string code)
 	{
 		await _mediator.Send(new EmailConfirmationRequest(email, code));
+
 		return Ok("Email confirmed");
 	}
 
@@ -52,6 +55,7 @@ public class AccountController : ControllerBase
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		await _mediator.Send(new LogoutUserRequest(userId));
+
 		return Ok();
 	}
 }

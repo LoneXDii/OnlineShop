@@ -28,6 +28,7 @@ internal class BlobService : IBlobService
 
 		//Later will be replace by Ocelot endpoint
 		var fileUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{fileId}";
+
         return fileUrl;
     }
 

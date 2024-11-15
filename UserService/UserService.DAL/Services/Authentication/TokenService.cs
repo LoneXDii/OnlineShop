@@ -39,6 +39,7 @@ internal class TokenService : ITokenService
         }
 
         var token = await GetAccessTokenAsync(user);
+
         return token;
     }
 

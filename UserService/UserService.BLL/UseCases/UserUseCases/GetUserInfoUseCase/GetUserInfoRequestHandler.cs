@@ -19,6 +19,7 @@ internal class GetUserInfoRequestHandler(UserManager<AppUser> userManager, IMapp
         }
 
         var userDTO = mapper.Map<UserInfoDTO>(user);
+
         return userDTO;
     }
 }

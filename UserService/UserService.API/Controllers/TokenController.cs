@@ -20,6 +20,7 @@ public class TokenController : ControllerBase
 	public async Task<ActionResult<string>> RefreshAccessToken(string refreshToken)
 	{
 		var token = await _mediator.Send(new RefreshAccessTokenRequest(refreshToken));
+
 		return Ok(token);
 	}
 }

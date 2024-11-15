@@ -30,6 +30,7 @@ public class UsersController : ControllerBase
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		await _mediator.Send(new UpdateUserRequest(userDTO, userId));
+
 		return Ok();
 	}
 
@@ -40,6 +41,7 @@ public class UsersController : ControllerBase
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		await _mediator.Send(new UpdateEmailRequest(newEmail, userId));
+
 		return Ok();
 	}
 
@@ -50,6 +52,7 @@ public class UsersController : ControllerBase
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		var token = await _mediator.Send(new UpdatePasswordRequest(updatePasswordDTO, userId));
+
 		return Ok(token);
 	}
 
@@ -59,6 +62,7 @@ public class UsersController : ControllerBase
 	public async Task<ActionResult<PaginatedListModel<UserInfoDTO>>> ListUsers(int pageNo, int pageSize)
 	{
 		var users = await _mediator.Send(new ListUsersWithPaginationRequest(pageNo, pageSize));
+
 		return Ok(users);
 	}
 
@@ -69,6 +73,7 @@ public class UsersController : ControllerBase
 	{
 		var userId = HttpContext.User.FindFirst("Id").Value;
 		var user = await _mediator.Send(new GetUserInfoRequest(userId));
+
 		return user;
 	}
 
@@ -78,6 +83,7 @@ public class UsersController : ControllerBase
 	public async Task<ActionResult<UserInfoDTO>> GetUserInfo(string userId)
 	{
 		var user = await _mediator.Send(new GetUserInfoRequest(userId));
+
 		return user;
 	}
 }

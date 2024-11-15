@@ -33,6 +33,7 @@ internal class UpdatePasswordRequestHandler(UserManager<AppUser> userManager, IT
 
 		await tokenService.InvalidateRefreshTokenAsync(user);
 		var refreshToken = await tokenService.GetRefreshTokenAsync(user);
+
 		return refreshToken;
 	}
 }
