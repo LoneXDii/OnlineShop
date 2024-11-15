@@ -1,7 +1,7 @@
 using UserService.API.Middleware;
-using UserService.Application;
-using UserService.Infrastructure;
-using UserService.Infrastructure.Database.DbInitializer;
+using UserService.BLL;
+using UserService.DAL;
+using UserService.DAL.Database.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 

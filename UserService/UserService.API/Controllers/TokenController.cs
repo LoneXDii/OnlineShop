@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.UseCases.AuthUseCases.RefreshAccessTokenUseCase;
+using UserService.BLL.UseCases.AuthUseCases.RefreshAccessTokenUseCase;
 
 namespace UserService.API.Controllers;
 

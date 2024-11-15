@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.DTO;
-using UserService.Application.Models;
-using UserService.Application.UseCases.UserUseCases.GetUserInfoUseCase;
-using UserService.Application.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
-using UserService.Application.UseCases.UserUseCases.UpdateEmailUseCase;
-using UserService.Application.UseCases.UserUseCases.UpdatePasswordUseCase;
-using UserService.Application.UseCases.UserUseCases.UpdateUserUseCase;
+using UserService.BLL.DTO;
+using UserService.BLL.Models;
+using UserService.BLL.UseCases.UserUseCases.GetUserInfoUseCase;
+using UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
+using UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
+using UserService.BLL.UseCases.UserUseCases.UpdatePasswordUseCase;
+using UserService.BLL.UseCases.UserUseCases.UpdateUserUseCase;
 
 namespace UserService.API.Controllers;
 

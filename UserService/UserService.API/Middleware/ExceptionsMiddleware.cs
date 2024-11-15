@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using UserService.Application.Exceptions;
+using UserService.BLL.Exceptions;
 
 namespace UserService.API.Middleware;
 

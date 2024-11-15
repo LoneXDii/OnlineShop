@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.DTO;
-using UserService.Application.UseCases.AuthUseCases.EmailConfirmationUseCase;
-using UserService.Application.UseCases.AuthUseCases.LoginUserUseCase;
-using UserService.Application.UseCases.AuthUseCases.LogoutUserUseCase;
-using UserService.Application.UseCases.AuthUseCases.RegisterUserUseCase;
-using UserService.Infrastructure.Models;
+using UserService.BLL.DTO;
+using UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
+using UserService.BLL.UseCases.AuthUseCases.LoginUserUseCase;
+using UserService.BLL.UseCases.AuthUseCases.LogoutUserUseCase;
+using UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
+using UserService.DAL.Models;
 
 namespace UserService.API.Controllers;
 
