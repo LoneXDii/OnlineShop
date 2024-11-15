@@ -4,5 +4,5 @@ using UserService.BLL.Models;
 
 namespace UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 
-public sealed record ListUsersWithPaginationRequest(int pageNo = 1, int pageSize = 10) 
+public sealed record ListUsersWithPaginationRequest(PaginationDTO pagination) 
     : IRequest<PaginatedListModel<UserInfoDTO>> { }

@@ -60,11 +60,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Route("pageNo={pageNo:int}&pageSize={pageSize:int}")]
     [Authorize(Policy = "admin")]
-    public async Task<ActionResult<PaginatedListModel<UserInfoDTO>>> ListUsers(int pageNo, int pageSize)
+    public async Task<ActionResult<PaginatedListModel<UserInfoDTO>>> ListUsers([FromQuery] PaginationDTO pagination)
     {
-        var users = await _mediator.Send(new ListUsersWithPaginationRequest(pageNo, pageSize));
+        var users = await _mediator.Send(new ListUsersWithPaginationRequest(pagination));
 
         return Ok(users);
     }

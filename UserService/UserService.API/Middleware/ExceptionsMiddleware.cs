@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using FluentValidation;
+using System.Text.Json;
 using UserService.BLL.Exceptions;
 
 namespace UserService.API.Middleware;
@@ -37,6 +38,7 @@ public class ExceptionMiddleware
                 InvalidTokenException => StatusCodes.Status404NotFound,
                 BadRequestException => StatusCodes.Status400BadRequest,
                 NotFoundException => StatusCodes.Status404NotFound,
+                ValidationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             }
         };
