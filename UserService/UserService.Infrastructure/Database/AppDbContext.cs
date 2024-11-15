@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using UserService.Domain.Entities;
+using UserService.Infrastructure.Entities;
 
 namespace UserService.Infrastructure.Database;
 

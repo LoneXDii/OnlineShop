@@ -4,8 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using UserService.Domain.Entities;
-using UserService.Domain.Exceptions;
+using UserService.Infrastructure.Entities;
 using UserService.Infrastructure.Models;
 
 namespace UserService.Infrastructure.Services.Authentication;
@@ -31,17 +30,14 @@ internal class TokenService : ITokenService
         return tokens;
     }
 
-    public async Task<string> RefreshAccessTokenAsync(string refreshToken)
+    public async Task<string?> RefreshAccessTokenAsync(string refreshToken)
     {
         var user = _userManager.Users.FirstOrDefault(u => u.RefreshTokenValue == refreshToken);
-        if (user is null)
+        if(user is null || user?.RefreshTokenExpiresAt < DateTime.Now)
         {
-            throw new InvalidTokenException("No user assigned with this token");
+            return null;
         }
-        if (user.RefreshTokenExpiresAt < DateTime.Now)
-        {
-            throw new InvalidTokenException("Refresh token is expired");
-        }
+
         var token = await GetAccessTokenAsync(user);
         return token;
     }

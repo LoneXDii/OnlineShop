@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SendGrid;
 using System.Text;
-using UserService.Domain.Entities;
+using UserService.Infrastructure.Entities;
 using UserService.Infrastructure.Database;
 using UserService.Infrastructure.Database.DbInitializer;
 using UserService.Infrastructure.Services.Authentication;

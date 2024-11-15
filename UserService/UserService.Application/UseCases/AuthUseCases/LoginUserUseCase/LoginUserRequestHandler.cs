@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.Infrastructure.Services.Authentication;
-using UserService.Domain.Entities;
+using UserService.Infrastructure.Entities;
 using MediatR;
 using UserService.Infrastructure.Models;
-using UserService.Domain.Exceptions;
+using UserService.Application.Exceptions;
 
 namespace UserService.Application.UseCases.AuthUseCases.LoginUserUseCase;
 

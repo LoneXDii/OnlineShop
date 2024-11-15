@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UserService.Application.DTO;
-using UserService.Domain.Entities;
-using UserService.Domain.Exceptions;
+using UserService.Infrastructure.Entities;
+using UserService.Application.Exceptions;
 
 namespace UserService.Application.UseCases.UserUseCases.GetUserInfoUseCase;
 

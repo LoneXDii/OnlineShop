@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using UserService.Application.DTO;
-using UserService.Domain.Entities;
+using UserService.Infrastructure.Entities;
 
 namespace UserService.Application.Mapping;
 

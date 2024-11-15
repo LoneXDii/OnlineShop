@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
 using System.Web;
-using UserService.Domain.Entities;
-using UserService.Domain.Exceptions;
+using UserService.Infrastructure.Entities;
+using UserService.Application.Exceptions;
 using UserService.Infrastructure.Services.EmailNotifications;
 
 namespace UserService.Application.UseCases.UserUseCases.UpdateEmailUseCase;

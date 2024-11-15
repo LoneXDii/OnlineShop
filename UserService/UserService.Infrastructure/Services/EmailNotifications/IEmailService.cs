@@ -1,4 +1,4 @@
-﻿using UserService.Domain.Entities;
+﻿using UserService.Infrastructure.Entities;
 
 namespace UserService.Infrastructure.Services.EmailNotifications;
 

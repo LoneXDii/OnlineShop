@@ -5,8 +5,6 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.API", "UserService.API\UserService.API.csproj", "{8B0BF8A7-2BF9-4267-8E26-8D1FD118B523}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Domain", "UserService.Domain\UserService.Domain.csproj", "{166B3775-654A-436A-B7D9-F09D56CF48E4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Application", "UserService.Application\UserService.Application.csproj", "{AF9DCBCE-B8D3-474B-89C4-3DB07CDD30EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Infrastructure", "UserService.Infrastructure\UserService.Infrastructure.csproj", "{A61ED789-8DE7-4C51-97EA-8A356DC00227}"
@@ -21,10 +19,6 @@ Global
 		{8B0BF8A7-2BF9-4267-8E26-8D1FD118B523}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B0BF8A7-2BF9-4267-8E26-8D1FD118B523}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B0BF8A7-2BF9-4267-8E26-8D1FD118B523}.Release|Any CPU.Build.0 = Release|Any CPU
-		{166B3775-654A-436A-B7D9-F09D56CF48E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{166B3775-654A-436A-B7D9-F09D56CF48E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{166B3775-654A-436A-B7D9-F09D56CF48E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{166B3775-654A-436A-B7D9-F09D56CF48E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF9DCBCE-B8D3-474B-89C4-3DB07CDD30EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF9DCBCE-B8D3-474B-89C4-3DB07CDD30EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF9DCBCE-B8D3-474B-89C4-3DB07CDD30EA}.Release|Any CPU.ActiveCfg = Release|Any CPU

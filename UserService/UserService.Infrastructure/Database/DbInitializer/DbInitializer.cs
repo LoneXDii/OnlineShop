@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using UserService.Domain.Entities;
+using UserService.Infrastructure.Entities;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace UserService.Infrastructure.Database.DbInitializer;

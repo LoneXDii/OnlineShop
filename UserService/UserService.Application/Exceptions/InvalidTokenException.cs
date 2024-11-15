@@ -1,4 +1,4 @@
-﻿namespace UserService.Domain.Exceptions;
+﻿namespace UserService.Application.Exceptions;
 
 public class InvalidTokenException : Exception
 {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using UserService.Domain.Entities;
-using UserService.Domain.Exceptions;
+using UserService.Infrastructure.Entities;
+using UserService.Application.Exceptions;
 using UserService.Infrastructure.Services.Authentication;
 
 namespace UserService.Application.UseCases.AuthUseCases.LogoutUserUseCase;

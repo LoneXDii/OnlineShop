@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UserService.Application.DTO;
 using UserService.Application.Models;
-using UserService.Domain.Entities;
-using UserService.Domain.Exceptions;
+using UserService.Infrastructure.Entities;
+using UserService.Application.Exceptions;
 
 namespace UserService.Application.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 
