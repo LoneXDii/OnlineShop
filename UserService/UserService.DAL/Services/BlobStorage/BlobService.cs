@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace UserService.DAL.Services.BlobStorage;
 
@@ -15,7 +16,7 @@ internal class BlobService : IBlobService
         containerClient.CreateIfNotExists(PublicAccessType.Blob);
     }
 
-    public async Task<Guid> UploadAsync(Stream stream, string contentType)
+    public async Task<string> UploadAsync(Stream stream, string contentType)
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
 
@@ -25,24 +26,17 @@ internal class BlobService : IBlobService
         await blobClient.UploadAsync(stream,
             new BlobHttpHeaders { ContentType = contentType });
 
-        return fileId;
+		//Later will be replace by Ocelot endpoint
+		var fileUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{fileId}";
+        return fileUrl;
     }
 
-    public async Task<FileResponse> DownloadAsync(Guid fileId)
+    public async Task DeleteAsync(string fileUrl)
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
 
-        var blobClient = containerClient.GetBlobClient(fileId.ToString());
-        var response = await blobClient.DownloadContentAsync();
-
-        return new FileResponse(response.Value.Content.ToStream(), response.Value.Details.ContentType);
-    }
-
-    public async Task DeleteAsync(Guid fileId)
-    {
-        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-
-        var blobClient = containerClient.GetBlobClient(fileId.ToString());
+		var fileId = fileUrl.Split("/").Last();
+		var blobClient = containerClient.GetBlobClient(fileId);
 
         await blobClient.DeleteIfExistsAsync();
     }

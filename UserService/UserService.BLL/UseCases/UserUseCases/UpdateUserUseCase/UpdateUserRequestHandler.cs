@@ -24,16 +24,12 @@ internal class UpdateUserRequestHandler(UserManager<AppUser> userManager, IMappe
 		{
 			if (user.AvatarUrl is not null) 
 			{
-				var avatarId = user.AvatarUrl.Split("/").Last();
-				await blobService.DeleteAsync(new Guid(avatarId));
+				await blobService.DeleteAsync(user.AvatarUrl);
 			}
 
 			using Stream stream = request.userDTO.Avatar.OpenReadStream();
-			var imageId = await blobService.UploadAsync(stream, request.userDTO.Avatar.ContentType);
 
-			//Later will be replace by Ocelot endpoint
-			var imageUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{imageId}";
-			user.AvatarUrl = imageUrl;
+			user.AvatarUrl = await blobService.UploadAsync(stream, request.userDTO.Avatar.ContentType);
 		}
 
 		await userManager.UpdateAsync(user);

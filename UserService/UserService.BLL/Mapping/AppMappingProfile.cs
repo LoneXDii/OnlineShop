@@ -11,7 +11,8 @@ internal class AppMappingProfile : Profile
 		CreateMap<RegisterDTO, AppUser>()
 			.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
-		CreateMap<AppUser, UserInfoDTO>();
+		CreateMap<AppUser, UserInfoDTO>()
+			.ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.AvatarUrl));
 
 		CreateMap<UpdateUserDTO, AppUser>();
 	}

@@ -20,11 +20,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 		if(request.RegisterModel.Avatar is not null)
 		{
 			using Stream stream = request.RegisterModel.Avatar.OpenReadStream();
-			var imageId = await blobService.UploadAsync(stream, request.RegisterModel.Avatar.ContentType);
 
-			//Later will be replace by Ocelot endpoint
-			var imageUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{imageId}";
-			user.AvatarUrl = imageUrl;
+			user.AvatarUrl = await blobService.UploadAsync(stream, request.RegisterModel.Avatar.ContentType);
 		}
 
 		var result = await userManager.CreateAsync(user, request.RegisterModel.Password);
