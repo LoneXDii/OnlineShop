@@ -46,6 +46,7 @@ public class ExceptionMiddleware
         _logger.LogError(ex, ex.Message);
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = error.StatusCode;
+
         await context.Response.WriteAsync(JsonSerializer.Serialize(error, 
             new JsonSerializerOptions
             {
