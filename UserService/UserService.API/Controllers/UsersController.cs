@@ -38,11 +38,11 @@ public class UsersController : ControllerBase
     [HttpPost]
     [Route("update/email")]
     [Authorize]
-    public async Task<IActionResult> UpdateEmail(string newEmail)
+    public async Task<IActionResult> UpdateEmail(UpdateEmailDTO newEmail)
     {
         var userId = HttpContext.User.FindFirst("Id").Value;
 
-        await _mediator.Send(new UpdateEmailRequest(newEmail, userId));
+        await _mediator.Send(new UpdateEmailRequest(newEmail.Email, userId));
 
         return Ok();
     }

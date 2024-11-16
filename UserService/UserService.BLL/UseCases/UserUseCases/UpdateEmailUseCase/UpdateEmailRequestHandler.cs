@@ -13,11 +13,6 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
 {
     public async Task Handle(UpdateEmailRequest request, CancellationToken cancellationToken)
     {
-        if (!Regex.IsMatch(request.newEmail, @"^\S+@\S+\.\S+$"))
-        {
-            throw new BadRequestException("Incorrect email");
-        }
-
         var userWithNewEmail = await userManager.FindByEmailAsync(request.newEmail);
 
         if (userWithNewEmail is not null)
@@ -35,6 +30,7 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
         user.Email = request.newEmail;
         user.UserName = request.newEmail;
         user.EmailConfirmed = false;
+
         await userManager.UpdateAsync(user);
 
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
