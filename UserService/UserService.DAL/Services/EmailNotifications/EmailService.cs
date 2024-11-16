@@ -1,5 +1,6 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.Web;
 
 namespace UserService.DAL.Services.EmailNotifications;
 
@@ -14,9 +15,13 @@ internal class EmailService : IEmailService
         mailSender = new EmailAddress("myshopemailsender@gmail.com", "Notification");
     }
 
-    public async Task SendEmailConfirmationCodeAsync(string email, string confirmationLink)
+    public async Task SendEmailConfirmationCodeAsync(string email, string code)
     {
-        var subject = "Email verification";
+		code = HttpUtility.UrlEncode(code);
+		var encodedEmail = HttpUtility.UrlEncode(email);
+		var confirmationLink = $"https://localhost:7001/api/account/confirm/email={encodedEmail}&code={code}";
+
+		var subject = "Email verification";
         var plainTextContent = $"Please enter this link to confirm your email: {confirmationLink}";
         var htmlContent = $"<span>{plainTextContent}</span>";
         var to = new EmailAddress(email);

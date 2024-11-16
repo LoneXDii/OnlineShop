@@ -30,11 +30,7 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         {
             var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            code = HttpUtility.UrlEncode(code);
-            var email = HttpUtility.UrlEncode(user.Email);
-            var confirmationLink = $"https://localhost:7001/api/account/confirm/email={email}&code={code}";
-
-            await emailService.SendEmailConfirmationCodeAsync(user.Email, confirmationLink);
+            await emailService.SendEmailConfirmationCodeAsync(user.Email, code);
         }
         else
         {

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 using UserService.BLL.DTO;
 using UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 using UserService.BLL.UseCases.AuthUseCases.LoginUserUseCase;
@@ -43,7 +44,9 @@ public class AccountController : ControllerBase
     [Route("confirm/email={email}&code={code}")]
     public async Task<IActionResult> ConfirmEmail(string email, string code)
     {
-        await _mediator.Send(new EmailConfirmationRequest(email, code));
+		code = HttpUtility.UrlDecode(code).Replace(" ", "+");
+
+		await _mediator.Send(new EmailConfirmationRequest(email, code));
 
         return Ok("Email confirmed");
     }
