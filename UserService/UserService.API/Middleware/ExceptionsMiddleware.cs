@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using UserService.BLL.Exceptions;
 
@@ -7,12 +8,14 @@ namespace UserService.API.Middleware;
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly IWebHostEnvironment _env;
     private readonly ILogger<ExceptionMiddleware> _logger;
 
-    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IWebHostEnvironment env)
     {
         _next = next;
         _logger = logger;
+        _env = env;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -29,28 +32,30 @@ public class ExceptionMiddleware
 
     public async Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
-        var error = new ApiException
+        var problemDetails = new ProblemDetails
         {
-            Message = ex.Message,
-            Details = ex.StackTrace,
-            StatusCode = ex switch
+            Title = "An error occurred while processing your request.",
+            Status = ex switch
             {
                 InvalidTokenException => StatusCodes.Status404NotFound,
                 BadRequestException => StatusCodes.Status400BadRequest,
                 NotFoundException => StatusCodes.Status404NotFound,
                 ValidationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
-            }
+            },
+            Detail = ex.Message,
+            Instance = context.Request.Path
         };
 
-        _logger.LogError(ex, ex.Message);
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = error.StatusCode;
+        if(_env.IsDevelopment())
+        {
+            problemDetails.Extensions.Add("stackTrace", ex.StackTrace);
+        }
 
-        await context.Response.WriteAsync(JsonSerializer.Serialize(error, 
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }));
+        _logger.LogError(ex, ex.Message);
+        context.Response.ContentType = "application/problem+json";
+        context.Response.StatusCode = problemDetails.Status.Value;
+
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }

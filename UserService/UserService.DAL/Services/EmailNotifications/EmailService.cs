@@ -17,11 +17,11 @@ internal class EmailService : IEmailService
 
     public async Task SendEmailConfirmationCodeAsync(string email, string code)
     {
-		code = HttpUtility.UrlEncode(code);
-		var encodedEmail = HttpUtility.UrlEncode(email);
-		var confirmationLink = $"https://localhost:7001/api/account/confirm/email={encodedEmail}&code={code}";
+        code = HttpUtility.UrlEncode(code);
+        var encodedEmail = HttpUtility.UrlEncode(email);
+        var confirmationLink = $"https://localhost:7001/api/account/confirm/email={encodedEmail}&code={code}";
 
-		var subject = "Email verification";
+        var subject = "Email verification";
         var plainTextContent = $"Please enter this link to confirm your email: {confirmationLink}";
         var htmlContent = $"<span>{plainTextContent}</span>";
         var to = new EmailAddress(email);
