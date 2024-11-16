@@ -14,9 +14,9 @@ internal class PaymentService : IPaymentService
     private readonly ProductService _productService;
     private readonly PriceService _priceService;
 
-    public PaymentService(IOptions<StripeSettings> stripeSettings, 
-        CustomerService customerService, 
-        ProductService productService, 
+    public PaymentService(IOptions<StripeSettings> stripeSettings,
+        CustomerService customerService,
+        ProductService productService,
         PriceService priceService)
     {
         _stripeSettings = stripeSettings.Value;
@@ -40,13 +40,17 @@ internal class PaymentService : IPaymentService
             });
         }
 
-        var options = new SessionCreateOptions 
-        { 
+        var options = new SessionCreateOptions
+        {
             LineItems = items,
             Mode = "payment",
-            SuccessUrl = "https://localhost:7003/api/Payment/",
-            CancelUrl = "https://localhost:7003/api/Payment/",
-            Customer = customerId
+            SuccessUrl = "https://localhost:7003/api/Payment/success",
+            CancelUrl = "https://localhost:7003/api/Payment/fail",
+            Customer = customerId,
+            Metadata = new Dictionary<string, string>
+            {
+                { "order_id", order.Id }
+             }
         };
 
         var sessionService = new SessionService();
@@ -88,5 +92,19 @@ internal class PaymentService : IPaymentService
         var price = await _priceService.CreateAsync(priceOptions);
 
         return price.Id;
+    }
+
+    public string? GetSuccessPaymentSessionOrderId(string eventJson, string signature)
+    {
+        var stripeEvent = EventUtility.ConstructEvent(eventJson, signature, _stripeSettings.Secret);
+        
+        if(stripeEvent.Type is not EventTypes.CheckoutSessionCompleted)
+        {
+            return null;
+        }
+
+        var session = stripeEvent.Data.Object as Session;
+
+        return session?.Metadata["order_id"];
     }
 }

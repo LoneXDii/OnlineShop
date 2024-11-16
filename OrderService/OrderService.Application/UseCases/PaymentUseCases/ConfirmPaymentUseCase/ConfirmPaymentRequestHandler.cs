@@ -1,0 +1,32 @@
+﻿using MediatR;
+using OrderService.Application.Exceptions;
+using OrderService.Domain.Abstractions.Data;
+using OrderService.Domain.Abstractions.Payments;
+using OrderService.Domain.Common.Statuses;
+
+namespace OrderService.Application.UseCases.PaymentUseCases.ConfirmPaymentUseCase;
+
+internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IDbService dbService)
+    : IRequestHandler<ConfirmPaymentRequest>
+{
+    public async Task Handle(ConfirmPaymentRequest request, CancellationToken cancellationToken)
+    {
+        var orderId = paymentService.GetSuccessPaymentSessionOrderId(request.json, request.signature);
+
+        if(orderId is null)
+        {
+            return;
+        }
+
+        var order = await dbService.GetOrderByIdAsync(orderId);
+
+        if(order is null)
+        {
+            throw new NotFoundException("No such order");
+        }
+
+        order.PaymentStatus = PaymentStatuses.Paid;
+
+        await dbService.UpdateOrderAsync(order);
+    }
+}

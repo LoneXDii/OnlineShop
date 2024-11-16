@@ -44,6 +44,7 @@ public class ExceptionMiddleware
                 PaginationException => StatusCodes.Status404NotFound,
                 NotFoundException => StatusCodes.Status404NotFound,
                 AccessDeniedException => StatusCodes.Status403Forbidden,
+                BadRequestException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             },
             Detail = ex.Message,
