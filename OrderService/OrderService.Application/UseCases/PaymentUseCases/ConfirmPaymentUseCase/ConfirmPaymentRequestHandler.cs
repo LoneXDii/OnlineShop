@@ -11,7 +11,7 @@ internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IDbS
 {
     public async Task Handle(ConfirmPaymentRequest request, CancellationToken cancellationToken)
     {
-        var orderId = paymentService.GetSuccessPaymentSessionOrderId(request.json, request.signature);
+        var orderId = paymentService.GetSuccessPaymentOrderId(request.json, request.signature);
 
         if(orderId is null)
         {

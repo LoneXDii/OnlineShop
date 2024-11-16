@@ -19,12 +19,12 @@ internal class CompleteOrderRequestHandler(IDbService dbService)
 
         if (order.OrderStatus != OrderStatuses.Confirmed)
         {
-            throw new OrderException("Can complete only confirmed orders");
+            throw new BadRequestException("Can complete only confirmed orders");
         }
 
         if (order.PaymentStatus == PaymentStatuses.NotPaid)
         {
-            throw new OrderException("Can't complete unpaid order'");
+            throw new BadRequestException("Can't complete unpaid order'");
         }
 
         order.OrderStatus = OrderStatuses.Completed;

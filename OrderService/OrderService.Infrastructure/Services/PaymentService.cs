@@ -94,7 +94,7 @@ internal class PaymentService : IPaymentService
         return price.Id;
     }
 
-    public string? GetSuccessPaymentSessionOrderId(string eventJson, string signature)
+    public string? GetSuccessPaymentOrderId(string eventJson, string signature)
     {
         var stripeEvent = EventUtility.ConstructEvent(eventJson, signature, _stripeSettings.Secret);
         

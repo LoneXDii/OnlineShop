@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.UseCases.PaymentUseCases.ConfirmPaymentUseCase;
-using Stripe;
 
 namespace OrderService.API.Controllers;
 

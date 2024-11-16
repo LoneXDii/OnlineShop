@@ -37,10 +37,7 @@ public class ExceptionMiddleware
             Title = "An error occurred while processing your request.",
             Status = ex switch
             {
-                CartException => StatusCodes.Status400BadRequest,
                 ValidationException => StatusCodes.Status400BadRequest,
-                OrderException => StatusCodes.Status400BadRequest,
-                NotInCartException => StatusCodes.Status404NotFound,
                 PaginationException => StatusCodes.Status404NotFound,
                 NotFoundException => StatusCodes.Status404NotFound,
                 AccessDeniedException => StatusCodes.Status403Forbidden,

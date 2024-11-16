@@ -27,7 +27,7 @@ internal class CancelOrderRequestHandler(IDbService dbService, IProductService p
 
         if(order.OrderStatus == OrderStatuses.Completed)
         {
-            throw new OrderException("Cannot cancel completed order");
+            throw new BadRequestException("Cannot cancel completed order");
         }
 
         order.OrderStatus = OrderStatuses.Cancelled;

@@ -15,14 +15,14 @@ internal class CreateOrderRequestHandler(Cart cart, IProductService productServi
 
         if (!products.Any()) 
         {
-            throw new NotInCartException("Your cart is empty");
+            throw new BadRequestException("Your cart is empty");
         }
 
         var orderProducts = await productService.TakeProductsIfSufficientQuantityAsync(products);
 
         if(orderProducts is null)
         {
-            throw new OrderException("Not enought products in stock");
+            throw new BadRequestException("Not enought products in stock");
         }
 
         var order = new OrderEntity { 

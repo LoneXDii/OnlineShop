@@ -14,7 +14,7 @@ internal class AddProductToCartRequestHandler(Cart cart, IProductService product
 
         if (product is null)
         {
-            throw new CartException("Cannot add to cart, this product not exist or its quantity to low");
+            throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }
 
         cart.AddToCart(product);

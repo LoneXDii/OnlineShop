@@ -19,7 +19,7 @@ internal class ConfirmOrderRequestHandler(IDbService dbService)
 
         if (order.OrderStatus != OrderStatuses.Created)
         {
-            throw new OrderException("Order confirmation error, invalid order status");
+            throw new BadRequestException("Order confirmation error, invalid order status");
         }
 
         order.OrderStatus = OrderStatuses.Confirmed;
