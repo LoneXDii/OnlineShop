@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using UserService.BLL.Exceptions;
 
 namespace UserService.API.Middleware;

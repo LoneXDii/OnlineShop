@@ -1,6 +1,4 @@
-﻿using UserService.DAL.Entities;
-
-namespace UserService.DAL.Services.EmailNotifications;
+﻿namespace UserService.DAL.Services.EmailNotifications;
 
 public interface IEmailService
 {

@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Text.Json;
-using System.Web;
 using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.BlobStorage;

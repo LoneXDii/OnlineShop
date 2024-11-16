@@ -1,6 +1,5 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Web;
 
 namespace UserService.DAL.Services.EmailNotifications;
 

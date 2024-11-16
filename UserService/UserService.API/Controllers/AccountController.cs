@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Web;
 using UserService.BLL.DTO;
 using UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 using UserService.BLL.UseCases.AuthUseCases.LoginUserUseCase;
