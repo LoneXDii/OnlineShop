@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.EmailNotifications;
+using System.Text.Json;
 
 namespace UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 
@@ -22,7 +23,9 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
 
         if (!result.Succeeded)
         {
-            throw new BadRequestException($"{result.Errors}");
+            var errors = JsonSerializer.Serialize(result.Errors);
+
+            throw new BadRequestException($"Email is not confirmed: {errors}");
         }
 
         await emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email);

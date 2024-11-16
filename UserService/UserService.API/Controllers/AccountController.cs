@@ -41,11 +41,9 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet]
-    [Route("confirm/email={email}&code={code}")]
+    [Route("confirm")]
     public async Task<IActionResult> ConfirmEmail(string email, string code)
     {
-        code = HttpUtility.UrlDecode(code).Replace(" ", "+");
-
         await _mediator.Send(new EmailConfirmationRequest(email, code));
 
         return Ok("Email confirmed");

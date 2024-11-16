@@ -17,12 +17,8 @@ internal class EmailService : IEmailService
 
     public async Task SendEmailConfirmationCodeAsync(string email, string code)
     {
-        code = HttpUtility.UrlEncode(code);
-        var encodedEmail = HttpUtility.UrlEncode(email);
-        var confirmationLink = $"https://localhost:7001/api/account/confirm/email={encodedEmail}&code={code}";
-
         var subject = "Email verification";
-        var plainTextContent = $"Please enter this link to confirm your email: {confirmationLink}";
+        var plainTextContent = $"Your email confirmation code is: {code}";
         var htmlContent = $"<span>{plainTextContent}</span>";
         var to = new EmailAddress(email);
 
