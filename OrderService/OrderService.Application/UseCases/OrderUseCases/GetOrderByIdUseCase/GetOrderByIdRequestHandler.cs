@@ -7,11 +7,11 @@ using OrderService.Domain.Abstractions.Data;
 namespace OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
 
 internal class GetOrderByIdRequestHandler(IDbService dbService, IMapper mapper)
-	: IRequestHandler<GetOrderByIdRequest, GetOrderDTO>
+    : IRequestHandler<GetOrderByIdRequest, GetOrderDTO>
 {
-	public async Task<GetOrderDTO> Handle(GetOrderByIdRequest request, CancellationToken cancellationToken)
-	{
-		var order = await dbService.GetOrderByIdAsync(request.orderId);
+    public async Task<GetOrderDTO> Handle(GetOrderByIdRequest request, CancellationToken cancellationToken)
+    {
+        var order = await dbService.GetOrderByIdAsync(request.orderId);
 
         if (order is null)
         {
@@ -27,6 +27,7 @@ internal class GetOrderByIdRequestHandler(IDbService dbService, IMapper mapper)
         }
 
         var returnOrder = mapper.Map<GetOrderDTO>(order);
+
         return returnOrder;
     }
 }

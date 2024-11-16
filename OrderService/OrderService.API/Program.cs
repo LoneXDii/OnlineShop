@@ -15,30 +15,30 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication()
-	.AddInfrastructure(builder.Configuration)
-	.AddHttpContextAccessor();
+    .AddInfrastructure(builder.Configuration)
+    .AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
-	{
-		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-		options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-	})
-	.AddJwtBearer(opt =>
-		opt.TokenValidationParameters = new TokenValidationParameters
-		{
-			ValidateIssuer = true,
-			ValidateAudience = true,
-			ValidateLifetime = true,
-			ValidateIssuerSigningKey = true,
-			ValidIssuer = builder.Configuration["JWT:Issuer"],
-			ValidAudience = builder.Configuration["JWT:Audience"],
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-		});
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(opt =>
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        });
 
 builder.Services.AddAuthorization(opt =>
 {
-	opt.AddPolicy("admin", p => p.RequireRole("admin"));
+    opt.AddPolicy("admin", p => p.RequireRole("admin"));
 });
 
 var app = builder.Build();
@@ -48,8 +48,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

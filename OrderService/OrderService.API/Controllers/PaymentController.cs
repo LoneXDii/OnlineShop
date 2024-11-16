@@ -9,25 +9,25 @@ namespace OrderService.API.Controllers;
 [ApiController]
 public class PaymentController : ControllerBase
 {
-	private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
 
-	public PaymentController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+    public PaymentController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-	[HttpGet]
-	[Route("pay")]
-	//[Authorize]
-	public async Task<ActionResult<string>> Pay(string orderId)
-	{
-		//var userId = HttpContext.User.FindFirst("Id")?.Value;
-		//var stribeId = HttpContext.User.FindFirst("StribeId")?.Value;
-		var userId = "2";
-		var stribeId = "cus_RDays6zmorNVMp";
+    [HttpGet]
+    [Route("pay")]
+    //[Authorize]
+    public async Task<ActionResult<string>> Pay(string orderId)
+    {
+        //var userId = HttpContext.User.FindFirst("Id")?.Value;
+        //var stribeId = HttpContext.User.FindFirst("StribeId")?.Value;
+        var userId = "2";
+        var stribeId = "cus_RDays6zmorNVMp";
 
-		var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stribeId));
+        var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stribeId));
 
-		return Ok(stribeUrl);
-	}
+        return Ok(stribeUrl);
+    }
 }

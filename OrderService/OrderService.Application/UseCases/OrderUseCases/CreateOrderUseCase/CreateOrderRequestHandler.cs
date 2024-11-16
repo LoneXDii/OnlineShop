@@ -7,32 +7,33 @@ using OrderService.Domain.Entities;
 namespace OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 
 internal class CreateOrderRequestHandler(Cart cart, IProductService productService, IDbService dbService)
-	: IRequestHandler<CreateOrderRequest>
+    : IRequestHandler<CreateOrderRequest>
 {
-	public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
-	{
-		var products = cart.Items.Values.ToList();
+    public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
+    {
+        var products = cart.Items.Values.ToList();
 
-		if (!products.Any()) 
-		{
-			throw new NotInCartException("Your cart is empty");
-		}
+        if (!products.Any()) 
+        {
+            throw new NotInCartException("Your cart is empty");
+        }
 
-		var orderProducts = await productService.TakeProductsIfSufficientQuantityAsync(products);
-		if(orderProducts is null)
-		{
-			throw new OrderException("Not enought products in stock");
-		}
+        var orderProducts = await productService.TakeProductsIfSufficientQuantityAsync(products);
 
-		var order = new OrderEntity { 
-			CreatedDate = DateTime.Now,
-			Products = orderProducts.ToList(),
-			TotalPrice = cart.TotalCost,
-			UserId = request.userId
-		};
+        if(orderProducts is null)
+        {
+            throw new OrderException("Not enought products in stock");
+        }
 
-		await dbService.CreateOrderAsync(order);
+        var order = new OrderEntity { 
+            CreatedDate = DateTime.Now,
+            Products = orderProducts.ToList(),
+            TotalPrice = cart.TotalCost,
+            UserId = request.userId
+        };
 
-		cart.ClearAll();
-	}
+        await dbService.CreateOrderAsync(order);
+
+        cart.ClearAll();
+    }
 }

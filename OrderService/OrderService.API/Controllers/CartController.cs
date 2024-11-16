@@ -14,57 +14,63 @@ namespace OrderService.API.Controllers;
 [ApiController]
 public class CartController : ControllerBase
 {
-	private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
 
-	public CartController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+    public CartController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-	[HttpGet]
-	public async Task<ActionResult<CartDTO>> GetCart()
-	{
-		var cart = await _mediator.Send(new GetCartRequest()); 
-		return Ok(cart);
-	}
+    [HttpGet]
+    public async Task<ActionResult<CartDTO>> GetCart()
+    {
+        var cart = await _mediator.Send(new GetCartRequest()); 
 
-	[HttpPost]
-	[Route("add")]
-	public async Task<IActionResult> AddToCart(CartProductDTO product)
-	{
-		await _mediator.Send(new AddProductToCartRequest(product));
-		return Ok();
-	}
+        return Ok(cart);
+    }
 
-	[HttpPost]
-	[Route("set")]
-	public async Task<IActionResult> SetQuantity(CartProductDTO product)
-	{
-		await _mediator.Send(new SetItemQuantityInCartRequest(product));
-		return Ok();
-	}
+    [HttpPost]
+    [Route("add")]
+    public async Task<IActionResult> AddToCart(CartProductDTO product)
+    {
+        await _mediator.Send(new AddProductToCartRequest(product));
 
-	[HttpPost]
-	[Route("reduce")]
-	public async Task<IActionResult> ReduceQuantity(CartProductDTO product)
-	{
-		await _mediator.Send(new ReduceItemsInCartRequest(product));
-		return Ok();
-	}
+        return Ok();
+    }
 
-	[HttpDelete]
-	[Route("remove")]
-	public async Task<IActionResult> RemoveItemFromCart(int id)
-	{
-		await _mediator.Send(new RemoveItemFromCartRequest(id));
-		return Ok();
-	}
+    [HttpPost]
+    [Route("set")]
+    public async Task<IActionResult> SetQuantity(CartProductDTO product)
+    {
+        await _mediator.Send(new SetItemQuantityInCartRequest(product));
 
-	[HttpDelete]
-	[Route("clear")]
-	public async Task<IActionResult> ClearCart()
-	{
-		await _mediator.Send(new ClearCartRequest());
-		return Ok();
-	}
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("reduce")]
+    public async Task<IActionResult> ReduceQuantity(CartProductDTO product)
+    {
+        await _mediator.Send(new ReduceItemsInCartRequest(product));
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    [Route("remove")]
+    public async Task<IActionResult> RemoveItemFromCart(int id)
+    {
+        await _mediator.Send(new RemoveItemFromCartRequest(id));
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    [Route("clear")]
+    public async Task<IActionResult> ClearCart()
+    {
+        await _mediator.Send(new ClearCartRequest());
+
+        return Ok();
+    }
 }

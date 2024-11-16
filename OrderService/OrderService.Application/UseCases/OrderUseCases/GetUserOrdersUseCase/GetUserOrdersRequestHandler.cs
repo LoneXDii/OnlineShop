@@ -9,25 +9,25 @@ using OrderService.Domain.Common.Models;
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 
 internal class GetUserOrdersRequestHandler(IDbService dbService, IMapper mapper, IConfiguration configuration)
-	: IRequestHandler<GetUserOrdersRequest, PaginatedListModel<GetOrderDTO>>
+    : IRequestHandler<GetUserOrdersRequest, PaginatedListModel<GetOrderDTO>>
 {
-	public async Task<PaginatedListModel<GetOrderDTO>> Handle(GetUserOrdersRequest request, CancellationToken cancellationToken)
-	{
-		var maxPageSize = Convert.ToInt32(configuration["Pagination:MaxPageSize"]);
-		
-		var pageSize = request.pageSize > maxPageSize 
-			? maxPageSize 
-			: request.pageSize;
+    public async Task<PaginatedListModel<GetOrderDTO>> Handle(GetUserOrdersRequest request, CancellationToken cancellationToken)
+    {
+        var maxPageSize = Convert.ToInt32(configuration["Pagination:MaxPageSize"]);
+        
+        var pageSize = request.pageSize > maxPageSize 
+            ? maxPageSize 
+            : request.pageSize;
 
-		var data = await dbService.ListOrdersWithPaginationAsync(request.pageNo, pageSize, order => order.UserId == request.userId);
+        var data = await dbService.ListOrdersWithPaginationAsync(request.pageNo, pageSize, order => order.UserId == request.userId);
 
-		if(data.CurrentPage > data.TotalPages)
-		{
-			throw new PaginationException("No such page");
-		}
+        if(data.CurrentPage > data.TotalPages)
+        {
+            throw new PaginationException("No such page");
+        }
 
-		var retData = mapper.Map<PaginatedListModel<GetOrderDTO>>(data);
+        var retData = mapper.Map<PaginatedListModel<GetOrderDTO>>(data);
 
-		return retData;
-	}
+        return retData;
+    }
 }

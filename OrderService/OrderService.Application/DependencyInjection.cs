@@ -10,28 +10,28 @@ namespace OrderService.Application;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddApplication(this IServiceCollection services)
-	{
-		services.AddAutoMapper(typeof(AppMappingProfile))
-				.AddMediatR(cfg =>
-					cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
-				.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
-				.AddFluentValidationAutoValidation(cfg =>
-				{
-					cfg.EnableFormBindingSourceAutomaticValidation = true;
-					cfg.EnableBodyBindingSourceAutomaticValidation = true;
-				});
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(AppMappingProfile))
+                .AddMediatR(cfg =>
+                    cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
+                .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+                .AddFluentValidationAutoValidation(cfg =>
+                {
+                    cfg.EnableFormBindingSourceAutomaticValidation = true;
+                    cfg.EnableBodyBindingSourceAutomaticValidation = true;
+                });
 
-		services.AddDistributedMemoryCache()
-			.AddSession(options =>
-			{
-				options.IdleTimeout = TimeSpan.FromMinutes(30);
-				options.Cookie.HttpOnly = true;
-				options.Cookie.IsEssential = true;
-			});
+        services.AddDistributedMemoryCache()
+            .AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
-		services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+        services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
 
-		return services;
-	}
+        return services;
+    }
 }

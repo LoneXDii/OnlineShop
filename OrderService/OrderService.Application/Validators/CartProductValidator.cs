@@ -5,10 +5,10 @@ namespace OrderService.Application.Validators;
 
 public class CartProductValidator : AbstractValidator<CartProductDTO>
 {
-	public CartProductValidator()
-	{
-		RuleFor(product => product.Quantity)
-			.GreaterThan(0)
-			.WithMessage("Incorrect quantity");
-	}
+    public CartProductValidator()
+    {
+        RuleFor(product => product.Quantity)
+            .GreaterThan(0)
+            .WithMessage("Incorrect quantity");
+    }
 }

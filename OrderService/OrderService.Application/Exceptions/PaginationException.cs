@@ -2,6 +2,6 @@
 
 public class PaginationException : Exception
 {
-	public PaginationException(string message) : base(message) { }
+    public PaginationException(string message) : base(message) { }
 }
 

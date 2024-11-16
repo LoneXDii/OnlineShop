@@ -10,19 +10,19 @@ namespace OrderService.Infrastructure;
 
 public static class DependencyInjection
 {
-	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.Configure<MongoDBSettings>(options => configuration.GetSection("MongoDB").Bind(options))
-			.Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MongoDBSettings>(options => configuration.GetSection("MongoDB").Bind(options))
+            .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
 
-		services.AddScoped<CustomerService>()
-			.AddScoped<Stripe.ProductService>()
-			.AddScoped<PriceService>();
+        services.AddScoped<CustomerService>()
+            .AddScoped<Stripe.ProductService>()
+            .AddScoped<PriceService>();
 
-		services.AddSingleton<IDbService, MongoDBService>()
-			.AddSingleton<IProductService, FakeProductService>()
-			.AddScoped<IPaymentService, PaymentService>();
+        services.AddSingleton<IDbService, MongoDBService>()
+            .AddSingleton<IProductService, FakeProductService>()
+            .AddScoped<IPaymentService, PaymentService>();
 
-		return services;
-	}
+        return services;
+    }
 }
