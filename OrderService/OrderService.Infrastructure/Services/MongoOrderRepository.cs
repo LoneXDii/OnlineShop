@@ -41,7 +41,7 @@ internal class MongoOrderRepository : IOrderRepository
             : Builders<OrderEntity>.Filter.Empty;
 
         var orders = await _ordersCollection.Find(combinedFilter)
-            .SortByDescending(order => order.CreatedDate)
+            .SortByDescending(order => order.CreatedAt)
             .Skip((pageNo - 1) * pageSize)
             .Limit(pageSize)
             .ToListAsync();

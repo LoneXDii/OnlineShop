@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.Exceptions;
-using System.Text.Json;
 
 namespace OrderService.API.Middleware;
 
@@ -38,7 +37,6 @@ public class ExceptionMiddleware
             Status = ex switch
             {
                 ValidationException => StatusCodes.Status400BadRequest,
-                PaginationException => StatusCodes.Status404NotFound,
                 NotFoundException => StatusCodes.Status404NotFound,
                 AccessDeniedException => StatusCodes.Status403Forbidden,
                 BadRequestException => StatusCodes.Status400BadRequest,

@@ -13,6 +13,6 @@ public class OrderEntity
     public PaymentStatuses PaymentStatus { get; set; } = PaymentStatuses.NotPaid;
     public string UserId { get; set; }
     public double TotalPrice { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
     public List<ProductEntity> Products { get; set; }
 }

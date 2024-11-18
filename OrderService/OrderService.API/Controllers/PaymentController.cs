@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.UseCases.PaymentUseCases.PayOrderUseCase;
 
@@ -18,13 +18,11 @@ public class PaymentController : ControllerBase
 
     [HttpGet]
     [Route("pay")]
-    //[Authorize]
+    [Authorize]
     public async Task<ActionResult<string>> Pay(string orderId)
     {
-        //var userId = HttpContext.User.FindFirst("Id")?.Value;
-        //var stribeId = HttpContext.User.FindFirst("StribeId")?.Value;
-        var userId = "2";
-        var stribeId = "cus_RDays6zmorNVMp";
+        var userId = HttpContext.User.FindFirst("Id")?.Value;
+        var stribeId = HttpContext.User.FindFirst("StribeId")?.Value;
 
         var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stribeId));
 

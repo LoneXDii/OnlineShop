@@ -9,9 +9,9 @@ using OrderService.Domain.Common.Models;
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 
 internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper mapper, IConfiguration configuration)
-    : IRequestHandler<GetUserOrdersRequest, PaginatedListModel<GetOrderDTO>>
+    : IRequestHandler<GetUserOrdersRequest, PaginatedListModel<OrderDTO>>
 {
-    public async Task<PaginatedListModel<GetOrderDTO>> Handle(GetUserOrdersRequest request, CancellationToken cancellationToken)
+    public async Task<PaginatedListModel<OrderDTO>> Handle(GetUserOrdersRequest request, CancellationToken cancellationToken)
     {
         var maxPageSize = Convert.ToInt32(configuration["Pagination:MaxPageSize"]);
         
@@ -23,10 +23,10 @@ internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper m
 
         if(data.CurrentPage > data.TotalPages)
         {
-            throw new PaginationException("No such page");
+            throw new NotFoundException("No such page");
         }
 
-        var retData = mapper.Map<PaginatedListModel<GetOrderDTO>>(data);
+        var retData = mapper.Map<PaginatedListModel<OrderDTO>>(data);
 
         return retData;
     }

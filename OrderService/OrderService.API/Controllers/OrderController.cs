@@ -26,11 +26,12 @@ public class OrderController : ControllerBase
 
     [HttpPost]
     [Route("create")]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> CreateOrder()
     {
-        //var userId = HttpContext.User.FindFirst("Id")?.Value;
-        await _mediator.Send(new CreateOrderRequest("2"));
+        var userId = HttpContext.User.FindFirst("Id")?.Value;
+
+        await _mediator.Send(new CreateOrderRequest(userId));
 
         return Ok();
     }
@@ -38,7 +39,7 @@ public class OrderController : ControllerBase
     [HttpGet]
     [Route("get")]
     [Authorize]
-    public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetOrders(int pageNo = 1, int pageSize = 10)
+    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(int pageNo = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
 
@@ -49,8 +50,8 @@ public class OrderController : ControllerBase
 
     [HttpGet]
     [Route("get/userId={userId}")]
-    //[Authorize(Policy = "admin")]
-    public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetOrders(string userId, int pageNo = 1, int pageSize = 10)
+    [Authorize(Policy = "admin")]
+    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(string userId, int pageNo = 1, int pageSize = 10)
     {
         var data = await _mediator.Send(new GetUserOrdersRequest(userId, pageNo, pageSize));
 
@@ -58,9 +59,9 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Route("getall")]
-    //[Authorize(Policy = "admin")]
-    public async Task<ActionResult<PaginatedListModel<GetOrderDTO>>> GetAllOrders(int pageNo = 1, int pageSize = 10)
+    [Route("get/all")]
+    [Authorize(Policy = "admin")]
+    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetAllOrders(int pageNo = 1, int pageSize = 10)
     {
         var data = await _mediator.Send(new GetAllOrdersRequest(pageNo, pageSize));
 
@@ -70,7 +71,7 @@ public class OrderController : ControllerBase
     [HttpGet]
     [Authorize]
     [Route("get/orderId={orderId}")]
-    public async Task<ActionResult<GetOrderDTO>> GetOrder(string orderId)
+    public async Task<ActionResult<OrderDTO>> GetOrder(string orderId)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
 
@@ -81,8 +82,8 @@ public class OrderController : ControllerBase
 
     [HttpGet]
     [Route("get/admin/orderId={orderId}")]
-    //[Authorize(Policy = "admin")]
-    public async Task<ActionResult<GetOrderDTO>> GetOrderAdmin(string orderId)
+    [Authorize(Policy = "admin")]
+    public async Task<ActionResult<OrderDTO>> GetOrderAdmin(string orderId)
     {
         var data = await _mediator.Send(new GetOrderByIdRequest(orderId));
 
@@ -103,7 +104,7 @@ public class OrderController : ControllerBase
 
     [HttpPut]
     [Route("cancel/admin")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> CancelOrderAdmin(string orderId)
     {
         await _mediator.Send(new CancelOrderRequest(orderId));
@@ -113,7 +114,7 @@ public class OrderController : ControllerBase
 
     [HttpPut]
     [Route("confirm")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> ConfirmOrder(string orderId)
     {
         await _mediator.Send(new ConfirmOrderRequest(orderId));
@@ -123,7 +124,7 @@ public class OrderController : ControllerBase
 
     [HttpPut]
     [Route("complete")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> CompleteOrder(string orderId)
     {
         await _mediator.Send(new CompleteOrderRequest(orderId));

@@ -2,7 +2,7 @@
 
 namespace OrderService.Application.DTO;
 
-public class GetOrderDTO
+public class OrderDTO
 {
     public string? Id { get; set; }
     public int OrderStatus { get; set; }
@@ -11,6 +11,6 @@ public class GetOrderDTO
     public string PaymentStatusDescription { get; set; } = null!;
     public string UserId { get; set; } = null!;
     public double TotalPrice { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedAt { get; set; }
     public List<ProductEntity> Products { get; set; } = null!;
 }

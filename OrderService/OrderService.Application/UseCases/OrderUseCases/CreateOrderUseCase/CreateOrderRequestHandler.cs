@@ -26,7 +26,7 @@ internal class CreateOrderRequestHandler(Cart cart, IProductService productServi
         }
 
         var order = new OrderEntity { 
-            CreatedDate = DateTime.Now,
+            CreatedAt = DateTime.Now,
             Products = orderProducts.ToList(),
             TotalPrice = cart.TotalCost,
             UserId = request.userId
