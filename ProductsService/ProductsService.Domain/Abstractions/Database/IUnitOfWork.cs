@@ -16,7 +16,6 @@ public interface IUnitOfWork
     ICommandRepository<Discount> DiscountCommandRepository { get; }
     IQueryRepository<Discount> DiscountQueryRepository { get; }
     public Task SaveAllAsync();
-    public Task DeleteDatabaseAsync();
-    public Task CreateDatabaseAsync();
+    public Task EnableMigrationsAsync();
 
 }
