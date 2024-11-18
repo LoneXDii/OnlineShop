@@ -33,6 +33,7 @@ public abstract class Cart
         if (Items.ContainsKey(id))
         {
             Items[id].Quantity -= quantity;
+
             if (Items[id].Quantity < 0)
             {
                 RemoveItems(id);

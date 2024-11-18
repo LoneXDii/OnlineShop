@@ -6,7 +6,7 @@ using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 
-internal class CreateOrderRequestHandler(Cart cart, IProductService productService, IDbService dbService)
+internal class CreateOrderRequestHandler(Cart cart, IProductService productService, IOrderRepository dbService)
     : IRequestHandler<CreateOrderRequest>
 {
     public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ internal class CreateOrderRequestHandler(Cart cart, IProductService productServi
             UserId = request.userId
         };
 
-        await dbService.CreateOrderAsync(order);
+        await dbService.CreateAsync(order);
 
         cart.ClearAll();
     }

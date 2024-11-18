@@ -6,12 +6,12 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.PaymentUseCases.PayOrderUseCase;
 
-internal class PayOrderRequestHandler(IDbService dbService, IPaymentService paymentService)
+internal class PayOrderRequestHandler(IOrderRepository dbService, IPaymentService paymentService)
     : IRequestHandler<PayOrderRequest, string>
 {
     public async Task<string> Handle(PayOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetOrderByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId);
 
         if(order is null)
         {

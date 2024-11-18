@@ -9,7 +9,7 @@ using OrderService.Domain.Common.Models;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
 
-internal class GetAllOrdersRequestHandler(IDbService dbService, IMapper mapper, IConfiguration configuration)
+internal class GetAllOrdersRequestHandler(IOrderRepository dbService, IMapper mapper, IConfiguration configuration)
     : IRequestHandler<GetAllOrdersRequest, PaginatedListModel<GetOrderDTO>>
 {
     public async Task<PaginatedListModel<GetOrderDTO>> Handle(GetAllOrdersRequest request, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ internal class GetAllOrdersRequestHandler(IDbService dbService, IMapper mapper, 
             ? maxPageSize
             : request.pageSize;
 
-        var data = await dbService.ListOrdersWithPaginationAsync(request.pageNo, pageSize);
+        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize);
 
         if (data.CurrentPage > data.TotalPages)
         {

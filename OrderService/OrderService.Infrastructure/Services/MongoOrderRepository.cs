@@ -9,30 +9,23 @@ using System.Linq.Expressions;
 
 namespace OrderService.Infrastructure.Services;
 
-internal class MongoDBService : IDbService
+internal class MongoOrderRepository : IOrderRepository
 {
     private readonly IMongoCollection<OrderEntity> _ordersCollection;
 
-    public MongoDBService(IOptions<MongoDBSettings> settings, IConfiguration configuration)
+    public MongoOrderRepository(IOptions<MongoDBSettings> settings)
     {
         var client = new MongoClient(settings.Value.ConnectionURI);
         var database = client.GetDatabase(settings.Value.DatabaseName);
         _ordersCollection = database.GetCollection<OrderEntity>(settings.Value.CollectionName);
     }
 
-    public async Task CreateOrderAsync(OrderEntity order)
+    public async Task CreateAsync(OrderEntity order)
     {
         await _ordersCollection.InsertOneAsync(order);
     }
 
-    public async Task<OrderEntity?> GetOrderByIdAsync(string id)
-    {
-        var order = await _ordersCollection.Find(order => order.Id == id).FirstOrDefaultAsync();
-
-        return order;
-    }
-
-    public async Task<PaginatedListModel<OrderEntity>> ListOrdersWithPaginationAsync(int pageNo = 1, int pageSize = 10, 
+    public async Task<PaginatedListModel<OrderEntity>> ListWithPaginationAsync(int pageNo = 1, int pageSize = 10, 
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
         var mongoFilters = new List<FilterDefinition<OrderEntity>>();
@@ -65,7 +58,14 @@ internal class MongoDBService : IDbService
         return data;
     }
 
-    public async Task UpdateOrderAsync(OrderEntity order)
+    public async Task<OrderEntity?> GetByIdAsync(string id)
+    {
+        var order = await _ordersCollection.Find(order => order.Id == id).FirstOrDefaultAsync();
+
+        return order;
+    }
+
+    public async Task UpdateAsync(OrderEntity order)
     {
         var filter = Builders<OrderEntity>.Filter.Where(o => o.Id == order.Id);
 

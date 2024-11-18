@@ -8,7 +8,7 @@ using OrderService.Domain.Common.Models;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 
-internal class GetUserOrdersRequestHandler(IDbService dbService, IMapper mapper, IConfiguration configuration)
+internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper mapper, IConfiguration configuration)
     : IRequestHandler<GetUserOrdersRequest, PaginatedListModel<GetOrderDTO>>
 {
     public async Task<PaginatedListModel<GetOrderDTO>> Handle(GetUserOrdersRequest request, CancellationToken cancellationToken)
@@ -19,7 +19,7 @@ internal class GetUserOrdersRequestHandler(IDbService dbService, IMapper mapper,
             ? maxPageSize 
             : request.pageSize;
 
-        var data = await dbService.ListOrdersWithPaginationAsync(request.pageNo, pageSize, order => order.UserId == request.userId);
+        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, order => order.UserId == request.userId);
 
         if(data.CurrentPage > data.TotalPages)
         {

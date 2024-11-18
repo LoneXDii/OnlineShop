@@ -5,12 +5,12 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CancelOrderUseCase;
 
-internal class CancelOrderRequestHandler(IDbService dbService, IProductService productService)
+internal class CancelOrderRequestHandler(IOrderRepository dbService, IProductService productService)
     : IRequestHandler<CancelOrderRequest>
 {
     public async Task Handle(CancelOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetOrderByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId);
 
         if (order is null)
         {
@@ -32,7 +32,7 @@ internal class CancelOrderRequestHandler(IDbService dbService, IProductService p
 
         order.OrderStatus = OrderStatuses.Cancelled;
 
-        await dbService.UpdateOrderAsync(order);
+        await dbService.UpdateAsync(order);
 
         await productService.ReturnProductsAsync(order.Products);
     }

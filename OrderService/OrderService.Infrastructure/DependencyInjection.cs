@@ -19,7 +19,7 @@ public static class DependencyInjection
             .AddScoped<Stripe.ProductService>()
             .AddScoped<PriceService>();
 
-        services.AddSingleton<IDbService, MongoDBService>()
+        services.AddSingleton<IOrderRepository, MongoOrderRepository>()
             .AddSingleton<IProductService, FakeProductService>()
             .AddScoped<IPaymentService, PaymentService>();
 
