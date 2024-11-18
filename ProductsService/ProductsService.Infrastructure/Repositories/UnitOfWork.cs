@@ -56,8 +56,6 @@ internal class UnitOfWork : IUnitOfWork
     public async Task EnableMigrationsAsync()
     {
         await _commandDbContext.Database.MigrateAsync();
-
-        await _queryDbContext.Database.MigrateAsync();
     }
 
     public async Task SaveAllAsync()

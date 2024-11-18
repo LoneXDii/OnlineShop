@@ -50,7 +50,9 @@ MASTER_LOG_FILE='mysql-bin.000003',
 MASTER_LOG_POS=868,
 GET_MASTER_PUBLIC_KEY=1;
 ```
-
+```bash
+START SLAVE;
+```
 MASTER_LOG_FILE and MASTER_LOG_POS must be the same as you get after executing SHOW MASTER STATUS on master db
 
 Now your databases are configured for replication
