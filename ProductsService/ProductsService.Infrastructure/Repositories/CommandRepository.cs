@@ -18,7 +18,7 @@ internal class CommandRepository<T> : ICommandRepository<T> where T : class, IEn
 
     public async Task AddAsync(T entity)
     {
-        var newEntity = await _dbContext.Set<T>().AddAsync(entity);
+        await _dbContext.Set<T>().AddAsync(entity);
     }
 
     public Task DeleteAsync(T entity)

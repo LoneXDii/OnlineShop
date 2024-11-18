@@ -78,9 +78,9 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         int count = await query.CountAsync();
 
         var entities = await query.OrderBy(e => e.Id)
-                                  .Skip((pageNo - 1) * pageSize)
-                                  .Take(pageSize)
-                                  .ToListAsync();
+            .Skip((pageNo - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
         var data = new PaginatedListModel<T>
         {
