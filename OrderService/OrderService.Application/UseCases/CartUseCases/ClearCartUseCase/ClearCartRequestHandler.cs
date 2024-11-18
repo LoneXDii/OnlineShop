@@ -5,8 +5,10 @@ namespace OrderService.Application.UseCases.CartUseCases.ClearCartUseCase;
 
 internal class ClearCartRequestHandler(Cart cart) : IRequestHandler<ClearCartRequest>
 {
-    public async Task Handle(ClearCartRequest request, CancellationToken cancellationToken)
+    public Task Handle(ClearCartRequest request, CancellationToken cancellationToken)
     {
         cart.ClearAll();
+
+        return Task.CompletedTask;
     }
 }

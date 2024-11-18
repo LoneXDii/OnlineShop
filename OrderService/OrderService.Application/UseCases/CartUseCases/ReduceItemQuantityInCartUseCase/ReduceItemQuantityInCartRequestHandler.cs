@@ -6,8 +6,10 @@ namespace OrderService.Application.UseCases.CartUseCases.ReduceItemQuantityInCar
 internal class ReduceItemQuantityInCartRequestHandler(Cart cart)
     : IRequestHandler<ReduceItemsInCartRequest>
 {
-    public async Task Handle(ReduceItemsInCartRequest request, CancellationToken cancellationToken)
+    public Task Handle(ReduceItemsInCartRequest request, CancellationToken cancellationToken)
     {
         cart.ReduceInCart(request.product.Id, request.product.Quantity);
+
+        return Task.CompletedTask;
     }
 }

@@ -5,8 +5,10 @@ namespace OrderService.Application.UseCases.CartUseCases.RemoveItemFromCartUseCa
 
 internal class RemoveItemFromCartRequestHandler(Cart cart) : IRequestHandler<RemoveItemFromCartRequest>
 {
-    public async Task Handle(RemoveItemFromCartRequest request, CancellationToken cancellationToken)
+    public Task Handle(RemoveItemFromCartRequest request, CancellationToken cancellationToken)
     {
         cart.RemoveItems(request.itemId);
+
+        return Task.CompletedTask;
     }
 }

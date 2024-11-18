@@ -8,10 +8,10 @@ namespace OrderService.Application.UseCases.CartUseCases.GetCartUseCase;
 internal class GetCartRequestHandler(Cart cart, IMapper mapper)
     : IRequestHandler<GetCartRequest, CartDTO>
 {
-    public async Task<CartDTO> Handle(GetCartRequest request, CancellationToken cancellationToken)
+    public Task<CartDTO> Handle(GetCartRequest request, CancellationToken cancellationToken)
     {
         var cartDto = mapper.Map<CartDTO>(cart);
 
-        return cartDto;
+        return Task.FromResult(cartDto);
     }
 }
