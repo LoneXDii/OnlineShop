@@ -14,9 +14,11 @@
     <Folder Include="DTO\" />
     <Folder Include="Mapping\" />
     <Folder Include="UseCases\ProductUseCases\Commands\" />
-    <Folder Include="UseCases\ProductUseCases\Queries\" />
     <Folder Include="Validators\" />
-    <Folder Include="Specifications\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
   </ItemGroup>
 
 </Project>
