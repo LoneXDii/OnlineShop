@@ -9,4 +9,5 @@ public class Category : IEntity
     public string NormalizedName { get; set; }
     public string? ImageUrl { get; set; }
     public IEnumerable<Attribute>? Attributes { get; set; }
+    public IEnumerable<Product>? Products { get; set; }
 }

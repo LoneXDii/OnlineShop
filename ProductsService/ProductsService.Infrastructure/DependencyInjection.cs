@@ -8,7 +8,6 @@ using ProductsService.Infrastructure.Data;
 using ProductsService.Infrastructure.Repositories;
 using ProductsService.Infrastructure.Services;
 
-
 namespace ProductsService.Infrastructure;
 
 public static class DependencyInjection

@@ -11,5 +11,7 @@ public class Product : IEntity
     public string? ImageUrl { get; set; }
     public int? CategoryId { get; set; }
     public Category? Category { get; set; }
-    public IEnumerable<ProductAttribute>? Attributes { get; set; }
+    public IEnumerable<Discount>? Discounts { get; set; }
+    public IEnumerable<Attribute>? Attributes { get; set; }
+    public IEnumerable<ProductAttribute>? ProductAttributes { get; set; }
 }

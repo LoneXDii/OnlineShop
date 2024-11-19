@@ -9,4 +9,5 @@ public class Attribute : IEntity
     public string NormalizedName { get; set; }
     public int? CategoryId { get; set; }
     public Category? Category { get; set; }
+    public IEnumerable<Product>? Products { get; set; }
 }
