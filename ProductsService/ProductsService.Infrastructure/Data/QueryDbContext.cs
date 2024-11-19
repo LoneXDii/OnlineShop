@@ -12,6 +12,5 @@ internal class QueryDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<ProductAttribute> ProductAttributes { get; set; }
     public DbSet<Discount> Discounts { get; set; }
 }

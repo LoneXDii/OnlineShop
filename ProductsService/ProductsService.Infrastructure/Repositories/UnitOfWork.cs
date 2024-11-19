@@ -15,7 +15,6 @@ internal class UnitOfWork : IUnitOfWork
         ICommandRepository<Product> productCommandRepository, IQueryRepository<Product> productQueryRepository,
         ICommandRepository<Category> categoryCommandRepository, IQueryRepository<Category> categoryQueryRepository,
         ICommandRepository<Attribute> attributeCommandRepository, IQueryRepository<Attribute> attributeQueryRepository,
-        ICommandRepository<ProductAttribute> productAttributeCommandRepository, IQueryRepository<ProductAttribute> productAttributeQueryRepository,
         ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository)
     {
         _commandDbContext = commandDbContext;
@@ -27,8 +26,6 @@ internal class UnitOfWork : IUnitOfWork
         CategoryQueryRepository = categoryQueryRepository;
         AttributeCommandRepository = attributeCommandRepository;
         AttributeQueryRepository = attributeQueryRepository;
-        ProductAttributeCommandRepository = productAttributeCommandRepository;
-        ProductAttributeQueryRepository = productAttributeQueryRepository;
         DiscountCommandRepository = discountCommandRepository;
         DiscountQueryRepository = discountQueryRepository;
     }
@@ -44,10 +41,6 @@ internal class UnitOfWork : IUnitOfWork
     public ICommandRepository<Attribute> AttributeCommandRepository { get; private set; }
 
     public IQueryRepository<Attribute> AttributeQueryRepository { get; private set; }
-
-    public ICommandRepository<ProductAttribute> ProductAttributeCommandRepository { get; private set; }
-
-    public IQueryRepository<ProductAttribute> ProductAttributeQueryRepository { get; private set; }
 
     public ICommandRepository<Discount> DiscountCommandRepository { get; private set; }
 

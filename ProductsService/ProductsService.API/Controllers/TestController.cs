@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.Test;
 using ProductsService.Domain.Entities;
 
@@ -17,7 +18,7 @@ public class TestController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<Product>>> Test()
+	public async Task<ActionResult<IEnumerable<ProductDTO>>> Test()
 	{
 		var products = await _mediator.Send(new TestRequest());
 

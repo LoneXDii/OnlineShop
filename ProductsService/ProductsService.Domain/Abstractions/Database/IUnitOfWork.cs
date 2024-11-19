@@ -11,8 +11,6 @@ public interface IUnitOfWork
     IQueryRepository<Category> CategoryQueryRepository { get; }
     ICommandRepository<Attribute> AttributeCommandRepository { get; }
     IQueryRepository<Attribute> AttributeQueryRepository { get; }
-    ICommandRepository<ProductAttribute> ProductAttributeCommandRepository { get; }
-    IQueryRepository<ProductAttribute> ProductAttributeQueryRepository { get; }
     ICommandRepository<Discount> DiscountCommandRepository { get; }
     IQueryRepository<Discount> DiscountQueryRepository { get; }
     public Task SaveAllAsync();

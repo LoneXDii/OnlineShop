@@ -8,6 +8,7 @@ public class Attribute : IEntity
     public string Name { get; set; }
     public string NormalizedName { get; set; }
     public int? CategoryId { get; set; }
-    public Category? Category { get; set; }
-    public IEnumerable<Product>? Products { get; set; }
+    public virtual Category? Category { get; set; }
+    public virtual IEnumerable<Product>? Products { get; set; }
+    public virtual IEnumerable<ProductAttribute> ProductAttributes { get; set; }
 }

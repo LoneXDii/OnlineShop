@@ -10,25 +10,25 @@ internal class CommandDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Attribute>()
-            .HasOne(attribute => attribute.Category)
-            .WithMany(category => category.Attributes)
-            .OnDelete(DeleteBehavior.SetNull);
+  //      modelBuilder.Entity<Attribute>()
+  //          .HasOne(attribute => attribute.Category)
+  //          .WithMany(category => category.Attributes)
+  //          .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Product>()
-            .HasOne(product => product.Category)
-            .WithMany(category => category.Products)
-            .OnDelete(DeleteBehavior.SetNull);
+  //      modelBuilder.Entity<Product>()
+  //          .HasOne(product => product.Category)
+  //          .WithMany(category => category.Products)
+  //          .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Product>()
-            .HasMany(product => product.Attributes)
-            .WithMany(attribute => attribute.Products)
-            .UsingEntity<ProductAttribute>();
+		//modelBuilder.Entity<Product>()
+  //          .HasMany(product => product.Attributes)
+  //          .WithMany(attribute => attribute.Products)
+		//	.UsingEntity<ProductAttribute>();
 
-        modelBuilder.Entity<Discount>()
-            .HasOne(discount => discount.Product)
-            .WithMany(product => product.Discounts)
-            .OnDelete(DeleteBehavior.SetNull);
+		//modelBuilder.Entity<Discount>()
+  //          .HasOne(discount => discount.Product)
+  //          .WithMany(product => product.Discounts)
+  //          .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Category>().HasData(
             new Category
@@ -132,108 +132,108 @@ internal class CommandDbContext : DbContext
             }
         );
 
-        modelBuilder.Entity<ProductAttribute>().HasData(
-            new ProductAttribute
-            {
-                Id = 1,
-                ProductId = 1,
-                AttributeId = 1,
-                Value = "Samsung"
-            },
-            new ProductAttribute
-            {
-                Id = 2,
-                ProductId = 1,
-                AttributeId = 3,
-                Value = "12GB"
-            },
-            new ProductAttribute
-            {
-                Id = 3,
-                ProductId = 1,
-                AttributeId = 5,
-                Value = "512Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 4,
-                ProductId = 2,
-                AttributeId = 1,
-                Value = "Apple"
-            },
-            new ProductAttribute
-            {
-                Id = 5,
-                ProductId = 2,
-                AttributeId = 3,
-                Value = "8GB"
-            },
-            new ProductAttribute
-            {
-                Id = 6,
-                ProductId = 2,
-                AttributeId = 5,
-                Value = "512Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 7,
-                ProductId = 3,
-                AttributeId = 2,
-                Value = "Apple"
-            },
-            new ProductAttribute
-            {
-                Id = 8,
-                ProductId = 3,
-                AttributeId = 4,
-                Value = "18GB"
-            },
-            new ProductAttribute
-            {
-                Id = 9,
-                ProductId = 3,
-                AttributeId = 6,
-                Value = "1024Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 10,
-                ProductId = 3,
-                AttributeId = 7,
-                Value = "M3 Pro"
-            },
-            new ProductAttribute
-            {
-                Id = 11,
-                ProductId = 4,
-                AttributeId = 2,
-                Value = "Apple"
-            },
-            new ProductAttribute
-            {
-                Id = 12,
-                ProductId = 4,
-                AttributeId = 4,
-                Value = "16GB"
-            },
-            new ProductAttribute
-            {
-                Id = 13,
-                ProductId = 4,
-                AttributeId = 6,
-                Value = "512Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 14,
-                ProductId = 4,
-                AttributeId = 7,
-                Value = "M3"
-            }
-        );
+		modelBuilder.Entity<ProductAttribute>().HasData(
+			new ProductAttribute
+			{
+				Id = 1,
+				ProductId = 1,
+				AttributeId = 1,
+				Value = "Samsung"
+			},
+			new ProductAttribute
+			{
+				Id = 2,
+				ProductId = 1,
+				AttributeId = 3,
+				Value = "12GB"
+			},
+			new ProductAttribute
+			{
+				Id = 3,
+				ProductId = 1,
+				AttributeId = 5,
+				Value = "512Gb"
+			},
+			new ProductAttribute
+			{
+				Id = 4,
+				ProductId = 2,
+				AttributeId = 1,
+				Value = "Apple"
+			},
+			new ProductAttribute
+			{
+				Id = 5,
+				ProductId = 2,
+				AttributeId = 3,
+				Value = "8GB"
+			},
+			new ProductAttribute
+			{
+				Id = 6,
+				ProductId = 2,
+				AttributeId = 5,
+				Value = "512Gb"
+			},
+			new ProductAttribute
+			{
+				Id = 7,
+				ProductId = 3,
+				AttributeId = 2,
+				Value = "Apple"
+			},
+			new ProductAttribute
+			{
+				Id = 8,
+				ProductId = 3,
+				AttributeId = 4,
+				Value = "18GB"
+			},
+			new ProductAttribute
+			{
+				Id = 9,
+				ProductId = 3,
+				AttributeId = 6,
+				Value = "1024Gb"
+			},
+			new ProductAttribute
+			{
+				Id = 10,
+				ProductId = 3,
+				AttributeId = 7,
+				Value = "M3 Pro"
+			},
+			new ProductAttribute
+			{
+				Id = 11,
+				ProductId = 4,
+				AttributeId = 2,
+				Value = "Apple"
+			},
+			new ProductAttribute
+			{
+				Id = 12,
+				ProductId = 4,
+				AttributeId = 4,
+				Value = "16GB"
+			},
+			new ProductAttribute
+			{
+				Id = 13,
+				ProductId = 4,
+				AttributeId = 6,
+				Value = "512Gb"
+			},
+			new ProductAttribute
+			{
+				Id = 14,
+				ProductId = 4,
+				AttributeId = 7,
+				Value = "M3"
+			}
+		);
 
-        modelBuilder.Entity<Discount>().HasData(
+		modelBuilder.Entity<Discount>().HasData(
             new Discount
             {
                 Id = 1,
@@ -246,6 +246,5 @@ internal class CommandDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Attribute> Attributes { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<ProductAttribute> ProductAttributes { get; set; }
     public DbSet<Discount> Discounts { get; set; }
 }

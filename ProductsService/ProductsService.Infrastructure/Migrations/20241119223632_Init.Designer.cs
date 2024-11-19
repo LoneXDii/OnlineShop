@@ -12,8 +12,8 @@ using ProductsService.Infrastructure.Data;
 namespace ProductsService.Infrastructure.Migrations
 {
     [DbContext(typeof(CommandDbContext))]
-    [Migration("20241119085523_CustomOnModelCreatingAndDbSeeding")]
-    partial class CustomOnModelCreatingAndDbSeeding
+    [Migration("20241119223632_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace ProductsService.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("AttributeProduct", b =>
+                {
+                    b.Property<int>("AttributesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AttributesId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("AttributeProduct");
+                });
 
             modelBuilder.Entity("ProductsService.Domain.Entities.Attribute", b =>
                 {
@@ -270,7 +285,7 @@ namespace ProductsService.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductAttributes");
+                    b.ToTable("ProductAttribute");
 
                     b.HasData(
                         new
@@ -373,12 +388,26 @@ namespace ProductsService.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AttributeProduct", b =>
+                {
+                    b.HasOne("ProductsService.Domain.Entities.Attribute", null)
+                        .WithMany()
+                        .HasForeignKey("AttributesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProductsService.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ProductsService.Domain.Entities.Attribute", b =>
                 {
                     b.HasOne("ProductsService.Domain.Entities.Category", "Category")
                         .WithMany("Attributes")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
@@ -387,8 +416,7 @@ namespace ProductsService.Infrastructure.Migrations
                 {
                     b.HasOne("ProductsService.Domain.Entities.Product", "Product")
                         .WithMany("Discounts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Product");
                 });
@@ -397,8 +425,7 @@ namespace ProductsService.Infrastructure.Migrations
                 {
                     b.HasOne("ProductsService.Domain.Entities.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
@@ -406,7 +433,7 @@ namespace ProductsService.Infrastructure.Migrations
             modelBuilder.Entity("ProductsService.Domain.Entities.ProductAttribute", b =>
                 {
                     b.HasOne("ProductsService.Domain.Entities.Attribute", "Attribute")
-                        .WithMany()
+                        .WithMany("ProductAttributes")
                         .HasForeignKey("AttributeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -420,6 +447,11 @@ namespace ProductsService.Infrastructure.Migrations
                     b.Navigation("Attribute");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ProductsService.Domain.Entities.Attribute", b =>
+                {
+                    b.Navigation("ProductAttributes");
                 });
 
             modelBuilder.Entity("ProductsService.Domain.Entities.Category", b =>

@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductsService.Domain.Abstractions.BlobStorage;
@@ -21,7 +22,8 @@ public static class DependencyInjection
                     ServiceLifetime.Scoped);
 
         services.AddDbContext<QueryDbContext>(opt =>
-                        opt.UseMySql(configuration["ConnectionStrings:MySQLQueryConnection"],
+                        opt.UseLazyLoadingProxies()
+                        .UseMySql(configuration["ConnectionStrings:MySQLQueryConnection"],
                         new MySqlServerVersion(new Version(8, 0, 36)),
                     opt => opt.EnableRetryOnFailure()),
                     ServiceLifetime.Scoped);

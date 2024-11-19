@@ -16,9 +16,6 @@ internal static class SpecificationQueryBuilder
             query = query.Where(specification.Criteria);
         }
 
-        specification.Includes.Aggregate(query,
-            (current, includes) => current.Include(includes));
-
         return query;
     }
 }
