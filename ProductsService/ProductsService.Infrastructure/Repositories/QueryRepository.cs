@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Common.Models;
 using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
+using ProductsService.Infrastructure.Specification;
 using System.Linq.Expressions;
 
 namespace ProductsService.Infrastructure.Repositories;
@@ -39,20 +41,10 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         return entities;
     }
 
-    public async Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> filter, 
-        params Expression<Func<T, object>>[] includedProperties)
+    public async Task<IEnumerable<T>> ListAsync(BaseSpecification<T> specification)
     {
         IQueryable<T>? query = _entities.AsQueryable();
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
-
-        if (filter is not null)
-        {
-            query = query.Where(filter);
-        }
+        query = SpecificationQueryBuilder.GetQuery(query, specification);
 
         var entities = await query.ToListAsync();
 
@@ -60,20 +52,10 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     }
 
     public async Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, 
-        Expression<Func<T, bool>>? filter = null, 
-        params Expression<Func<T, object>>[] includedProperties)
+        BaseSpecification<T> specification)
     {
         var query = _entities.AsQueryable();
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
-
-        if (filter is not null)
-        {
-            query = query.Where(filter);
-        }
+        query = SpecificationQueryBuilder.GetQuery(query, specification);
 
         int count = await query.CountAsync();
 

@@ -1,4 +1,5 @@
-﻿using ProductsService.Domain.Common.Models;
+﻿using ProductsService.Domain.Abstractions.Specifications;
+using ProductsService.Domain.Common.Models;
 using ProductsService.Domain.Entities.Abstractions;
 using System.Linq.Expressions;
 
@@ -8,10 +9,7 @@ public interface IQueryRepository<T> where T : IEntity
 {
     Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includedProperties);
     Task<IEnumerable<T>> ListAllAsync();
-    Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> filter,
-                                   params Expression<Func<T, object>>[] includedProperties);
-    Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize,
-                                                        Expression<Func<T, bool>>? filter = null,
-                                                        params Expression<Func<T, object>>[] includedProperties);
+    Task<IEnumerable<T>> ListAsync(BaseSpecification<T> specification);
+    Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, BaseSpecification<T> specification);
     Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter);
 }
