@@ -22,8 +22,7 @@ public static class DependencyInjection
                     ServiceLifetime.Scoped);
 
         services.AddDbContext<QueryDbContext>(opt =>
-                        opt.UseLazyLoadingProxies()
-                        .UseMySql(configuration["ConnectionStrings:MySQLQueryConnection"],
+                        opt.UseMySql(configuration["ConnectionStrings:MySQLQueryConnection"],
                         new MySqlServerVersion(new Version(8, 0, 36)),
                     opt => opt.EnableRetryOnFailure()),
                     ServiceLifetime.Scoped);

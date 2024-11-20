@@ -12,7 +12,7 @@ using ProductsService.Infrastructure.Data;
 namespace ProductsService.Infrastructure.Migrations
 {
     [DbContext(typeof(CommandDbContext))]
-    [Migration("20241119223632_Init")]
+    [Migration("20241120092730_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -24,21 +24,6 @@ namespace ProductsService.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("AttributeProduct", b =>
-                {
-                    b.Property<int>("AttributesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AttributesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("AttributeProduct");
-                });
 
             modelBuilder.Entity("ProductsService.Domain.Entities.Attribute", b =>
                 {
@@ -388,26 +373,12 @@ namespace ProductsService.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AttributeProduct", b =>
-                {
-                    b.HasOne("ProductsService.Domain.Entities.Attribute", null)
-                        .WithMany()
-                        .HasForeignKey("AttributesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProductsService.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ProductsService.Domain.Entities.Attribute", b =>
                 {
                     b.HasOne("ProductsService.Domain.Entities.Category", "Category")
                         .WithMany("Attributes")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
                 });
@@ -416,7 +387,8 @@ namespace ProductsService.Infrastructure.Migrations
                 {
                     b.HasOne("ProductsService.Domain.Entities.Product", "Product")
                         .WithMany("Discounts")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Product");
                 });
@@ -425,7 +397,8 @@ namespace ProductsService.Infrastructure.Migrations
                 {
                     b.HasOne("ProductsService.Domain.Entities.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
                 });

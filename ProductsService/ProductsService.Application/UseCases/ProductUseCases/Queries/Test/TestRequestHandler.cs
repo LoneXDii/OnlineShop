@@ -5,22 +5,28 @@ using ProductsService.Application.Specifications;
 using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
+using System.Diagnostics;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.Test;
 
 internal class TestRequestHandler(IUnitOfWork unitOfWork, IMapper mapper) 
-	: IRequestHandler<TestRequest, IEnumerable<ProductDTO>>
+    : IRequestHandler<TestRequest, IEnumerable<ProductDTO>>
 {
-	public async Task<IEnumerable<ProductDTO>> Handle(TestRequest request, CancellationToken cancellationToken) 
-	{
-		var specification = new CombinableSpecification<Product>();
-		specification = specification & new ProductCategorySpecification(2);
-		specification = specification | new ProductPriceLessThanSpecification(1100);
+    public async Task<IEnumerable<ProductDTO>> Handle(TestRequest request, CancellationToken cancellationToken) 
+    {
+        var specification = new CombinableSpecification<Product>();
+        //specification = specification & new ProductCategorySpecification(request.categoryId);
+        specification = specification & new ProductAttributeValueSpecification("Brand", "Apple");
+        specification = specification & new ProductAttributeValueSpecification("RAM", "16GB");
+        specification = specification & new ProductPriceLessThanSpecification(request.maxPrice);
 
-		var products = await unitOfWork.ProductQueryRepository.ListAsync(specification);
+        specification.AddInclude($"{nameof(Product.ProductAttributes)}.{nameof(ProductAttribute.Attribute)}");
+        specification.AddInclude(p => p.Category);
 
-		var ret = mapper.Map<List<ProductDTO>>(products);
+        var products = await unitOfWork.ProductQueryRepository.ListAsync(specification);
 
-		return ret;
-	}
+        var ret = mapper.Map<List<ProductDTO>>(products);
+
+        return ret;
+    }
 }

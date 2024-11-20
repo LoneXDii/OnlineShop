@@ -10,7 +10,7 @@ public class Product : IEntity
     public int Quantity { get; set; }
     public string? ImageUrl { get; set; }
     public int? CategoryId { get; set; }
-	public virtual Category? Category { get; set; }
+    public virtual Category? Category { get; set; }
     public virtual IEnumerable<Discount>? Discounts { get; set; }
     public virtual IEnumerable<Attribute>? Attributes { get; set; }
     public virtual IEnumerable<ProductAttribute>? ProductAttributes { get; set; }

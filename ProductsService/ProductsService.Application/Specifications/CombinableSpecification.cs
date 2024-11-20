@@ -31,16 +31,16 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
             return left;
         }
 
-		var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
+        var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
 
-		var and = Expression.AndAlso(
-			Expression.Invoke(leftExression, combinedParameters),
-			Expression.Invoke(rightExression, combinedParameters)
-		);
+        var and = Expression.AndAlso(
+            Expression.Invoke(leftExression, combinedParameters),
+            Expression.Invoke(rightExression, combinedParameters)
+        );
 
-		var andExpr = Expression.Lambda<Func<T, bool>>(and, combinedParameters);
+        var andExpr = Expression.Lambda<Func<T, bool>>(and, combinedParameters);
 
-		return new CombinableSpecification<T>(andExpr);
+        return new CombinableSpecification<T>(andExpr);
     }
 
     public static CombinableSpecification<T> operator |(CombinableSpecification<T> left, CombinableSpecification<T> right)
@@ -62,15 +62,15 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
             return left;
         }
 
-		var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
+        var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
 
-		var or = Expression.OrElse(
-			Expression.Invoke(leftExression, combinedParameters),
-			Expression.Invoke(rightExression, combinedParameters)
-		);
+        var or = Expression.OrElse(
+            Expression.Invoke(leftExression, combinedParameters),
+            Expression.Invoke(rightExression, combinedParameters)
+        );
 
-		var orExpr = Expression.Lambda<Func<T, bool>>(or, combinedParameters);
+        var orExpr = Expression.Lambda<Func<T, bool>>(or, combinedParameters);
 
-		return new CombinableSpecification<T>(orExpr);
+        return new CombinableSpecification<T>(orExpr);
     }
 }

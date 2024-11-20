@@ -55,7 +55,8 @@ namespace ProductsService.Infrastructure.Migrations
                         name: "FK_Attributes_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -80,32 +81,8 @@ namespace ProductsService.Infrastructure.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AttributeProduct",
-                columns: table => new
-                {
-                    AttributesId = table.Column<int>(type: "int", nullable: false),
-                    ProductsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AttributeProduct", x => new { x.AttributesId, x.ProductsId });
-                    table.ForeignKey(
-                        name: "FK_AttributeProduct_Attributes_AttributesId",
-                        column: x => x.AttributesId,
-                        principalTable: "Attributes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AttributeProduct_Products_ProductsId",
-                        column: x => x.ProductsId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -128,7 +105,8 @@ namespace ProductsService.Infrastructure.Migrations
                         name: "FK_Discounts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -222,11 +200,6 @@ namespace ProductsService.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttributeProduct_ProductsId",
-                table: "AttributeProduct",
-                column: "ProductsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Attributes_CategoryId",
                 table: "Attributes",
                 column: "CategoryId");
@@ -255,9 +228,6 @@ namespace ProductsService.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AttributeProduct");
-
             migrationBuilder.DropTable(
                 name: "Discounts");
 

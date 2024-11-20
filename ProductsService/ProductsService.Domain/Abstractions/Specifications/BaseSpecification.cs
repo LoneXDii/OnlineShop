@@ -13,4 +13,16 @@ public abstract class BaseSpecification<T> where T : IEntity
     }
 
     public Expression<Func<T, bool>>? Criteria { get; }
+    public List<Expression<Func<T, object>>> Includes { get; } = new();
+    public List<string> IncludeStrings { get; } = new();
+
+    public void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+
+    public void AddInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString);
+    }
 }

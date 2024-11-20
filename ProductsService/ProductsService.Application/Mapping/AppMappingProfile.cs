@@ -7,14 +7,14 @@ namespace ProductsService.Application.Mapping;
 
 internal class AppMappingProfile : Profile
 {
-	public AppMappingProfile()
-	{
-		CreateMap<Category, CategoryDTO>();
+    public AppMappingProfile()
+    {
+        CreateMap<Category, CategoryDTO>();
 
-		CreateMap<ProductAttribute, AttributeValueDTO>()
-			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Attribute.Name));
+        CreateMap<ProductAttribute, AttributeValueDTO>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Attribute.Name));
 
-		CreateMap<Product, ProductDTO>()
-			.ForMember(dest => dest.AttributeValues, opt => opt.MapFrom(src => src.ProductAttributes));
-	}
+        CreateMap<Product, ProductDTO>()
+            .ForMember(dest => dest.AttributeValues, opt => opt.MapFrom(src => src.ProductAttributes));
+    }
 }

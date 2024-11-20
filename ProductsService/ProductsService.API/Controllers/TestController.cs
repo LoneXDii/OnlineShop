@@ -10,18 +10,18 @@ namespace ProductsService.API.Controllers;
 [ApiController]
 public class TestController : ControllerBase
 {
-	private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
 
-	public TestController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+    public TestController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<ProductDTO>>> Test()
-	{
-		var products = await _mediator.Send(new TestRequest());
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ProductDTO>>> Test(int categoryId, double maxPrice)
+    {
+        var products = await _mediator.Send(new TestRequest(categoryId, maxPrice));
 
-		return Ok(products);
-	}
+        return Ok(products);
+    }
 }
