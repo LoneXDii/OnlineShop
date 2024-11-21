@@ -6,7 +6,7 @@ namespace ProductsService.Infrastructure.Specification;
 
 internal static class SpecificationQueryBuilder
 {
-    public static IQueryable<T> GetQuery<T>(IQueryable<T> inputQuery, BaseSpecification<T> specification)
+    public static IQueryable<T> GetQuery<T>(IQueryable<T> inputQuery, ISpecification<T> specification)
         where T : class, IEntity
     {
         var query = inputQuery;

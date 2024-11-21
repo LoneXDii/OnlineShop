@@ -6,6 +6,7 @@ using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.Test;
 
@@ -19,9 +20,6 @@ internal class TestRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         specification = specification & new ProductAttributeValueSpecification("Brand", "Apple");
         specification = specification & new ProductAttributeValueSpecification("RAM", "16GB");
         specification = specification & new ProductPriceLessThanSpecification(request.maxPrice);
-
-        specification.AddInclude($"{nameof(Product.ProductAttributes)}.{nameof(ProductAttribute.Attribute)}");
-        specification.AddInclude(p => p.Category);
 
         var products = await unitOfWork.ProductQueryRepository.ListAsync(specification);
 

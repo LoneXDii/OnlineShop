@@ -41,7 +41,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         return entities;
     }
 
-    public async Task<IEnumerable<T>> ListAsync(BaseSpecification<T> specification)
+    public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification)
     {
         IQueryable<T>? query = _entities.AsQueryable();
         query = SpecificationQueryBuilder.GetQuery(query, specification);
@@ -52,7 +52,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     }
 
     public async Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, 
-        BaseSpecification<T> specification)
+        ISpecification<T> specification)
     {
         var query = _entities.AsQueryable();
         query = SpecificationQueryBuilder.GetQuery(query, specification);

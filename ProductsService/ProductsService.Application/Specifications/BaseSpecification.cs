@@ -1,9 +1,10 @@
-﻿using ProductsService.Domain.Entities.Abstractions;
+﻿using ProductsService.Domain.Abstractions.Specifications;
+using ProductsService.Domain.Entities.Abstractions;
 using System.Linq.Expressions;
 
-namespace ProductsService.Domain.Abstractions.Specifications;
+namespace ProductsService.Application.Specifications;
 
-public abstract class BaseSpecification<T> where T : IEntity
+internal abstract class BaseSpecification<T> : ISpecification<T> where T : IEntity
 {
     public BaseSpecification() { }
 
@@ -16,12 +17,12 @@ public abstract class BaseSpecification<T> where T : IEntity
     public List<Expression<Func<T, object>>> Includes { get; } = new();
     public List<string> IncludeStrings { get; } = new();
 
-    public void AddInclude(Expression<Func<T, object>> includeExpression)
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
     {
         Includes.Add(includeExpression);
     }
 
-    public void AddInclude(string includeString)
+    protected void AddInclude(string includeString)
     {
         IncludeStrings.Add(includeString);
     }

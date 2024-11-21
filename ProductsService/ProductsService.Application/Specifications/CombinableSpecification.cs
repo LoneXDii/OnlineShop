@@ -1,5 +1,4 @@
-﻿using ProductsService.Domain.Abstractions.Specifications;
-using ProductsService.Domain.Entities.Abstractions;
+﻿using ProductsService.Domain.Entities.Abstractions;
 using System.Linq.Expressions;
 
 namespace ProductsService.Application.Specifications;
@@ -39,8 +38,13 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
         );
 
         var andExpr = Expression.Lambda<Func<T, bool>>(and, combinedParameters);
-
-        return new CombinableSpecification<T>(andExpr);
+        var specification = new CombinableSpecification<T>(andExpr);
+        specification.Includes.AddRange(left.Includes);
+        specification.Includes.AddRange(right.Includes);
+		specification.IncludeStrings.AddRange(left.IncludeStrings);
+		specification.IncludeStrings.AddRange(right.IncludeStrings);
+        
+		return specification;
     }
 
     public static CombinableSpecification<T> operator |(CombinableSpecification<T> left, CombinableSpecification<T> right)
@@ -70,7 +74,12 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
         );
 
         var orExpr = Expression.Lambda<Func<T, bool>>(or, combinedParameters);
+		var specification = new CombinableSpecification<T>(orExpr);
+		specification.Includes.AddRange(left.Includes);
+		specification.Includes.AddRange(right.Includes);
+		specification.IncludeStrings.AddRange(left.IncludeStrings);
+		specification.IncludeStrings.AddRange(right.IncludeStrings);
 
-        return new CombinableSpecification<T>(orExpr);
+		return specification;
     }
 }
