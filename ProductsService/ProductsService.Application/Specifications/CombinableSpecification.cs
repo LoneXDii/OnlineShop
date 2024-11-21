@@ -5,7 +5,7 @@ namespace ProductsService.Application.Specifications;
 
 internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEntity
 {
-    public CombinableSpecification() 
+    protected CombinableSpecification() 
         : base() { }
 
     protected CombinableSpecification(Expression<Func<T, bool>> criteria)
@@ -41,10 +41,10 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
         var specification = new CombinableSpecification<T>(andExpr);
         specification.Includes.AddRange(left.Includes);
         specification.Includes.AddRange(right.Includes);
-		specification.IncludeStrings.AddRange(left.IncludeStrings);
-		specification.IncludeStrings.AddRange(right.IncludeStrings);
+        specification.IncludeStrings.AddRange(left.IncludeStrings);
+        specification.IncludeStrings.AddRange(right.IncludeStrings);
         
-		return specification;
+        return specification;
     }
 
     public static CombinableSpecification<T> operator |(CombinableSpecification<T> left, CombinableSpecification<T> right)
@@ -74,12 +74,12 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
         );
 
         var orExpr = Expression.Lambda<Func<T, bool>>(or, combinedParameters);
-		var specification = new CombinableSpecification<T>(orExpr);
-		specification.Includes.AddRange(left.Includes);
-		specification.Includes.AddRange(right.Includes);
-		specification.IncludeStrings.AddRange(left.IncludeStrings);
-		specification.IncludeStrings.AddRange(right.IncludeStrings);
+        var specification = new CombinableSpecification<T>(orExpr);
+        specification.Includes.AddRange(left.Includes);
+        specification.Includes.AddRange(right.Includes);
+        specification.IncludeStrings.AddRange(left.IncludeStrings);
+        specification.IncludeStrings.AddRange(right.IncludeStrings);
 
-		return specification;
+        return specification;
     }
 }

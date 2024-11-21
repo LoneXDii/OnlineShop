@@ -6,8 +6,8 @@ internal class ProductPriceLessThanSpecification : CombinableSpecification<Produ
 {
     public ProductPriceLessThanSpecification(double price)
         : base(product => product.Price <= price)
-	{
-		AddInclude($"{nameof(Product.ProductAttributes)}.{nameof(ProductAttribute.Attribute)}");
-		AddInclude(p => p.Category);
-	}
+    {
+        AddInclude($"{nameof(Product.ProductAttributes)}.{nameof(ProductAttribute.Attribute)}");
+        AddInclude(p => p.Category);
+    }
 }

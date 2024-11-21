@@ -2,10 +2,10 @@
 
 namespace ProductsService.Application.Specifications.Products;
 
-internal class ProductPriceGreaterThenSpecification : CombinableSpecification<Product>
+internal class EmptyProductSpecification : CombinableSpecification<Product>
 {
-    public ProductPriceGreaterThenSpecification(double price) 
-        : base(product => product.Price >= price)
+    public EmptyProductSpecification()
+        : base()
     {
         AddInclude($"{nameof(Product.ProductAttributes)}.{nameof(ProductAttribute.Attribute)}");
         AddInclude(p => p.Category);
