@@ -5,7 +5,7 @@ namespace ProductsService.Application.Specifications;
 
 internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEntity
 {
-    protected CombinableSpecification() 
+    public CombinableSpecification() 
         : base() { }
 
     protected CombinableSpecification(Expression<Func<T, bool>> criteria)
