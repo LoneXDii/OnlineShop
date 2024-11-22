@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderService.Application.Mapping;
 using OrderService.Application.Sessions;
+using OrderService.Application.Settings;
 using OrderService.Domain.Abstractions.Cart;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Reflection;
@@ -10,7 +12,7 @@ namespace OrderService.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAutoMapper(typeof(OrderMappingProfile), typeof(CartMappingProfile))
                 .AddMediatR(cfg =>
@@ -28,9 +30,9 @@ public static class DependencyInjection
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-            });
-
-        services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+			});
+		services.AddScoped<Cart>(sp => SessionCart.GetCart(sp))
+			.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
 
         return services;
     }
