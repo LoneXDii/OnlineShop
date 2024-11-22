@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
-using ProductsService.Domain.Common.Models;
+using ProductsService.Application.Models;
 
 namespace ProductsService.API.Controllers;
 

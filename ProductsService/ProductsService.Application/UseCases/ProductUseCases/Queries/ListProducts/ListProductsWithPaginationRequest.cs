@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using ProductsService.Application.DTO;
-using ProductsService.Domain.Common.Models;
+using ProductsService.Application.Models;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 

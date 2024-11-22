@@ -3,12 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using ProductsService.Application.Mapping;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using ProductsService.Application.Configuration;
 
 namespace ProductsService.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
             .AddAutoMapper(typeof(AppMappingProfile))
@@ -19,6 +21,8 @@ public static class DependencyInjection
                 cfg.EnableBodyBindingSourceAutomaticValidation = true;
             });
 
-        return services;
+        services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
+
+		return services;
     }
 }

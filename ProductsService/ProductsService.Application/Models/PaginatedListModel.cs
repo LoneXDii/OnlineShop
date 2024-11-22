@@ -1,4 +1,4 @@
-﻿namespace ProductsService.Domain.Common.Models;
+﻿namespace ProductsService.Application.Models;
 
 public class PaginatedListModel<T>
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ProductsService.Application.DTO;
-using ProductsService.Domain.Common.Models;
+using ProductsService.Application.Models;
 using ProductsService.Domain.Entities;
 using Attribute = ProductsService.Domain.Entities.Attribute;
 
@@ -25,7 +25,5 @@ internal class AppMappingProfile : Profile
 
         CreateMap<PostProductDTO, Product>()
             .ForMember(dest => dest.ProductAttributes, opt => opt.MapFrom(src => src.AttributeValues));
-
-        CreateMap<PaginatedListModel<Product>, PaginatedListModel<ProductDTO>>();
     }
 }

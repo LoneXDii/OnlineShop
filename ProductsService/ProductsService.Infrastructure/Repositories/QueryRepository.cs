@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Abstractions.Specifications;
-using ProductsService.Domain.Common.Models;
 using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
 using ProductsService.Infrastructure.Specification;
@@ -51,27 +50,18 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         return entities;
     }
 
-    public async Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, 
+    public async Task<List<T>> ListWithPaginationAsync(int pageNo, int pageSize, 
         ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
         query = SpecificationQueryBuilder.GetQuery(query, specification);
-
-        int count = await query.CountAsync();
 
         var entities = await query.OrderBy(e => e.Id)
             .Skip((pageNo - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        var data = new PaginatedListModel<T>
-        {
-            Items = entities,
-            CurrentPage = pageNo,
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize)
-        };
-
-        return data;
+        return entities;
     }
 
     public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
@@ -79,5 +69,15 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         var entity = await _entities.FirstOrDefaultAsync(filter, cancellationToken);
 
         return entity;
+    }
+
+    public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    {
+        var query = _entities.AsQueryable();
+        query = SpecificationQueryBuilder.GetQuery(query, specification);
+
+        var count = await query.CountAsync(cancellationToken); 
+        
+        return count;
     }
 }

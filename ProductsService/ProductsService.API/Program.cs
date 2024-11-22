@@ -16,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication(builder.Configuration);
 
 builder.Services.AddAuthentication(options =>
     {
