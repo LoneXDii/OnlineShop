@@ -1,22 +1,22 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using OrderService.Application.DTO;
 using OrderService.Application.Exceptions;
-using OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Common.Models;
+using OrderService.Domain.Configuration;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
 
-internal class GetAllOrdersRequestHandler(IOrderRepository dbService, IMapper mapper, IConfiguration configuration)
+internal class GetAllOrdersRequestHandler(IOrderRepository dbService, IMapper mapper, IOptions<PaginationSettings> paginationOptions)
     : IRequestHandler<GetAllOrdersRequest, PaginatedListModel<OrderDTO>>
 {
     public async Task<PaginatedListModel<OrderDTO>> Handle(GetAllOrdersRequest request, CancellationToken cancellationToken)
     {
-        var maxPageSize = Convert.ToInt32(configuration["Pagination:MaxPageSize"]);
+        var maxPageSize = paginationOptions.Value.MaxPageSize;
 
-        var pageSize = request.pageSize > maxPageSize
+		var pageSize = request.pageSize > maxPageSize
             ? maxPageSize
             : request.pageSize;
 
