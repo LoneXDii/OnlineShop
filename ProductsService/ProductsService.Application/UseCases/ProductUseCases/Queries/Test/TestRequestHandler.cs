@@ -19,7 +19,7 @@ internal class TestRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         specification = specification & new ProductCategorySpecification(request.categoryId);
         //specification = specification & new ProductAttributeValueSpecification("Brand", "Apple");
         //specification = specification & new ProductAttributeValueSpecification("RAM", "16GB");
-        specification = specification & new ProductPriceLessThanSpecification(request.maxPrice);
+        specification = specification & new ProductMaxPriceSpecification(request.maxPrice);
 
         var products = await unitOfWork.ProductQueryRepository.ListAsync(specification);
 

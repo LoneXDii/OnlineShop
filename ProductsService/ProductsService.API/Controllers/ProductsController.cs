@@ -47,8 +47,8 @@ public class ProductsController : ControllerBase
         {
             PageNo = pageNo,
             PageSize = pageSize,
-            PriceLessThan = priceLessThan,
-            PriceGreaterThan = priceGreaterThan,
+            MaxPrice = priceLessThan,
+            MinPrice = priceGreaterThan,
             CategoryId = categoryId
         };
 

@@ -51,7 +51,7 @@ public class PostProductDtoValidator : AbstractValidator<PostProductDTO>
         return category is not null;
     }
 
-    private async Task<bool> BeAValidAttributesAsync(List<AttributeValueDTO> attributeValues, CancellationToken cancellationToken)
+    private async Task<bool> BeAValidAttributesAsync(List<AttributeValueDTO>? attributeValues, CancellationToken cancellationToken)
     {
         if(attributeValues is null)
         {

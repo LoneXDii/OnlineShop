@@ -15,6 +15,8 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
     public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
         //var specification = new CombinableSpecification<Product>();
+
+        //Maybe add typeof to operators overloads;
         var specification = (CombinableSpecification<Product>)new EmptyProductSpecification();
 
         if (request.requestDto.CategoryId is not null)
@@ -22,14 +24,14 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
             specification = specification & new ProductCategorySpecification(request.requestDto.CategoryId.Value);
         }
 
-        if(request.requestDto.PriceGreaterThan is not null)
+        if(request.requestDto.MinPrice is not null)
         {
-            specification = specification & new ProductPriceGreaterThanSpecification(request.requestDto.PriceGreaterThan.Value);
+            specification = specification & new ProductMinPriceSpecification(request.requestDto.MinPrice.Value);
         }
 
-        if (request.requestDto.PriceLessThan is not null)
+        if (request.requestDto.MaxPrice is not null)
         {
-            specification = specification & new ProductPriceLessThanSpecification(request.requestDto.PriceLessThan.Value);
+            specification = specification & new ProductMaxPriceSpecification(request.requestDto.MaxPrice.Value);
         }
 
         if(request.attributes is not null)
