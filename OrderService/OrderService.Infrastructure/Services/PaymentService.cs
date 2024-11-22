@@ -43,9 +43,9 @@ internal class PaymentService : IPaymentService
         var options = new SessionCreateOptions
         {
             LineItems = items,
-            Mode = "payment",
-            SuccessUrl = "https://localhost:7003/api/Payment/success",
-            CancelUrl = "https://localhost:7003/api/Payment/fail",
+            Mode = _stripeSettings.SessionMode,
+            SuccessUrl = _stripeSettings.SuccessUrl,
+            CancelUrl = _stripeSettings.CancelUrl,
             Customer = customerId,
             Metadata = new Dictionary<string, string>
             {
