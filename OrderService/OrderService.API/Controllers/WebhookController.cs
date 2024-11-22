@@ -17,13 +17,13 @@ public class WebhookController : ControllerBase
 
     [HttpPost]
     [Route("stripe")]
-    public async Task<IActionResult> StripeWebhookHandler()
+    public async Task<IActionResult> StripeWebhookHandler(CancellationToken cancellationToken)
     {
-        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
 
         var signature = Request.Headers["Stripe-Signature"];
 
-        await _mediator.Send(new ConfirmPaymentRequest(json, signature));
+        await _mediator.Send(new ConfirmPaymentRequest(json, signature), cancellationToken);
 
         return Ok();
     }

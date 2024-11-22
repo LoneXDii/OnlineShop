@@ -22,10 +22,9 @@ public class CartController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<CartDTO>> GetCart()
+    public async Task<ActionResult<CartDTO>> GetCart(CancellationToken cancellationToken)
     {
         var cart = await _mediator.Send(new GetCartRequest()); 
-
         return Ok(cart);
     }
 

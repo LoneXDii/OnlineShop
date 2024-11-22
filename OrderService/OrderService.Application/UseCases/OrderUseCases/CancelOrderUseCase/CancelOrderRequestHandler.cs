@@ -10,7 +10,7 @@ internal class CancelOrderRequestHandler(IOrderRepository dbService, IProductSer
 {
     public async Task Handle(CancelOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {
@@ -32,7 +32,7 @@ internal class CancelOrderRequestHandler(IOrderRepository dbService, IProductSer
 
         order.OrderStatus = OrderStatuses.Cancelled;
 
-        await dbService.UpdateAsync(order);
+        await dbService.UpdateAsync(order, cancellationToken);
 
         await productService.ReturnProductsAsync(order.Products);
     }

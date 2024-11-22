@@ -32,7 +32,7 @@ internal class CreateOrderRequestHandler(Cart cart, IProductService productServi
             UserId = request.userId
         };
 
-        await dbService.CreateAsync(order);
+        await dbService.CreateAsync(order, cancellationToken);
 
         cart.ClearAll();
     }

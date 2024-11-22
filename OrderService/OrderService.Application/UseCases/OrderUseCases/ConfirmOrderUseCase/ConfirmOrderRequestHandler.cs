@@ -10,7 +10,7 @@ internal class ConfirmOrderRequestHandler(IOrderRepository dbService)
 {
     public async Task Handle(ConfirmOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {
@@ -24,6 +24,6 @@ internal class ConfirmOrderRequestHandler(IOrderRepository dbService)
 
         order.OrderStatus = OrderStatuses.Confirmed;
 
-        await dbService.UpdateAsync(order);
+        await dbService.UpdateAsync(order, cancellationToken);
     }
 }

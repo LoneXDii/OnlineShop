@@ -11,7 +11,7 @@ internal class GetOrderByIdRequestHandler(IOrderRepository dbService, IMapper ma
 {
     public async Task<OrderDTO> Handle(GetOrderByIdRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {

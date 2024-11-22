@@ -18,7 +18,7 @@ internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrd
             return;
         }
 
-        var order = await dbService.GetByIdAsync(orderId);
+        var order = await dbService.GetByIdAsync(orderId, cancellationToken);
 
         if(order is null)
         {
@@ -27,6 +27,6 @@ internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrd
 
         order.PaymentStatus = PaymentStatuses.Paid;
 
-        await dbService.UpdateAsync(order);
+        await dbService.UpdateAsync(order, cancellationToken);
     }
 }

@@ -10,7 +10,7 @@ internal class CompleteOrderRequestHandler(IOrderRepository dbService)
 {
     public async Task Handle(CompleteOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {
@@ -29,6 +29,6 @@ internal class CompleteOrderRequestHandler(IOrderRepository dbService)
 
         order.OrderStatus = OrderStatuses.Completed;
 
-        await dbService.UpdateAsync(order);
+        await dbService.UpdateAsync(order, cancellationToken);
     }
 }

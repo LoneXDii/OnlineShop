@@ -20,12 +20,13 @@ internal class MongoOrderRepository : IOrderRepository
         _ordersCollection = database.GetCollection<OrderEntity>(settings.Value.CollectionName);
     }
 
-    public async Task CreateAsync(OrderEntity order)
+    public async Task CreateAsync(OrderEntity order, CancellationToken cancellationToken = default)
     {
-        await _ordersCollection.InsertOneAsync(order);
+        await _ordersCollection.InsertOneAsync(order, null, cancellationToken);
     }
 
-    public async Task<PaginatedListModel<OrderEntity>> ListWithPaginationAsync(int pageNo = 1, int pageSize = 10, 
+    public async Task<PaginatedListModel<OrderEntity>> ListWithPaginationAsync(int pageNo = 1, int pageSize = 10,
+        CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
         var mongoFilters = new List<FilterDefinition<OrderEntity>>();
@@ -44,9 +45,9 @@ internal class MongoOrderRepository : IOrderRepository
             .SortByDescending(order => order.CreatedAt)
             .Skip((pageNo - 1) * pageSize)
             .Limit(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var count = await _ordersCollection.CountDocumentsAsync(combinedFilter);
+        var count = await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
 
         var data = new PaginatedListModel<OrderEntity>
         {
@@ -58,17 +59,19 @@ internal class MongoOrderRepository : IOrderRepository
         return data;
     }
 
-    public async Task<OrderEntity?> GetByIdAsync(string id)
+    public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var order = await _ordersCollection.Find(order => order.Id == id).FirstOrDefaultAsync();
+        var order = await _ordersCollection.Find(order => order.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
 
         return order;
     }
 
-    public async Task UpdateAsync(OrderEntity order)
+    public async Task UpdateAsync(OrderEntity order, CancellationToken cancellationToken = default)
     {
         var filter = Builders<OrderEntity>.Filter.Where(o => o.Id == order.Id);
+        var replaceOptions = new ReplaceOptions();
 
-        await _ordersCollection.ReplaceOneAsync(filter, order);
+        await _ordersCollection.ReplaceOneAsync(filter, order, replaceOptions, cancellationToken);
     }
 }

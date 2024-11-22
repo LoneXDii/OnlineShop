@@ -20,7 +20,7 @@ internal class GetAllOrdersRequestHandler(IOrderRepository dbService, IMapper ma
             ? maxPageSize
             : request.pageSize;
 
-        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize);
+        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken);
 
         if (data.CurrentPage > data.TotalPages)
         {

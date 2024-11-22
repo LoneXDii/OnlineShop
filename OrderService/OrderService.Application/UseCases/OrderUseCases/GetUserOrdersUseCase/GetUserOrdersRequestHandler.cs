@@ -19,7 +19,7 @@ internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper m
             ? maxPageSize 
             : request.pageSize;
 
-        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, order => order.UserId == request.userId);
+        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
 
         if(data.CurrentPage > data.TotalPages)
         {

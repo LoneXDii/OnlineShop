@@ -19,12 +19,12 @@ public class PaymentController : ControllerBase
     [HttpGet]
     [Route("pay")]
     [Authorize]
-    public async Task<ActionResult<string>> Pay(string orderId)
+    public async Task<ActionResult<string>> Pay([FromQuery] string orderId, CancellationToken cancellationToken)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
         var stribeId = HttpContext.User.FindFirst("StribeId")?.Value;
 
-        var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stribeId));
+        var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stribeId), cancellationToken);
 
         return Ok(stribeUrl);
     }

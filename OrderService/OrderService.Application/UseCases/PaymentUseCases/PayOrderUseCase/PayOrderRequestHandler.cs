@@ -11,7 +11,7 @@ internal class PayOrderRequestHandler(IOrderRepository dbService, IPaymentServic
 {
     public async Task<string> Handle(PayOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId);
+        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
 
         if(order is null)
         {
