@@ -15,7 +15,7 @@ internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrd
 
         if(orderId is null)
         {
-            return;
+            throw new NotFoundException("No such order");
         }
 
         var order = await dbService.GetByIdAsync(orderId, cancellationToken);
