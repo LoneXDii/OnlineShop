@@ -7,9 +7,9 @@ namespace ProductsService.Domain.Abstractions.Database;
 
 public interface IQueryRepository<T> where T : IEntity
 {
-    Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includedProperties);
-    Task<IEnumerable<T>> ListAllAsync();
-    Task<IEnumerable<T>> ListAsync(ISpecification<T> specification);
-    Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, ISpecification<T> specification);
-    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter);
+    Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includedProperties);
+    Task<IEnumerable<T>> ListAllAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default);
+    Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, ISpecification<T> specification, CancellationToken cancellationToken = default);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
 }

@@ -43,7 +43,7 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
         }
 
         var data = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(request.requestDto.PageNo,
-            request.requestDto.PageSize, specification);
+            request.requestDto.PageSize, specification, cancellationToken);
 
         var retData = mapper.Map<PaginatedListModel<ProductDTO>>(data);
         return retData;

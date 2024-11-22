@@ -20,8 +20,8 @@ internal class AddProductRequestHandler(IUnitOfWork unitOfWork, IBlobService blo
             product.ImageUrl = await blobService.UploadAsync(stream, request.product.Image.ContentType);
         }
 
-        await unitOfWork.ProductCommandRepository.AddAsync(product);
+        await unitOfWork.ProductCommandRepository.AddAsync(product, cancellationToken);
 
-        await unitOfWork.SaveAllAsync();
+        await unitOfWork.SaveAllAsync(cancellationToken);
     }
 }

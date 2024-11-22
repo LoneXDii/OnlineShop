@@ -46,13 +46,13 @@ internal class UnitOfWork : IUnitOfWork
 
     public IQueryRepository<Discount> DiscountQueryRepository { get; private set; }
 
-    public async Task EnableMigrationsAsync()
+    public async Task EnableMigrationsAsync(CancellationToken cancellationToken = default)
     {
-        await _commandDbContext.Database.MigrateAsync();
+        await _commandDbContext.Database.MigrateAsync(cancellationToken);
     }
 
-    public async Task SaveAllAsync()
+    public async Task SaveAllAsync(CancellationToken cancellationToken = default)
     {
-        await _commandDbContext.SaveChangesAsync();
+        await _commandDbContext.SaveChangesAsync(cancellationToken);
     }
 }

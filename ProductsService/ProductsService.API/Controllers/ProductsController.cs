@@ -21,15 +21,16 @@ public class ProductsController : ControllerBase
 
     [HttpPost]
     //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> CreateProduct([FromForm] PostProductDTO product)
+    public async Task<IActionResult> CreateProduct([FromForm] PostProductDTO product, CancellationToken cancellationToken)
     {
-        await _mediator.Send(new AddProductRequest(product));
+        await _mediator.Send(new AddProductRequest(product), cancellationToken);
 
         return NoContent();
     }
 
     [HttpGet]
     public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProductsListProducts(
+        CancellationToken cancellationToken,
         [FromQuery] double? priceLessThan,
         [FromQuery] double? priceGreaterThan,
         [FromQuery] int? categoryId,
@@ -52,7 +53,7 @@ public class ProductsController : ControllerBase
             CategoryId = categoryId
         };
 
-        var result = await _mediator.Send(new ListProductsWithPaginationRequest(requestDto, attributes));
+        var result = await _mediator.Send(new ListProductsWithPaginationRequest(requestDto, attributes), cancellationToken);
 
         return Ok(result);
     }

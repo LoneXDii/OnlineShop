@@ -20,7 +20,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         _entities = _dbContext.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includedProperties)
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includedProperties)
     {
         IQueryable<T>? query = _entities.AsQueryable();
 
@@ -29,30 +29,30 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
             query = query.Include(property);
         }
 
-        var entity = await query.FirstOrDefaultAsync(e => e.Id == id);
+        var entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
         return entity;
     }
 
-    public async Task<IEnumerable<T>> ListAllAsync()
+    public async Task<IEnumerable<T>> ListAllAsync(CancellationToken cancellationToken = default)
     {
-        var entities = await _entities.AsQueryable().ToListAsync();
+        var entities = await _entities.AsQueryable().ToListAsync(cancellationToken);
 
         return entities;
     }
 
-    public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification)
+    public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         IQueryable<T>? query = _entities.AsQueryable();
         query = SpecificationQueryBuilder.GetQuery(query, specification);
 
-        var entities = await query.ToListAsync();
+        var entities = await query.ToListAsync(cancellationToken);
 
         return entities;
     }
 
     public async Task<PaginatedListModel<T>> ListWithPaginationAsync(int pageNo, int pageSize, 
-        ISpecification<T> specification)
+        ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
         query = SpecificationQueryBuilder.GetQuery(query, specification);
@@ -62,7 +62,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         var entities = await query.OrderBy(e => e.Id)
             .Skip((pageNo - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var data = new PaginatedListModel<T>
         {
@@ -74,9 +74,9 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         return data;
     }
 
-    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter)
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
     {
-        var entity = await _entities.FirstOrDefaultAsync(filter);
+        var entity = await _entities.FirstOrDefaultAsync(filter, cancellationToken);
 
         return entity;
     }
