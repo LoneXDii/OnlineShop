@@ -9,7 +9,7 @@ using OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
-using OrderService.Domain.Common.Models;
+using OrderService.Application.Models;
 
 namespace OrderService.API.Controllers;
 

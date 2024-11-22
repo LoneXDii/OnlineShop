@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OrderService.Domain.Abstractions.Data;
-using OrderService.Domain.Common.Models;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;
 using System.Linq.Expressions;
@@ -25,7 +23,7 @@ internal class MongoOrderRepository : IOrderRepository
         await _ordersCollection.InsertOneAsync(order, null, cancellationToken);
     }
 
-    public async Task<PaginatedListModel<OrderEntity>> ListWithPaginationAsync(int pageNo = 1, int pageSize = 10,
+    public async Task<List<OrderEntity>> ListWithPaginationAsync(int pageNo = 1, int pageSize = 10,
         CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
@@ -47,16 +45,7 @@ internal class MongoOrderRepository : IOrderRepository
             .Limit(pageSize)
             .ToListAsync(cancellationToken);
 
-        var count = await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
-
-        var data = new PaginatedListModel<OrderEntity>
-        {
-            Items = orders,
-            CurrentPage = pageNo,
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize)
-        };
-
-        return data;
+        return orders;
     }
 
     public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -73,5 +62,32 @@ internal class MongoOrderRepository : IOrderRepository
         var replaceOptions = new ReplaceOptions();
 
         await _ordersCollection.ReplaceOneAsync(filter, order, replaceOptions, cancellationToken);
+    }
+
+    public async Task<long> CountAsync(CancellationToken cancellationToken = default)
+    {
+        var count = await _ordersCollection.CountDocumentsAsync(Builders<OrderEntity>.Filter.Empty,null, cancellationToken);
+
+        return count;
+    }
+
+    public async Task<long> CountAsync(CancellationToken cancellationToken = default, 
+        params Expression<Func<OrderEntity, bool>>[] filters)
+    {
+        var mongoFilters = new List<FilterDefinition<OrderEntity>>();
+
+        foreach (var filter in filters)
+        {
+            var mongoFilter = Builders<OrderEntity>.Filter.Where(filter);
+            mongoFilters.Add(mongoFilter);
+        }
+
+        var combinedFilter = mongoFilters.Any()
+            ? Builders<OrderEntity>.Filter.And(mongoFilters)
+            : Builders<OrderEntity>.Filter.Empty;
+
+        var count = await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
+
+        return count;
     }
 }

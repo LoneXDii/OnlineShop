@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using OrderService.Application.DTO;
 using OrderService.Application.Exceptions;
+using OrderService.Application.Models;
 using OrderService.Domain.Abstractions.Data;
-using OrderService.Domain.Common.Models;
 using OrderService.Domain.Configuration;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
@@ -20,15 +20,24 @@ internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper m
             ? maxPageSize 
             : request.pageSize;
 
-        var data = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
+        var items = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
 
-        if(data.CurrentPage > data.TotalPages)
-        {
-            throw new NotFoundException("No such page");
-        }
+		var itemsCount = await dbService.CountAsync(cancellationToken, order => order.UserId == request.userId);
 
-        var retData = mapper.Map<PaginatedListModel<OrderDTO>>(data);
+		var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);
 
-        return retData;
-    }
+		if (request.pageNo > totalPages)
+		{
+			throw new NotFoundException("No such page");
+		}
+
+		var data = new PaginatedListModel<OrderDTO>
+		{
+			Items = mapper.Map<List<OrderDTO>>(items),
+			CurrentPage = request.pageNo,
+			TotalPages = totalPages
+		};
+
+		return data;
+	}
 }

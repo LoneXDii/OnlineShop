@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using OrderService.Application.DTO;
-using OrderService.Domain.Common.Models;
+using OrderService.Application.Models;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
 

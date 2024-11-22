@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using OrderService.Application.DTO;
 using OrderService.Domain.Abstractions.Cart;
-using OrderService.Domain.Common.Models;
 namespace OrderService.Application.Mapping;
 
 internal class CartMappingProfile : Profile

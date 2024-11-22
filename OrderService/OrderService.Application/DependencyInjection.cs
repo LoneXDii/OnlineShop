@@ -12,7 +12,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(OrderMappingProfile), typeof(OrderListModelMappingProfile), typeof(CartMappingProfile))
+        services.AddAutoMapper(typeof(OrderMappingProfile), typeof(CartMappingProfile))
                 .AddMediatR(cfg =>
                     cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
                 .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())

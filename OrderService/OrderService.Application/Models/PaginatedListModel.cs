@@ -1,4 +1,4 @@
-﻿namespace OrderService.Domain.Common.Models;
+﻿namespace OrderService.Application.Models;
 
 public class PaginatedListModel<T>
 {
