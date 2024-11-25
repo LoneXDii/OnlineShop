@@ -24,6 +24,7 @@ internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper m
 
         var itemsCount = await dbService.CountAsync(cancellationToken, order => order.UserId == request.userId);
 
+        //Move to validator
         var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);
 
         if (request.pageNo > totalPages)
