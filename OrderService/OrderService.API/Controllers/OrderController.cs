@@ -37,7 +37,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Route("get")]
+    [Route("get/user")]
     [Authorize]
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(CancellationToken cancellationToken, 
         [FromQuery] PaginationDTO pagination)
@@ -50,7 +50,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Route("get")]
+    [Route("get/user/admin")]
     [Authorize(Policy = "admin")]
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(CancellationToken cancellationToken, 
         [FromQuery] string userId,
