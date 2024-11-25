@@ -10,5 +10,9 @@ public class CartProductValidator : AbstractValidator<CartProductDTO>
         RuleFor(product => product.Quantity)
             .GreaterThan(0)
             .WithMessage("Incorrect quantity");
+
+        RuleFor(product => product.Id)
+            .GreaterThan(0)
+            .WithMessage("Incorrect product id");
     }
 }
