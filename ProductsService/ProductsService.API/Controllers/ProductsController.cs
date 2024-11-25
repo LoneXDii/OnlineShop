@@ -9,6 +9,7 @@ using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttribute
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteProduct;
 
 namespace ProductsService.API.Controllers;
 
@@ -64,10 +65,18 @@ public class ProductsController : ControllerBase
 
     [HttpPut]
     //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDTO productDTO,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDTO productDTO, CancellationToken cancellationToken)
     {
         await _mediator.Send(new UpdateProductRequest(productDTO), cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteProduct([FromQuery] DeleteProductRequest request, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
 
         return Ok();
     }
