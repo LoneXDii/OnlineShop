@@ -8,6 +8,7 @@ using ProductsService.Application.Models;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
 namespace ProductsService.API.Controllers;
 
@@ -78,6 +79,17 @@ public class ProductsController : ControllerBase
         CancellationToken cancellationToken)
     {
         await _mediator.Send(new AddAttributeToProductRequest(productAttribute), cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("/attribute")]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> UpdateProductAttribute([FromBody] UpdateProductAttributeRequest request, 
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
 
         return Ok();
     }
