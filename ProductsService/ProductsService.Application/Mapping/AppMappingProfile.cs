@@ -26,6 +26,8 @@ internal class AppMappingProfile : Profile
         CreateMap<PostProductDTO, Product>()
             .ForMember(dest => dest.ProductAttributes, opt => opt.MapFrom(src => src.AttributeValues));
 
+        CreateMap<UpdateProductDTO, Product>();
+
         CreateMap<AddProductAttributeDTO, ProductAttribute>();
     }
 }

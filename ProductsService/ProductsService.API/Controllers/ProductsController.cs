@@ -7,6 +7,7 @@ using ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 using ProductsService.Application.Models;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
 
 namespace ProductsService.API.Controllers;
 
@@ -60,7 +61,17 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
+    [HttpPut]
+	//[Authorize(Policy = "admin")]
+    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDTO productDTO,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new UpdateProductRequest(productDTO), cancellationToken);
+
+        return Ok();
+    }
+
+	[HttpPost]
     [Route("/attrubite")]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> AddProductAttribute([FromBody] AddProductAttributeDTO productAttribute, 
