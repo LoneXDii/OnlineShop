@@ -22,7 +22,7 @@ public class CartController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<CartDTO>> GetCart(CancellationToken cancellationToken)
+    public async Task<ActionResult<CartDTO>> GetCart()
     {
         var cart = await _mediator.Send(new GetCartRequest()); 
         return Ok(cart);
@@ -30,7 +30,7 @@ public class CartController : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> AddToCart(CartProductDTO product)
+    public async Task<IActionResult> AddToCart([FromBody] CartProductDTO product)
     {
         await _mediator.Send(new AddProductToCartRequest(product));
 
@@ -39,7 +39,7 @@ public class CartController : ControllerBase
 
     [HttpPost]
     [Route("set")]
-    public async Task<IActionResult> SetQuantity(CartProductDTO product)
+    public async Task<IActionResult> SetQuantity([FromBody] CartProductDTO product)
     {
         await _mediator.Send(new SetItemQuantityInCartRequest(product));
 
@@ -48,7 +48,7 @@ public class CartController : ControllerBase
 
     [HttpPost]
     [Route("reduce")]
-    public async Task<IActionResult> ReduceQuantity(CartProductDTO product)
+    public async Task<IActionResult> ReduceQuantity([FromBody] CartProductDTO product)
     {
         await _mediator.Send(new ReduceItemsInCartRequest(product));
 
@@ -57,9 +57,9 @@ public class CartController : ControllerBase
 
     [HttpDelete]
     [Route("remove")]
-    public async Task<IActionResult> RemoveItemFromCart(int id)
+    public async Task<IActionResult> RemoveItemFromCart([FromQuery] CartProductDTO product)
     {
-        await _mediator.Send(new RemoveItemFromCartRequest(id));
+        await _mediator.Send(new RemoveItemFromCartRequest(product.Id));
 
         return Ok();
     }
