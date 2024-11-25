@@ -3,7 +3,7 @@ using OrderService.Domain.Abstractions.Cart;
 
 namespace OrderService.Application.UseCases.CartUseCases.ReduceItemQuantityInCartUseCase;
 
-internal class ReduceItemQuantityInCartRequestHandler(Cart cart)
+internal class ReduceItemQuantityInCartRequestHandler(ICart cart)
     : IRequestHandler<ReduceItemsInCartRequest>
 {
     public Task Handle(ReduceItemsInCartRequest request, CancellationToken cancellationToken)

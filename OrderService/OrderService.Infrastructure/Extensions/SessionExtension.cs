@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
-namespace OrderService.Application.Extensions;
+namespace OrderService.Infrastructure.Extensions;
 
 internal static class SessionExtension
 {

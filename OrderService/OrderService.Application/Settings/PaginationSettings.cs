@@ -2,5 +2,5 @@
 
 public class PaginationSettings
 {
-	public int MaxPageSize { get; set; }
+    public int MaxPageSize { get; set; }
 }

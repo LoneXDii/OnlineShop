@@ -5,7 +5,7 @@ using OrderService.Domain.Abstractions.Data;
 
 namespace OrderService.Application.UseCases.CartUseCases.SetItemQuantityInCartUseCase;
 
-internal class SetItemQuantityInCartRequestHandler(Cart cart, IProductService productService)
+internal class SetItemQuantityInCartRequestHandler(ICart cart, IProductService productService)
     : IRequestHandler<SetItemQuantityInCartRequest>
 {
     public async Task Handle(SetItemQuantityInCartRequest request, CancellationToken cancellationToken)

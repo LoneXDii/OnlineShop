@@ -6,7 +6,7 @@ using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 
-internal class CreateOrderRequestHandler(Cart cart, IProductService productService, IOrderRepository dbService)
+internal class CreateOrderRequestHandler(ICart cart, IProductService productService, IOrderRepository dbService)
     : IRequestHandler<CreateOrderRequest>
 {
     public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)

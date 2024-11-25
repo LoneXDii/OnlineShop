@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderService.Application.Mapping;
-using OrderService.Application.Sessions;
 using OrderService.Application.Settings;
 using OrderService.Domain.Abstractions.Cart;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
@@ -30,9 +29,9 @@ public static class DependencyInjection
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-			});
-		services.AddScoped<Cart>(sp => SessionCart.GetCart(sp))
-			.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
+            });
+
+        services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
 
         return services;
     }

@@ -3,7 +3,7 @@ using OrderService.Domain.Abstractions.Cart;
 
 namespace OrderService.Application.UseCases.CartUseCases.RemoveItemFromCartUseCase;
 
-internal class RemoveItemFromCartRequestHandler(Cart cart) : IRequestHandler<RemoveItemFromCartRequest>
+internal class RemoveItemFromCartRequestHandler(ICart cart) : IRequestHandler<RemoveItemFromCartRequest>
 {
     public Task Handle(RemoveItemFromCartRequest request, CancellationToken cancellationToken)
     {

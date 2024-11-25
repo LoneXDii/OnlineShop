@@ -7,7 +7,7 @@ internal class CartMappingProfile : Profile
 {
     public CartMappingProfile()
     {
-        CreateMap<Cart, CartDTO>()
+        CreateMap<ICart, CartDTO>()
             .ForMember(dest => dest.Products,
                 opt => opt.MapFrom(src => src.Items.Values.ToList()));
     }

@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using OrderService.Application.Extensions;
 using OrderService.Domain.Abstractions.Cart;
 using OrderService.Domain.Entities;
 using System.Text.Json.Serialization;
+using OrderService.Infrastructure.Extensions;
 
-namespace OrderService.Application.Sessions;
+namespace OrderService.Infrastructure.Cart;
 
-internal class SessionCart : Cart
+internal class SessionCart : AbstractCart
 {
     [JsonIgnore]
     public ISession? Session { get; set; }
 
-    public static Cart GetCart(IServiceProvider services)
+    public static ICart GetCart(IServiceProvider services)
     {
         ISession session = services.GetRequiredService<IHttpContextAccessor>().HttpContext.Session;
         SessionCart cart = session.Get<SessionCart>("cart") ?? new SessionCart();

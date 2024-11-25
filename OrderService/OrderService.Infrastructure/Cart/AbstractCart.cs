@@ -1,8 +1,9 @@
-﻿using OrderService.Domain.Entities;
+﻿using OrderService.Domain.Abstractions.Cart;
+using OrderService.Domain.Entities;
 
-namespace OrderService.Domain.Abstractions.Cart;
+namespace OrderService.Infrastructure.Cart;
 
-public abstract class Cart
+internal abstract class AbstractCart : ICart
 {
     public Dictionary<int, ProductEntity> Items { get; set; } = new();
 

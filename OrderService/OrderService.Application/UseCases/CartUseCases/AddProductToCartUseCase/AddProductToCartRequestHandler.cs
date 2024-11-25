@@ -5,7 +5,7 @@ using OrderService.Domain.Abstractions.Data;
 
 namespace OrderService.Application.UseCases.CartUseCases.AddProductToCartUseCase;
 
-internal class AddProductToCartRequestHandler(Cart cart, IProductService productService)
+internal class AddProductToCartRequestHandler(ICart cart, IProductService productService)
     : IRequestHandler<AddProductToCartRequest>
 {
     public async Task Handle(AddProductToCartRequest request, CancellationToken cancellationToken)

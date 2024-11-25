@@ -22,22 +22,22 @@ internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper m
 
         var items = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
 
-		var itemsCount = await dbService.CountAsync(cancellationToken, order => order.UserId == request.userId);
+        var itemsCount = await dbService.CountAsync(cancellationToken, order => order.UserId == request.userId);
 
-		var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);
+        var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);
 
-		if (request.pageNo > totalPages)
-		{
-			throw new NotFoundException("No such page");
-		}
+        if (request.pageNo > totalPages)
+        {
+            throw new NotFoundException("No such page");
+        }
 
-		var data = new PaginatedListModel<OrderDTO>
-		{
-			Items = mapper.Map<List<OrderDTO>>(items),
-			CurrentPage = request.pageNo,
-			TotalPages = totalPages
-		};
+        var data = new PaginatedListModel<OrderDTO>
+        {
+            Items = mapper.Map<List<OrderDTO>>(items),
+            CurrentPage = request.pageNo,
+            TotalPages = totalPages
+        };
 
-		return data;
-	}
+        return data;
+    }
 }
