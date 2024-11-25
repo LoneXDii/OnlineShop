@@ -13,6 +13,8 @@ public interface IUnitOfWork
     IQueryRepository<Attribute> AttributeQueryRepository { get; }
     ICommandRepository<Discount> DiscountCommandRepository { get; }
     IQueryRepository<Discount> DiscountQueryRepository { get; }
+    ICommandRepository<ProductAttribute> ProductAttributeCommandRepository { get; }
+    IQueryRepository<ProductAttribute> ProductAttributeQueryRepository { get; }
     public Task SaveAllAsync(CancellationToken cancellationToken = default);
     public Task EnableMigrationsAsync(CancellationToken cancellationToken = default);
 

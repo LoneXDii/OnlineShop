@@ -5,6 +5,7 @@ using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 using ProductsService.Application.Models;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
 
 namespace ProductsService.API.Controllers;
 
@@ -31,14 +32,14 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProductsListProducts(
         CancellationToken cancellationToken,
-        [FromQuery] double? priceLessThan,
-        [FromQuery] double? priceGreaterThan,
+        [FromQuery] double? maxPrice,
+        [FromQuery] double? minPrice,
         [FromQuery] int? categoryId,
         [FromQuery] Dictionary<string, string>? attributes,
         [FromQuery] int pageNo = 1,
         [FromQuery] int pageSize = 10)
     {
-        var keysToIgnore = new HashSet<string> { "priceLessThan", "priceGreaterThan", "categoryId", "pageNo", "pageSize"};
+        var keysToIgnore = new HashSet<string> { "priceLessThan", "priceGreaterThan", "categoryId", "pageNo", "pageSize" };
 
         attributes = attributes
             ?.Where(kv => !keysToIgnore.Contains(kv.Key))
@@ -48,13 +49,23 @@ public class ProductsController : ControllerBase
         {
             PageNo = pageNo,
             PageSize = pageSize,
-            MaxPrice = priceLessThan,
-            MinPrice = priceGreaterThan,
+            MaxPrice = maxPrice,
+            MinPrice = minPrice,
             CategoryId = categoryId
         };
 
         var result = await _mediator.Send(new ListProductsWithPaginationRequest(requestDto, attributes), cancellationToken);
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("/attrubite/add")]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> AddProductAttribute([FromBody] AddProductAttributeDTO productAttribute, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new AddAttributeToProductRequest(productAttribute), cancellationToken);
+
+        return Ok();
     }
 }

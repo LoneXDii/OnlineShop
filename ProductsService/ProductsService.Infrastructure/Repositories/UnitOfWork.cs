@@ -15,7 +15,9 @@ internal class UnitOfWork : IUnitOfWork
         ICommandRepository<Product> productCommandRepository, IQueryRepository<Product> productQueryRepository,
         ICommandRepository<Category> categoryCommandRepository, IQueryRepository<Category> categoryQueryRepository,
         ICommandRepository<Attribute> attributeCommandRepository, IQueryRepository<Attribute> attributeQueryRepository,
-        ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository)
+        ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository,
+        ICommandRepository<ProductAttribute> productAttributeCommandRepository,
+        IQueryRepository<ProductAttribute> productAttributeQueryRepository)
     {
         _commandDbContext = commandDbContext;
         _queryDbContext = queryDbContext;
@@ -28,6 +30,8 @@ internal class UnitOfWork : IUnitOfWork
         AttributeQueryRepository = attributeQueryRepository;
         DiscountCommandRepository = discountCommandRepository;
         DiscountQueryRepository = discountQueryRepository;
+        ProductAttributeCommandRepository = productAttributeCommandRepository;
+        ProductAttributeQueryRepository = productAttributeQueryRepository;
     }
 
     public ICommandRepository<Product> ProductCommandRepository { get; private set; }
@@ -45,6 +49,8 @@ internal class UnitOfWork : IUnitOfWork
     public ICommandRepository<Discount> DiscountCommandRepository { get; private set; }
 
     public IQueryRepository<Discount> DiscountQueryRepository { get; private set; }
+    public ICommandRepository<ProductAttribute> ProductAttributeCommandRepository { get; private set; }
+    public IQueryRepository<ProductAttribute> ProductAttributeQueryRepository { get; private set; }
 
     public async Task EnableMigrationsAsync(CancellationToken cancellationToken = default)
     {

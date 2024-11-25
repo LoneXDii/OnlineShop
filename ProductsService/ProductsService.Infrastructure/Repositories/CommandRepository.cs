@@ -21,14 +21,14 @@ internal class CommandRepository<T> : ICommandRepository<T> where T : class, IEn
         await _dbContext.Set<T>().AddAsync(entity, cancellationToken);
     }
 
-    public Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+    public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;
 
         return Task.CompletedTask;
     }
 
-    public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
         _entities.Remove(entity);
 
