@@ -21,7 +21,7 @@ internal class TestRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         //specification = specification & new ProductAttributeValueSpecification("RAM", "16GB");
         specification = specification & new ProductMaxPriceSpecification(request.maxPrice);
 
-        var products = await unitOfWork.ProductQueryRepository.ListAsync(specification);
+        var products = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(1, 10, specification);
 
         var ret = mapper.Map<List<ProductDTO>>(products);
 

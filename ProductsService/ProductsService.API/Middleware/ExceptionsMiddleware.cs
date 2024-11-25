@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using ProductsService.Application.Exceptions;
 
 namespace ProductsService.API.Middleware;
 
@@ -36,6 +37,7 @@ public class ExceptionMiddleware
             Status = ex switch
             {
                 ValidationException => StatusCodes.Status400BadRequest,
+                NotFoundException => StatusCodes.Status404NotFound,
                 _ => StatusCodes.Status500InternalServerError
             },
             Detail = ex.Message,

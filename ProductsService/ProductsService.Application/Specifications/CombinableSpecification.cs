@@ -16,16 +16,16 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
         var leftExression = left.Criteria;
         var rightExression = right.Criteria;
 
-        if (leftExression is null)
-        {
-            return right.CombineIncludes(left);
-        }
-        else if(rightExression is null)
-        {
-            return left.CombineIncludes(right);
-        }
+		if (leftExression is null)
+		{
+			return right.CombineIncludes(left);
+		}
+		else if (rightExression is null)
+		{
+			return left.CombineIncludes(right);
+		}
 
-        var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
+		var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
 
         var and = Expression.AndAlso(
             Expression.Invoke(leftExression, combinedParameters),
@@ -34,10 +34,10 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
 
         var andExpr = Expression.Lambda<Func<T, bool>>(and, combinedParameters);
         var specification = new CombinableSpecification<T>(andExpr);
-        specification.CombineIncludes(left);
-        specification.CombineIncludes(right);
+		specification.CombineIncludes(left);
+		specification.CombineIncludes(right);
 
-        return specification;
+		return specification;
     }
 
     public static CombinableSpecification<T> operator |(CombinableSpecification<T> left, CombinableSpecification<T> right)

@@ -41,7 +41,7 @@ public class ProductsController : ControllerBase
         [FromQuery] int pageNo = 1,
         [FromQuery] int pageSize = 10)
     {
-        var keysToIgnore = new HashSet<string> { "priceLessThan", "priceGreaterThan", "categoryId", "pageNo", "pageSize" };
+        var keysToIgnore = new HashSet<string> { "maxPrice", "minPrice", "categoryId", "pageNo", "pageSize" };
 
         attributes = attributes
             ?.Where(kv => !keysToIgnore.Contains(kv.Key))
