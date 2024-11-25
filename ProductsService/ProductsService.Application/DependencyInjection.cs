@@ -23,6 +23,6 @@ public static class DependencyInjection
 
         services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
 
-		return services;
+        return services;
     }
 }

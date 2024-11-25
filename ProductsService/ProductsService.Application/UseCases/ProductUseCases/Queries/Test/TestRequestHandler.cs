@@ -15,7 +15,7 @@ internal class TestRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
 {
     public async Task<IEnumerable<ProductDTO>> Handle(TestRequest request, CancellationToken cancellationToken) 
     {
-        var specification = (CombinableSpecification<Product>)new EmptyProductSpecification();
+        var specification = (CombinableSpecification<Product>)new ProductIncludesSpecification();
         specification = specification & new ProductCategorySpecification(request.categoryId);
         //specification = specification & new ProductAttributeValueSpecification("Brand", "Apple");
         //specification = specification & new ProductAttributeValueSpecification("RAM", "16GB");

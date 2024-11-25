@@ -2,9 +2,9 @@
 
 namespace ProductsService.Application.Specifications.Products;
 
-internal class EmptyProductSpecification : CombinableSpecification<Product>
+internal class ProductIncludesSpecification : CombinableSpecification<Product>
 {
-    public EmptyProductSpecification()
+    public ProductIncludesSpecification()
         : base()
     {
         AddInclude($"{nameof(Product.ProductAttributes)}.{nameof(ProductAttribute.Attribute)}");

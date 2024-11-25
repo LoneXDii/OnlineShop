@@ -18,16 +18,11 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
 
         if (leftExression is null)
         {
-            if(rightExression is null)
-            {
-                throw new NotImplementedException();
-            }
-
-            return right;
+            return right.CombineIncludes(left);
         }
         else if(rightExression is null)
         {
-            return left;
+            return left.CombineIncludes(right);
         }
 
         var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
@@ -39,11 +34,9 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
 
         var andExpr = Expression.Lambda<Func<T, bool>>(and, combinedParameters);
         var specification = new CombinableSpecification<T>(andExpr);
-        specification.Includes.AddRange(left.Includes);
-        specification.Includes.AddRange(right.Includes);
-        specification.IncludeStrings.AddRange(left.IncludeStrings);
-        specification.IncludeStrings.AddRange(right.IncludeStrings);
-        
+        specification.CombineIncludes(left);
+        specification.CombineIncludes(right);
+
         return specification;
     }
 
@@ -54,16 +47,11 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
 
         if (leftExression is null)
         {
-            if (rightExression is null)
-            {
-                throw new NotImplementedException();
-            }
-
-            return right;
+            return right.CombineIncludes(left);
         }
         else if (rightExression is null)
         {
-            return left;
+            return left.CombineIncludes(right);
         }
 
         var combinedParameters = leftExression.Parameters.Select(p => Expression.Parameter(typeof(T), p.Name)).ToList();
@@ -74,12 +62,18 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
         );
 
         var orExpr = Expression.Lambda<Func<T, bool>>(or, combinedParameters);
-        var specification = new CombinableSpecification<T>(orExpr);
-        specification.Includes.AddRange(left.Includes);
-        specification.Includes.AddRange(right.Includes);
-        specification.IncludeStrings.AddRange(left.IncludeStrings);
-        specification.IncludeStrings.AddRange(right.IncludeStrings);
+        var specification = new CombinableSpecification<T>(orExpr);    
+        specification.CombineIncludes(left);
+        specification.CombineIncludes(right);
 
         return specification;
+    }
+
+    private CombinableSpecification<T> CombineIncludes(CombinableSpecification<T> other)
+    {
+        Includes.AddRange(other.Includes);
+        IncludeStrings.AddRange(other.IncludeStrings);
+
+        return this;
     }
 }

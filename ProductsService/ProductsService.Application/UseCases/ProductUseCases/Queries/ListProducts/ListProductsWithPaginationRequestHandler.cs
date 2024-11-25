@@ -17,10 +17,9 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
 {
     public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
-        //var specification = new CombinableSpecification<Product>();
+        var specification = new CombinableSpecification<Product>();
 
-        //Maybe add typeof to operators overloads;
-        var specification = (CombinableSpecification<Product>)new EmptyProductSpecification();
+        specification = specification & new ProductIncludesSpecification();
 
         if (request.requestDto.CategoryId is not null)
         {
@@ -45,31 +44,29 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
             }
         }
 
-		var maxPageSize = paginationOptions.Value.MaxPageSize;
+        var maxPageSize = paginationOptions.Value.MaxPageSize;
 
-		var pageSize = request.requestDto.PageSize > maxPageSize
-			? maxPageSize
-			: request.requestDto.PageSize;
+        var pageSize = request.requestDto.PageSize > maxPageSize
+            ? maxPageSize
+            : request.requestDto.PageSize;
 
-		var items = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(request.requestDto.PageNo, pageSize, 
+        var items = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(request.requestDto.PageNo, pageSize, 
             specification, cancellationToken);
 
-        var itemsCount = await unitOfWork.ProductQueryRepository.CountAsync(specification, cancellationToken);
+        var totalPages = (int)Math.Ceiling(items.Count() / (double)pageSize);
 
-		var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);
+        if (request.requestDto.PageNo > totalPages)
+        {
+            throw new NotFoundException("No such page");
+        }
 
-		if (request.requestDto.PageNo > totalPages)
-		{
-			throw new NotFoundException("No such page");
-		}
+        var data = new PaginatedListModel<ProductDTO>
+        {
+            Items = mapper.Map<List<ProductDTO>>(items),
+            CurrentPage = request.requestDto.PageNo,
+            TotalPages = totalPages
+        };
 
-		var data = new PaginatedListModel<ProductDTO>
-		{
-			Items = mapper.Map<List<ProductDTO>>(items),
-			CurrentPage = request.requestDto.PageNo,
-			TotalPages = totalPages
-		};
-
-		return data;
+        return data;
     }
 }
