@@ -13,7 +13,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
-            .AddAutoMapper(typeof(AppMappingProfile))
+            .AddAutoMapper(typeof(ProductMappingProfile), typeof(CategoryMappingProfile), typeof(ProductAttributeMappingProfile))
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddFluentValidationAutoValidation(cfg =>
             {

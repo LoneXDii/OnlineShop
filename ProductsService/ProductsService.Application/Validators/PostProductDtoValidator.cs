@@ -1,18 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using ProductsService.Application.DTO;
-using ProductsService.Domain.Abstractions.Database;
 
 namespace ProductsService.Application.Validators;
 
 public class PostProductDtoValidator : AbstractValidator<PostProductDTO>
 {
-    private readonly IUnitOfWork _unitOfWork;
-
-    public PostProductDtoValidator(IUnitOfWork unitOfWork)
+    public PostProductDtoValidator()
     {
-        _unitOfWork = unitOfWork;
-
         RuleFor(p => p.Name)
             .NotEmpty()
             .WithMessage("Name can't be empty");
@@ -26,11 +21,11 @@ public class PostProductDtoValidator : AbstractValidator<PostProductDTO>
             .WithMessage("Wrong quantity");
 
         RuleFor(p => p.CategoryId)
-            .MustAsync(BeAValidCategoryIdAsync)
+            .GreaterThan(0)
             .WithMessage("Wrong category");
 
         RuleFor(p => p.AttributeValues)
-            .MustAsync(BeAValidAttributesAsync)
+            .Must(BeAValidAttributes)
             .WithMessage("Wrong attributes");
 
         RuleFor(p => p.Image)
@@ -44,30 +39,19 @@ public class PostProductDtoValidator : AbstractValidator<PostProductDTO>
         return file != null && file.ContentType.StartsWith("image/");
     }
 
-    private async Task<bool> BeAValidCategoryIdAsync(int categoryId, CancellationToken cancellationToken)
+    private bool BeAValidAttributes(List<AttributeValueDTO>? attributeValues)
     {
-        var category = await _unitOfWork.CategoryQueryRepository.GetByIdAsync(categoryId);
-
-        return category is not null;
-    }
-
-    private async Task<bool> BeAValidAttributesAsync(List<AttributeValueDTO>? attributeValues, CancellationToken cancellationToken)
-    {
-        if(attributeValues is null)
+        if (attributeValues is null)
         {
             return false;
         }
 
         foreach (var attributeValue in attributeValues)
         {
-            var attribute = await _unitOfWork.AttributeQueryRepository.GetByIdAsync(attributeValue.AttributeId);
-
-            if (attribute is null || attributeValue.Value == "")
+            if (attributeValue.Id <= 0 || attributeValue.Value == "" || attributeValue.AttributeId <= 0)
             {
                 return false;
             }
-
-            attributeValue.Name = attribute.Name;
         }
 
         return true;
