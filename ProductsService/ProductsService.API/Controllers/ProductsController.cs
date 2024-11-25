@@ -6,6 +6,7 @@ using ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 using ProductsService.Application.Models;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
 
 namespace ProductsService.API.Controllers;
 
@@ -60,11 +61,23 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    [Route("/attrubite/add")]
+    [Route("/attrubite")]
     //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> AddProductAttribute([FromBody] AddProductAttributeDTO productAttribute, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddProductAttribute([FromBody] AddProductAttributeDTO productAttribute, 
+        CancellationToken cancellationToken)
     {
         await _mediator.Send(new AddAttributeToProductRequest(productAttribute), cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    [Route("/attribute")]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteProductAttribute([FromQuery] int productAttributeId,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DeleteAttributeFromProductRequest(productAttributeId), cancellationToken);
 
         return Ok();
     }

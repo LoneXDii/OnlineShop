@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="UseCases\ProductUseCases\Commands\UpdateProduct\" />
-    <Folder Include="UseCases\ProductUseCases\Commands\DeleteAttributeFromProduct\" />
   </ItemGroup>
 
 </Project>

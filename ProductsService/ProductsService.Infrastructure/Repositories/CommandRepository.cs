@@ -34,4 +34,13 @@ internal class CommandRepository<T> : ICommandRepository<T> where T : class, IEn
 
         return Task.CompletedTask;
     }
+
+    public async Task DeleteByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var entity = await _entities.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+
+        _entities.Remove(entity);
+
+        return;
+    }
 }
