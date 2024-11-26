@@ -3,7 +3,7 @@ using MediatR;
 using ProductsService.Application.DTO;
 using ProductsService.Domain.Abstractions.Database;
 
-namespace ProductsService.Application.UseCases.CategoryUseCases.Queries;
+namespace ProductsService.Application.UseCases.CategoryUseCases.Queries.GetAllCategories;
 
 internal class GetAllCategoriesRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<GetAllCategoriesReguest, List<CategoryDTO>>

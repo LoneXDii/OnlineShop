@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductsService.Application.DTO;
-using ProductsService.Application.UseCases.CategoryUseCases.Queries;
+using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetAllCategories;
+using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryAttributes;
 
 namespace ProductsService.API.Controllers;
 
@@ -23,5 +24,15 @@ public class CategoriesController : ControllerBase
         var categories = await _mediator.Send(new GetAllCategoriesReguest(), cancellationToken);
 
         return Ok(categories);
+    }
+
+    [HttpGet]
+    [Route("attributes")]
+    public async Task<ActionResult<List<AttributeDTO>>> GetCategoryAttributes([FromQuery] GetCategoryAttributesRequest request,
+        CancellationToken cancellationToken)
+    {
+       var attributes = await _mediator.Send(request, cancellationToken);
+
+        return Ok(attributes);
     }
 }
