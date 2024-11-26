@@ -2,7 +2,7 @@
 using MediatR;
 using ProductsService.Application.DTO;
 using ProductsService.Application.Specifications;
-using ProductsService.Application.Specifications.ProductAttributes;
+using ProductsService.Application.Specifications.Categoies;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
 
@@ -13,13 +13,11 @@ internal class GetUniqueCategoryAttributesValuesRequestHandler (IUnitOfWork unit
 {
     public async Task<List<CategoryAttributesValuesDTO>> Handle(GetUniqueCategoryAttributesValuesRequest request, CancellationToken cancellationToken)
     {
-        var specification = new CombinableSpecification<ProductAttribute>();
-        specification = specification & new ProductAttributesCategorySpecification(request.categoryId);
-        specification = specification & new UniqueProductAttributeValueSpecification();
+        var specification = new CategoryAttributesValuesSpecification(request.categoryId);
 
-        var productAttributes = await unitOfWork.ProductAttributeQueryRepository.ListAsync(specification, cancellationToken);
+        var categoriesValues = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
 
-        var data = mapper.Map<List<CategoryAttributesValuesDTO>>(productAttributes);
+        var data = mapper.Map<List<CategoryAttributesValuesDTO>>(categoriesValues);
 
         return data;
     }

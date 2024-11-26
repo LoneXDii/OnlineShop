@@ -1,22 +1,23 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProductsService.Application.DTO;
-using ProductsService.Application.Specifications.Attributes;
+using ProductsService.Application.Specifications.Categoies;
 using ProductsService.Domain.Abstractions.Database;
 
 namespace ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryAttributes;
 
 internal class GetCategoryAttributesRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
-    : IRequestHandler<GetCategoryAttributesRequest, List<AttributeDTO>>
+    : IRequestHandler<GetCategoryAttributesRequest, List<CategoryDTO>>
 {
-    public async Task<List<AttributeDTO>> Handle(GetCategoryAttributesRequest request, CancellationToken cancellationToken)
+    public async Task<List<CategoryDTO>> Handle(GetCategoryAttributesRequest request, CancellationToken cancellationToken)
     {
-        var specification = new AttributeCategorySpecification(request.categoryId);
+        var specification = new CategoryAttributesSpecification(request.categoryId);
 
-        var attributes = await unitOfWork.AttributeQueryRepository.ListAsync(specification, cancellationToken);
+        var attributes = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
 
-        var attributesDto = mapper.Map<List<AttributeDTO>>(attributes);
+        var attributesDto = mapper.Map<List<CategoryDTO>>(attributes);
 
         return attributesDto;
+
     }
 }

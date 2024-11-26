@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsService.API", "ProductsService.API\ProductsService.API.csproj", "{93B7CD69-B493-4B2C-B48D-CBC9AC25D5D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsService.API", "ProductsService.API\ProductsService.API.csproj", "{93B7CD69-B493-4B2C-B48D-CBC9AC25D5D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsService.Application", "ProductsService.Application\ProductsService.Application.csproj", "{A21BCCF8-9C21-4D1A-B3CF-DB27B1F86BC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsService.Application", "ProductsService.Application\ProductsService.Application.csproj", "{A21BCCF8-9C21-4D1A-B3CF-DB27B1F86BC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsService.Domain", "ProductsService.Domain\ProductsService.Domain.csproj", "{04743370-3DAB-4107-8778-51B68DCECA26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsService.Domain", "ProductsService.Domain\ProductsService.Domain.csproj", "{04743370-3DAB-4107-8778-51B68DCECA26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsService.Infrastructure", "ProductsService.Infrastructure\ProductsService.Infrastructure.csproj", "{A7C2BB19-3E54-4CE3-90B1-D627BA53DCFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsService.Infrastructure", "ProductsService.Infrastructure\ProductsService.Infrastructure.csproj", "{A7C2BB19-3E54-4CE3-90B1-D627BA53DCFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsService.Domain.Entities;
-using Attribute = ProductsService.Domain.Entities.Attribute;
 
 namespace ProductsService.Infrastructure.Data;
 
@@ -10,25 +9,54 @@ internal class CommandDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Attribute>()
-            .HasOne(attribute => attribute.Category)
-            .WithMany(category => category.Attributes)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        modelBuilder.Entity<Product>()
-            .HasOne(product => product.Category)
-            .WithMany(category => category.Products)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        modelBuilder.Entity<Product>()
-            .HasMany(product => product.Attributes)
-            .WithMany(attribute => attribute.Products)
-            .UsingEntity<ProductAttribute>();
+        modelBuilder.Entity<Category>()
+            .HasOne(category => category.Parent)
+            .WithMany(category => category.Children)
+            .HasForeignKey(category => category.ParentId);
 
         modelBuilder.Entity<Discount>()
             .HasOne(discount => discount.Product)
             .WithMany(product => product.Discounts)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Category>()
+            .HasMany(category => category.Products)
+            .WithMany(product => product.Categories)
+            .UsingEntity(j => j
+                .HasData(
+                    new { ProductsId = 1, CategoriesId =1 },
+                    new { ProductsId = 1, CategoriesId = 3 },
+                    new { ProductsId = 1, CategoriesId = 5 },
+                    new { ProductsId = 1, CategoriesId = 7 },
+                    new { ProductsId = 1, CategoriesId = 10 },
+                    new { ProductsId = 1, CategoriesId = 12 },
+                    new { ProductsId = 1, CategoriesId = 14 },
+                    new { ProductsId = 2, CategoriesId = 1 },
+                    new { ProductsId = 2, CategoriesId = 3 },
+                    new { ProductsId = 2, CategoriesId = 5 },
+                    new { ProductsId = 2, CategoriesId = 7 },
+                    new { ProductsId = 2, CategoriesId = 11 },
+                    new { ProductsId = 2, CategoriesId = 13 },
+                    new { ProductsId = 2, CategoriesId = 14 },
+                    new { ProductsId = 3, CategoriesId = 2 },
+                    new { ProductsId = 3, CategoriesId = 4 },
+                    new { ProductsId = 3, CategoriesId = 6 },
+                    new { ProductsId = 3, CategoriesId = 8 },
+                    new { ProductsId = 3, CategoriesId = 9 },
+                    new { ProductsId = 3, CategoriesId = 15 },
+                    new { ProductsId = 3, CategoriesId = 17 },
+                    new { ProductsId = 3, CategoriesId = 19 },
+                    new { ProductsId = 3, CategoriesId = 21 },
+                    new { ProductsId = 4, CategoriesId = 2 },
+                    new { ProductsId = 4, CategoriesId = 4 },
+                    new { ProductsId = 4, CategoriesId = 6 },
+                    new { ProductsId = 4, CategoriesId = 8 },
+                    new { ProductsId = 4, CategoriesId = 9 },
+                    new { ProductsId = 4, CategoriesId = 15 },
+                    new { ProductsId = 4, CategoriesId = 16 },
+                    new { ProductsId = 4, CategoriesId = 18 },
+                    new { ProductsId = 4, CategoriesId = 20 }
+                ));
 
         modelBuilder.Entity<Category>().HasData(
             new Category
@@ -42,58 +70,139 @@ internal class CommandDbContext : DbContext
                 Id = 2,
                 Name = "Laptops",
                 NormalizedName = "laptops"
-            }
-        );
-
-        modelBuilder.Entity<Attribute>().HasData(
-            new Attribute
-            {
-                Id = 1,
-                Name = "Brand",
-                NormalizedName = "phone_brand",
-                CategoryId = 1
             },
-            new Attribute
-            {
-                Id = 2,
-                Name = "Brand",
-                NormalizedName = "laptop_brand",
-                CategoryId = 2
-            },
-            new Attribute
+            new Category
             {
                 Id = 3,
-                Name = "RAM",
-                NormalizedName = "phone_ram",
-                CategoryId = 1
+                Name = "Brand",
+                NormalizedName = "smartphones_brand",
+                ParentId = 1,
             },
-            new Attribute
+            new Category
             {
                 Id = 4,
-                Name = "RAM",
-                NormalizedName = "laptop_ram",
-                CategoryId = 2
+                Name = "Brand",
+                NormalizedName = "laptops_brand",
+                ParentId = 2,
             },
-            new Attribute
+            new Category
             {
                 Id = 5,
-                Name = "ROM",
-                NormalizedName = "phone_rom",
-                CategoryId = 1
+                Name = "RAM",
+                NormalizedName = "smartphones_ram",
+                ParentId = 1,
             },
-            new Attribute
+            new Category
             {
                 Id = 6,
-                Name = "ROM",
-                NormalizedName = "laptop_rom",
-                CategoryId = 2
+                Name = "RAM",
+                NormalizedName = "laptops_ram",
+                ParentId = 2,
             },
-            new Attribute
+            new Category
             {
                 Id = 7,
+                Name = "ROM",
+                NormalizedName = "smartphones_rom",
+                ParentId = 1,
+            },
+            new Category
+            {
+                Id = 8,
+                Name = "ROM",
+                NormalizedName = "laptops_rom",
+                ParentId = 2,
+            },
+            new Category
+            {
+                Id = 9,
                 Name = "Processor",
-                NormalizedName = "laptop_processor",
-                CategoryId = 2
+                NormalizedName = "laptops_processor",
+                ParentId = 2,
+            },
+            new Category
+            {
+                Id = 10,
+                Name = "Samsung",
+                NormalizedName = "smartphones_brand_samsung",
+                ParentId = 3,
+            },
+            new Category
+            {
+                Id = 11,
+                Name = "Apple",
+                NormalizedName = "smartphones_brand_apple",
+                ParentId = 3,
+            },
+            new Category
+            {
+                Id = 12,
+                Name = "12GB",
+                NormalizedName = "smartphones_ram_12gb",
+                ParentId = 5,
+            },
+            new Category
+            {
+                Id = 13,
+                Name = "8GB",
+                NormalizedName = "smartphones_ram_8gb",
+                ParentId = 5,
+            },
+            new Category
+            {
+                Id = 14,
+                Name = "512GB",
+                NormalizedName = "smartphones_rom_512gb",
+                ParentId = 7,
+            },
+            new Category
+            {
+                Id = 15,
+                Name = "Apple",
+                NormalizedName = "laptops_brand_apple",
+                ParentId = 4,
+            },
+            new Category
+            {
+                Id = 16,
+                Name = "16GB",
+                NormalizedName = "laptops_ram_16gb",
+                ParentId = 6,
+            },
+            new Category
+            {
+                Id = 17,
+                Name = "18GB",
+                NormalizedName = "laptops_ram_18gb",
+                ParentId = 6,
+            },
+            new Category
+            {
+                Id = 18,
+                Name = "512GB",
+                NormalizedName = "laptops_rom_512gb",
+                ParentId = 8,
+            },
+            new Category
+            {
+                Id = 19,
+                Name = "1024GB",
+                NormalizedName = "laptops_ram_1024gb",
+                ParentId = 8,
+            },
+            new Category
+            {
+                Id = 20,
+                Name = "M3",
+                NormalizedName = "laptops_processor_m3",
+                ParentId = 9,
+            },
+            new Category
+            {
+                Id = 21,
+                Name = "M3 Pro",
+                NormalizedName = "laptops_processor_m3pro",
+                ParentId = 9,
             }
         );
 
@@ -103,133 +212,28 @@ internal class CommandDbContext : DbContext
                 Id = 1,
                 Name = "Samsung Galaxy S24 Ultra",
                 Price = 1119.99,
-                Quantity = 14,
-                CategoryId = 1
+                Quantity = 14
             },
             new Product
             {
                 Id = 2,
                 Name = "IPhone 15 Pro",
                 Price = 999,
-                Quantity = 10,
-                CategoryId = 1
+                Quantity = 10
             },
             new Product
             {
                 Id = 3,
                 Name = "MacBook Pro 16'",
                 Price = 2499,
-                Quantity = 2,
-                CategoryId = 2
+                Quantity = 2
             },
             new Product
             {
                 Id = 4,
                 Name = "MacBook Air 13'",
                 Price = 1099,
-                Quantity = 12,
-                CategoryId = 2
-            }
-        );
-
-        modelBuilder.Entity<ProductAttribute>().HasData(
-            new ProductAttribute
-            {
-                Id = 1,
-                ProductId = 1,
-                AttributeId = 1,
-                Value = "Samsung"
-            },
-            new ProductAttribute
-            {
-                Id = 2,
-                ProductId = 1,
-                AttributeId = 3,
-                Value = "12GB"
-            },
-            new ProductAttribute
-            {
-                Id = 3,
-                ProductId = 1,
-                AttributeId = 5,
-                Value = "512Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 4,
-                ProductId = 2,
-                AttributeId = 1,
-                Value = "Apple"
-            },
-            new ProductAttribute
-            {
-                Id = 5,
-                ProductId = 2,
-                AttributeId = 3,
-                Value = "8GB"
-            },
-            new ProductAttribute
-            {
-                Id = 6,
-                ProductId = 2,
-                AttributeId = 5,
-                Value = "512Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 7,
-                ProductId = 3,
-                AttributeId = 2,
-                Value = "Apple"
-            },
-            new ProductAttribute
-            {
-                Id = 8,
-                ProductId = 3,
-                AttributeId = 4,
-                Value = "18GB"
-            },
-            new ProductAttribute
-            {
-                Id = 9,
-                ProductId = 3,
-                AttributeId = 6,
-                Value = "1024Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 10,
-                ProductId = 3,
-                AttributeId = 7,
-                Value = "M3 Pro"
-            },
-            new ProductAttribute
-            {
-                Id = 11,
-                ProductId = 4,
-                AttributeId = 2,
-                Value = "Apple"
-            },
-            new ProductAttribute
-            {
-                Id = 12,
-                ProductId = 4,
-                AttributeId = 4,
-                Value = "16GB"
-            },
-            new ProductAttribute
-            {
-                Id = 13,
-                ProductId = 4,
-                AttributeId = 6,
-                Value = "512Gb"
-            },
-            new ProductAttribute
-            {
-                Id = 14,
-                ProductId = 4,
-                AttributeId = 7,
-                Value = "M3"
+                Quantity = 12
             }
         );
 
@@ -244,8 +248,6 @@ internal class CommandDbContext : DbContext
     }
 
     public DbSet<Product> Products { get; set; }
-    public DbSet<Attribute> Attributes { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Discount> Discounts { get; set; }
-    public DbSet<ProductAttribute> ProductAttributes { get; set; }
 }

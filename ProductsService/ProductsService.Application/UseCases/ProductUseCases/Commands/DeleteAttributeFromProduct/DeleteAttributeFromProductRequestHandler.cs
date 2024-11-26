@@ -9,15 +9,16 @@ internal class DeleteAttributeFromProductRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(DeleteAttributeFromProductRequest request, CancellationToken cancellationToken)
     {
-        var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.productAttributeId, cancellationToken);
+        //var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.productAttributeId, cancellationToken);
 
-        if (productAttribute is null)
-        {
-            throw new NotFoundException("No such product attribute");
-        }
+        //if (productAttribute is null)
+        //{
+        //    throw new NotFoundException("No such product attribute");
+        //}
 
-        await unitOfWork.ProductAttributeCommandRepository.DeleteAsync(productAttribute, cancellationToken);
+        //await unitOfWork.ProductAttributeCommandRepository.DeleteAsync(productAttribute, cancellationToken);
 
-        await unitOfWork.SaveAllAsync(cancellationToken);
+        //await unitOfWork.SaveAllAsync(cancellationToken);
+        throw new NotImplementedException();
     }
 }

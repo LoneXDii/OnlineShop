@@ -29,10 +29,10 @@ public class CategoriesController : ControllerBase
 
     [HttpGet]
     [Route("attributes")]
-    public async Task<ActionResult<List<AttributeDTO>>> GetCategoryAttributes([FromQuery] GetCategoryAttributesRequest request,
+    public async Task<ActionResult<List<CategoryDTO>>> GetCategoryAttributes([FromQuery] GetCategoryAttributesRequest request,
         CancellationToken cancellationToken)
     {
-       var attributes = await _mediator.Send(request, cancellationToken);
+        var attributes = await _mediator.Send(request, cancellationToken);
 
         return Ok(attributes);
     }

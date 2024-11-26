@@ -2,7 +2,6 @@
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
 using ProductsService.Infrastructure.Data;
-using Attribute = ProductsService.Domain.Entities.Attribute;
 
 namespace ProductsService.Infrastructure.Repositories;
 
@@ -14,10 +13,7 @@ internal class UnitOfWork : IUnitOfWork
     public UnitOfWork(CommandDbContext commandDbContext, QueryDbContext queryDbContext,
         ICommandRepository<Product> productCommandRepository, IQueryRepository<Product> productQueryRepository,
         ICommandRepository<Category> categoryCommandRepository, IQueryRepository<Category> categoryQueryRepository,
-        ICommandRepository<Attribute> attributeCommandRepository, IQueryRepository<Attribute> attributeQueryRepository,
-        ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository,
-        ICommandRepository<ProductAttribute> productAttributeCommandRepository,
-        IQueryRepository<ProductAttribute> productAttributeQueryRepository)
+        ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository)
     {
         _commandDbContext = commandDbContext;
         _queryDbContext = queryDbContext;
@@ -26,12 +22,8 @@ internal class UnitOfWork : IUnitOfWork
         ProductQueryRepository = productQueryRepository;
         CategoryCommandRepository = categoryCommandRepository;
         CategoryQueryRepository = categoryQueryRepository;
-        AttributeCommandRepository = attributeCommandRepository;
-        AttributeQueryRepository = attributeQueryRepository;
         DiscountCommandRepository = discountCommandRepository;
         DiscountQueryRepository = discountQueryRepository;
-        ProductAttributeCommandRepository = productAttributeCommandRepository;
-        ProductAttributeQueryRepository = productAttributeQueryRepository;
     }
 
     public ICommandRepository<Product> ProductCommandRepository { get; private set; }
@@ -42,15 +34,9 @@ internal class UnitOfWork : IUnitOfWork
 
     public IQueryRepository<Category> CategoryQueryRepository { get; private set; }
 
-    public ICommandRepository<Attribute> AttributeCommandRepository { get; private set; }
-
-    public IQueryRepository<Attribute> AttributeQueryRepository { get; private set; }
-
     public ICommandRepository<Discount> DiscountCommandRepository { get; private set; }
 
     public IQueryRepository<Discount> DiscountQueryRepository { get; private set; }
-    public ICommandRepository<ProductAttribute> ProductAttributeCommandRepository { get; private set; }
-    public IQueryRepository<ProductAttribute> ProductAttributeQueryRepository { get; private set; }
 
     public async Task EnableMigrationsAsync(CancellationToken cancellationToken = default)
     {

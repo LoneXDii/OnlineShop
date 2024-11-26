@@ -8,12 +8,12 @@ internal class ProductMappingProfile : Profile
 {
     public ProductMappingProfile()
     {
-        CreateMap<Product, ProductDTO>()
-            .ForMember(dest => dest.AttributeValues, opt => opt.MapFrom(src => src.ProductAttributes));
+        //CreateMap<Product, ProductDTO>()
+        //    .ForMember(dest => dest.AttributeValues, opt => opt.MapFrom(src => src.ProductAttributes));
 
-        CreateMap<PostProductDTO, Product>()
-            .ForMember(dest => dest.ProductAttributes, opt => opt.MapFrom(src => src.AttributeValues));
+        //CreateMap<PostProductDTO, Product>()
+        //    .ForMember(dest => dest.ProductAttributes, opt => opt.MapFrom(src => src.AttributeValues));
 
-        CreateMap<UpdateProductDTO, Product>();
+        //CreateMap<UpdateProductDTO, Product>();
     }
 }

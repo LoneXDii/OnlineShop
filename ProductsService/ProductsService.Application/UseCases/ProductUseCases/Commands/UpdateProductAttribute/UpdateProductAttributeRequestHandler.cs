@@ -9,17 +9,18 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
     {
-        var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.ProductAttributeId, cancellationToken);
+        //var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.ProductAttributeId, cancellationToken);
 
-        if (productAttribute is null)
-        {
-            throw new NotFoundException("No such attribute");
-        }
+        //if (productAttribute is null)
+        //{
+        //    throw new NotFoundException("No such attribute");
+        //}
 
-        productAttribute.Value = request.Value;
+        //productAttribute.Value = request.Value;
 
-        await unitOfWork.ProductAttributeCommandRepository.UpdateAsync(productAttribute, cancellationToken);
+        //await unitOfWork.ProductAttributeCommandRepository.UpdateAsync(productAttribute, cancellationToken);
 
-        await unitOfWork.SaveAllAsync(cancellationToken);
+        //await unitOfWork.SaveAllAsync(cancellationToken);
+        throw new NotImplementedException();
     }
 }
