@@ -73,6 +73,7 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
     {
         Includes.AddRange(other.Includes);
         IncludeStrings.AddRange(other.IncludeStrings);
+        DescendingBy = DescendingBy ?? other.DescendingBy;
 
         return this;
     }

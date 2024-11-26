@@ -19,6 +19,12 @@ internal static class SpecificationQueryBuilder
         query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
         query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
+        if (specification.DescendingBy is not null)
+        {
+            query = query.GroupBy(specification.DescendingBy)
+                .Select(g => g.First());
+        }
+
         return query;
     }
 }

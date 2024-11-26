@@ -42,10 +42,10 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
 
     public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
-        IQueryable<T>? query = _entities.AsQueryable();
+        var query = _entities.AsQueryable();
         query = SpecificationQueryBuilder.GetQuery(query, specification);
 
-        var entities = await query.ToListAsync(cancellationToken);
+        var entities = await query.ToListAsync();
 
         return entities;
     }
