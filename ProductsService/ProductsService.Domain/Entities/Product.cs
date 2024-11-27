@@ -9,6 +9,6 @@ public class Product : IEntity
     public double Price { get; set; }
     public int Quantity { get; set; }
     public string? ImageUrl { get; set; }
-    public virtual IEnumerable<Category>? Categories { get; set; }
-    public virtual IEnumerable<Discount>? Discounts { get; set; }
+	public virtual ICollection<CategoryProduct>? CategoryProducts { get; set; }
+	public virtual ICollection<Discount>? Discounts { get; set; }
 }

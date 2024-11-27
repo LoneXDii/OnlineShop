@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Specifications\CategoryProduct\" />
     <Folder Include="UseCases\CategoryUseCases\Commands\" />
   </ItemGroup>
 

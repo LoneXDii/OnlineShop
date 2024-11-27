@@ -6,6 +6,6 @@ internal class ProductIncludesSpecification : CombinableSpecification<Product>
 {
     public ProductIncludesSpecification() : base()
     {
-        AddInclude(p => p.Categories);
+        AddInclude($"{nameof(Product.CategoryProducts)}.{nameof(CategoryProduct.Category)}.{nameof(Category.Children)}");
     }
 }

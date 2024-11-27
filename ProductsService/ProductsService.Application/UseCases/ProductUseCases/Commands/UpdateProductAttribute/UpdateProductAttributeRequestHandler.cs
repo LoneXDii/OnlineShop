@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
@@ -9,18 +10,25 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
     {
-        //var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.ProductAttributeId, cancellationToken);
+        var oldAttribute = await unitOfWork.CategoryProductQueryRepository.FirstOrDefaultAsync(cp => cp.ProductId == request.ProductId && cp.CategoryId == request.OldValueId,
+            cancellationToken, cp => cp.Category);
 
-        //if (productAttribute is null)
-        //{
-        //    throw new NotFoundException("No such attribute");
-        //}
+        var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewValueId, cancellationToken);
 
-        //productAttribute.Value = request.Value;
+        if (oldAttribute is null || newAttribute is null)
+        {
+            throw new BadRequestException("Wrong attributes ids");
+        }
 
-        //await unitOfWork.ProductAttributeCommandRepository.UpdateAsync(productAttribute, cancellationToken);
+        if (newAttribute.ParentId != oldAttribute.Category.ParentId)
+        {
+            throw new BadRequestException("New value and old values must be from same attribute");
+        }
 
-        //await unitOfWork.SaveAllAsync(cancellationToken);
-        throw new NotImplementedException();
+        await unitOfWork.CategoryProductCommandRepository.DeleteAsync(oldAttribute, cancellationToken);
+
+        await unitOfWork.CategoryProductCommandRepository.AddAsync(new CategoryProduct { CategoryId = newAttribute.Id, ProductId = request.ProductId }, cancellationToken);
+
+        await unitOfWork.SaveAllAsync(cancellationToken);
     }
 }

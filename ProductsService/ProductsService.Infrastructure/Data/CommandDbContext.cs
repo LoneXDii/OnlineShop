@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ProductsService.Domain.Entities;
 
 namespace ProductsService.Infrastructure.Data;
@@ -7,7 +8,12 @@ internal class CommandDbContext : DbContext
 {
     public CommandDbContext(DbContextOptions<CommandDbContext> options) : base(options) { }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+	public DbSet<Product> Products { get; set; }
+	public DbSet<Category> Categories { get; set; }
+	public DbSet<Discount> Discounts { get; set; }
+    public DbSet<CategoryProduct> CategoryProducts { get; set; }
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>()
             .HasOne(category => category.Parent)
@@ -19,44 +25,51 @@ internal class CommandDbContext : DbContext
             .WithMany(product => product.Discounts)
             .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Category>()
-            .HasMany(category => category.Products)
-            .WithMany(product => product.Categories)
-            .UsingEntity(j => j
-                .HasData(
-                    new { ProductsId = 1, CategoriesId =1 },
-                    new { ProductsId = 1, CategoriesId = 3 },
-                    new { ProductsId = 1, CategoriesId = 5 },
-                    new { ProductsId = 1, CategoriesId = 7 },
-                    new { ProductsId = 1, CategoriesId = 10 },
-                    new { ProductsId = 1, CategoriesId = 12 },
-                    new { ProductsId = 1, CategoriesId = 14 },
-                    new { ProductsId = 2, CategoriesId = 1 },
-                    new { ProductsId = 2, CategoriesId = 3 },
-                    new { ProductsId = 2, CategoriesId = 5 },
-                    new { ProductsId = 2, CategoriesId = 7 },
-                    new { ProductsId = 2, CategoriesId = 11 },
-                    new { ProductsId = 2, CategoriesId = 13 },
-                    new { ProductsId = 2, CategoriesId = 14 },
-                    new { ProductsId = 3, CategoriesId = 2 },
-                    new { ProductsId = 3, CategoriesId = 4 },
-                    new { ProductsId = 3, CategoriesId = 6 },
-                    new { ProductsId = 3, CategoriesId = 8 },
-                    new { ProductsId = 3, CategoriesId = 9 },
-                    new { ProductsId = 3, CategoriesId = 15 },
-                    new { ProductsId = 3, CategoriesId = 17 },
-                    new { ProductsId = 3, CategoriesId = 19 },
-                    new { ProductsId = 3, CategoriesId = 21 },
-                    new { ProductsId = 4, CategoriesId = 2 },
-                    new { ProductsId = 4, CategoriesId = 4 },
-                    new { ProductsId = 4, CategoriesId = 6 },
-                    new { ProductsId = 4, CategoriesId = 8 },
-                    new { ProductsId = 4, CategoriesId = 9 },
-                    new { ProductsId = 4, CategoriesId = 15 },
-                    new { ProductsId = 4, CategoriesId = 16 },
-                    new { ProductsId = 4, CategoriesId = 18 },
-                    new { ProductsId = 4, CategoriesId = 20 }
-                ));
+        modelBuilder.Entity<Product>()
+            .HasMany(product => product.CategoryProducts)
+            .WithOne(cp => cp.Product)
+            .HasForeignKey(cp => cp.ProductId);
+
+		modelBuilder.Entity<Category>()
+			.HasMany(category => category.CategoryProducts)
+			.WithOne(cp => cp.Category)
+			.HasForeignKey(cp => cp.CategoryId);
+
+		modelBuilder.Entity<CategoryProduct>()
+			.HasData(
+				new { Id = 1, ProductId = 1, CategoryId = 1 },
+				new { Id = 2, ProductId = 1, CategoryId = 3 },
+				new { Id = 3, ProductId = 1, CategoryId = 5 },
+				new { Id = 4, ProductId = 1, CategoryId = 7 },
+				new { Id = 5, ProductId = 1, CategoryId = 10 },
+				new { Id = 6, ProductId = 1, CategoryId = 12 },
+				new { Id = 7, ProductId = 1, CategoryId = 14 },
+				new { Id = 8, ProductId = 2, CategoryId = 1 },
+				new { Id = 9, ProductId = 2, CategoryId = 3 },
+				new { Id = 10, ProductId = 2, CategoryId = 5 },
+				new { Id = 11, ProductId = 2, CategoryId = 7 },
+				new { Id = 12, ProductId = 2, CategoryId = 11 },
+				new { Id = 13, ProductId = 2, CategoryId = 13 },
+				new { Id = 14, ProductId = 2, CategoryId = 14 },
+				new { Id = 15, ProductId = 3, CategoryId = 2 },
+				new { Id = 16, ProductId = 3, CategoryId = 4 },
+				new { Id = 17, ProductId = 3, CategoryId = 6 },
+				new { Id = 18, ProductId = 3, CategoryId = 8 },
+				new { Id = 19, ProductId = 3, CategoryId = 9 },
+				new { Id = 20, ProductId = 3, CategoryId = 15 },
+				new { Id = 21, ProductId = 3, CategoryId = 17 },
+				new { Id = 22, ProductId = 3, CategoryId = 19 },
+				new { Id = 23, ProductId = 3, CategoryId = 21 },
+				new { Id = 24, ProductId = 4, CategoryId = 2 },
+				new { Id = 25, ProductId = 4, CategoryId = 4 },
+				new { Id = 26, ProductId = 4, CategoryId = 6 },
+				new { Id = 27, ProductId = 4, CategoryId = 8 },
+				new { Id = 28, ProductId = 4, CategoryId = 9 },
+				new { Id = 29, ProductId = 4, CategoryId = 15 },
+				new { Id = 30, ProductId = 4, CategoryId = 16 },
+				new { Id = 31, ProductId = 4, CategoryId = 18 },
+				new { Id = 32, ProductId = 4, CategoryId = 20 }
+			);
 
         modelBuilder.Entity<Category>().HasData(
             new Category
@@ -246,8 +259,4 @@ internal class CommandDbContext : DbContext
             }
         );
     }
-
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Discount> Discounts { get; set; }
 }

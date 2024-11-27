@@ -9,6 +9,6 @@ public class Category : IEntity
     public string NormalizedName { get; set; }
     public int? ParentId { get; set; }
     public virtual Category? Parent { get; set; }
-    public virtual IEnumerable<Category>? Children { get; set;}
-    public virtual IEnumerable<Product>? Products { get; set; }
+    public virtual ICollection<Category>? Children { get; set;}
+    public virtual ICollection<CategoryProduct>? CategoryProducts { get; set; }
 }
