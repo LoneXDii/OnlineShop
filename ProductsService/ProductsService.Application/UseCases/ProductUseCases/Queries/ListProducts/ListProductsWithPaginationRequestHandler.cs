@@ -8,6 +8,7 @@ using ProductsService.Application.Models;
 using ProductsService.Domain.Entities;
 using Microsoft.Extensions.Options;
 using ProductsService.Application.Configuration;
+using ProductsService.Application.Specifications.Products;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 
@@ -17,43 +18,43 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
     public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
         var specification = new CombinableSpecification<Product>();
-        //specification = specification & new ProductIncludesSpecification();
+        specification = specification & new ProductIncludesSpecification();
 
-        //if (request.requestDto.CategoryId is not null)
-        //{
-        //    specification = specification & new ProductCategorySpecification(request.requestDto.CategoryId.Value);
-        //}
+        if (request.CategoryId is not null)
+        {
+            specification = specification & new ProductCategorySpecification(request.CategoryId.Value);
+        }
 
-        //if (request.requestDto.MinPrice is not null)
-        //{
-        //    specification = specification & new ProductMinPriceSpecification(request.requestDto.MinPrice.Value);
-        //}
+        if (request.MinPrice is not null)
+        {
+            specification = specification & new ProductMinPriceSpecification(request.MinPrice.Value);
+        }
 
-        //if (request.requestDto.MaxPrice is not null)
-        //{
-        //    specification = specification & new ProductMaxPriceSpecification(request.requestDto.MaxPrice.Value);
-        //}
+        if (request.MaxPrice is not null)
+        {
+            specification = specification & new ProductMaxPriceSpecification(request.MaxPrice.Value);
+        }
 
-        //if (request.attributes is not null)
-        //{
-        //    foreach (var attribute in request.attributes)
-        //    {
-        //        specification = specification & new ProductAttributeValueSpecification(attribute.Key, attribute.Value);
-        //    }
-        //}
+        if (request.ValuesIds is not null)
+        {
+            foreach (var id in request.ValuesIds)
+            {
+                specification = specification & new ProductCategorySpecification(id);
+            }
+        }
 
         var maxPageSize = paginationOptions.Value.MaxPageSize;
 
-        var pageSize = request.requestDto.PageSize > maxPageSize
+        var pageSize = request.PageSize > maxPageSize
             ? maxPageSize
-            : request.requestDto.PageSize;
+            : request.PageSize;
 
-        var items = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(request.requestDto.PageNo, pageSize, 
+        var items = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(request.PageNo, pageSize,
             specification, cancellationToken);
 
         var totalPages = (int)Math.Ceiling(items.Count() / (double)pageSize);
 
-        if (request.requestDto.PageNo > totalPages)
+        if (request.PageNo > totalPages)
         {
             throw new NotFoundException("No such page");
         }
@@ -61,7 +62,7 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
         var data = new PaginatedListModel<ProductDTO>
         {
             Items = mapper.Map<List<ProductDTO>>(items),
-            CurrentPage = request.requestDto.PageNo,
+            CurrentPage = request.PageNo,
             TotalPages = totalPages
         };
 

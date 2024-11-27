@@ -24,8 +24,9 @@ public static class DependencyInjection
 
         services.AddAutoMapper(
             typeof(ProductMappingProfile),
-            typeof(CategoryMappingProfile));
-
+            typeof(CategoryMappingProfile),
+            typeof(AttributeValueMappingProfile),
+            typeof(CategoryAttributeValuesMappingProfile));
 
         return services;
     }

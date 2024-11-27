@@ -17,7 +17,6 @@ internal abstract class BaseSpecification<T> : ISpecification<T> where T : IEnti
     public Expression<Func<T, bool>>? Criteria { get; }
     public List<Expression<Func<T, object>>> Includes { get; } = new();
     public List<string> IncludeStrings { get; } = new();
-    public Expression<Func<T, object>>? DescendingBy { get; protected set; }
 
     protected void AddInclude(Expression<Func<T, object>> includeExpression)
     {
@@ -27,10 +26,5 @@ internal abstract class BaseSpecification<T> : ISpecification<T> where T : IEnti
     protected void AddInclude(string includeString)
     {
         IncludeStrings.Add(includeString);
-    }
-
-    protected void SetDescendingFilter(Expression<Func<T, object>> filterExpression)
-    {
-        DescendingBy = filterExpression;
     }
 }

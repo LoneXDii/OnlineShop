@@ -4,9 +4,9 @@ using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.Mapping;
 
-internal class CategoryAttributeValueMapping : Profile
+internal class CategoryAttributeValuesMappingProfile : Profile
 {
-    public CategoryAttributeValueMapping()
+    public CategoryAttributeValuesMappingProfile()
     {
         CreateMap<Category, CategoryAttributesValuesDTO>()
             .ForMember(dest => dest.Attribute, opt => opt.MapFrom(src => src))

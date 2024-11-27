@@ -35,30 +35,10 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProductsListProducts(
-        CancellationToken cancellationToken,
-        [FromQuery] double? maxPrice,
-        [FromQuery] double? minPrice,
-        [FromQuery] int? categoryId,
-        [FromQuery] Dictionary<string, string>? attributes,
-        [FromQuery] int pageNo = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] ListProductsWithPaginationRequest request,
+        CancellationToken cancellationToken)
     {
-        var keysToIgnore = new HashSet<string> { "maxPrice", "minPrice", "categoryId", "pageNo", "pageSize" };
-
-        attributes = attributes
-            ?.Where(kv => !keysToIgnore.Contains(kv.Key))
-            .ToDictionary(kv => kv.Key, kv => kv.Value);
-
-        var requestDto = new ListProductsRequestDTO
-        {
-            PageNo = pageNo,
-            PageSize = pageSize,
-            MaxPrice = maxPrice,
-            MinPrice = minPrice,
-            CategoryId = categoryId
-        };
-
-        var result = await _mediator.Send(new ListProductsWithPaginationRequest(requestDto, attributes), cancellationToken);
+        var result = await _mediator.Send(request, cancellationToken);
 
         return Ok(result);
     }
