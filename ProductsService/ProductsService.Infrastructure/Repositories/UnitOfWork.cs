@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
+using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
 
 namespace ProductsService.Infrastructure.Repositories;
@@ -46,5 +47,10 @@ internal class UnitOfWork : IUnitOfWork
     public async Task SaveAllAsync(CancellationToken cancellationToken = default)
     {
         await _commandDbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public void AttachInCommandContext(IEntity entity)
+    {
+        _commandDbContext.Attach(entity);
     }
 }

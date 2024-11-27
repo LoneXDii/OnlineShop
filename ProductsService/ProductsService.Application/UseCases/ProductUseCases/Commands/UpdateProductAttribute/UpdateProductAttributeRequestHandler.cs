@@ -5,22 +5,41 @@ using ProductsService.Domain.Abstractions.Database;
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
 internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<UpdateProductAttributeRequest>
+	: IRequestHandler<UpdateProductAttributeRequest>
 {
-    public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
-    {
-        //var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.ProductAttributeId, cancellationToken);
+	public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
+	{
 
-        //if (productAttribute is null)
-        //{
-        //    throw new NotFoundException("No such attribute");
-        //}
+		var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
 
-        //productAttribute.Value = request.Value;
+		var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, p => p.Categories);
 
-        //await unitOfWork.ProductAttributeCommandRepository.UpdateAsync(productAttribute, cancellationToken);
+		var oldAttribute = product.Categories.FirstOrDefault(c => c.Id == request.OldAttributeId);
 
-        //await unitOfWork.SaveAllAsync(cancellationToken);
-        throw new NotImplementedException();
+		if (newAttribute is null || oldAttribute is null || product is null) 
+		{
+			throw new BadRequestException("No entities with this isd");
+		}
+
+		if(newAttribute.ParentId != oldAttribute.ParentId)
+		{
+			throw new BadRequestException("Attributes must have the same parent");
+		}
+
+		if(product.Categories.FirstOrDefault(c => c.Id == newAttribute.Id) is not null)
+		{
+			throw new BadRequestException("Cant add existing attribute");
+		}
+
+		unitOfWork.AttachInCommandContext(newAttribute);
+		unitOfWork.AttachInCommandContext(oldAttribute);
+		unitOfWork.AttachInCommandContext(product);
+
+		product.Categories.Remove(oldAttribute);
+		product.Categories.Add(newAttribute);
+
+		await unitOfWork.ProductCommandRepository.UpdateAsync(product);
+
+		await unitOfWork.SaveAllAsync(cancellationToken);
     }
 }
