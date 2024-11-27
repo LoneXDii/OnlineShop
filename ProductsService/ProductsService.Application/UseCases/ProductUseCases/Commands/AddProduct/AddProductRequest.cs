@@ -1,11 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using ProductsService.Application.DTO;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
 
-public sealed record AddProductRequest(string Name,
-	double Price, 
-	int Quantity, 
-	List<int>? AttributeIds,
-	IFormFile? Image) 
-	: IRequest { }
+public sealed record AddProductRequest(PostProductDTO product) : IRequest { }

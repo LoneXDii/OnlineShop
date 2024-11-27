@@ -22,7 +22,11 @@ public static class DependencyInjection
 
         services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
 
-        services.AddAutoMapper(typeof(ProductMappingProfile));
+        services.AddAutoMapper(
+            typeof(ProductMappingProfile),
+            typeof(CategoryMappingProfile),
+            typeof(AttributeValueMappingProfile),
+            typeof(CategoryAttributeValuesMappingProfile));
 
         return services;
     }

@@ -24,9 +24,9 @@ public class ProductsController : ControllerBase
 
     [HttpPost]
     //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> CreateProduct([FromForm] AddProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromForm] PostProductDTO product, CancellationToken cancellationToken)
     {
-        await _mediator.Send(request, cancellationToken);
+        await _mediator.Send(new AddProductRequest(product), cancellationToken);
 
         return NoContent();
     }
@@ -41,7 +41,7 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
-	[HttpPut]
+    [HttpPut]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDTO productDTO, CancellationToken cancellationToken)
     {

@@ -11,13 +11,13 @@ internal class AddProductRequestHandler(IUnitOfWork unitOfWork, IBlobService blo
 {
     public async Task Handle(AddProductRequest request, CancellationToken cancellationToken)
     {
-        var product = mapper.Map<Product>(request);
+        var product = mapper.Map<Product>(request.product);
 
-        if(request.Image is not null)
+        if(request.product.Image is not null)
         {
-            using var stream = request.Image.OpenReadStream();
+            using var stream = request.product.Image.OpenReadStream();
 
-            product.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
+            product.ImageUrl = await blobService.UploadAsync(stream, request.product.Image.ContentType);
         }
 
         await unitOfWork.ProductCommandRepository.AddAsync(product, cancellationToken);
