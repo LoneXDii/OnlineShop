@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Domain.Abstractions.Database;
-using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
@@ -10,25 +9,18 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
     {
-        var oldAttribute = await unitOfWork.CategoryProductQueryRepository.FirstOrDefaultAsync(cp => cp.ProductId == request.ProductId && cp.CategoryId == request.OldValueId,
-            cancellationToken, cp => cp.Category);
+        //var productAttribute = await unitOfWork.ProductAttributeQueryRepository.GetByIdAsync(request.ProductAttributeId, cancellationToken);
 
-        var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewValueId, cancellationToken);
+        //if (productAttribute is null)
+        //{
+        //    throw new NotFoundException("No such attribute");
+        //}
 
-        if (oldAttribute is null || newAttribute is null)
-        {
-            throw new BadRequestException("Wrong attributes ids");
-        }
+        //productAttribute.Value = request.Value;
 
-        if (newAttribute.ParentId != oldAttribute.Category.ParentId)
-        {
-            throw new BadRequestException("New value and old values must be from same attribute");
-        }
+        //await unitOfWork.ProductAttributeCommandRepository.UpdateAsync(productAttribute, cancellationToken);
 
-        await unitOfWork.CategoryProductCommandRepository.DeleteAsync(oldAttribute, cancellationToken);
-
-        await unitOfWork.CategoryProductCommandRepository.AddAsync(new CategoryProduct { CategoryId = newAttribute.Id, ProductId = request.ProductId }, cancellationToken);
-
-        await unitOfWork.SaveAllAsync(cancellationToken);
+        //await unitOfWork.SaveAllAsync(cancellationToken);
+        throw new NotImplementedException();
     }
 }

@@ -60,26 +60,24 @@ namespace ProductsService.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CategoryProducts",
+                name: "CategoryProduct",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoriesId = table.Column<int>(type: "int", nullable: false),
+                    ProductsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryProducts", x => x.Id);
+                    table.PrimaryKey("PK_CategoryProduct", x => new { x.CategoriesId, x.ProductsId });
                     table.ForeignKey(
-                        name: "FK_CategoryProducts_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_CategoryProduct_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CategoryProducts_Products_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_CategoryProduct_Products_ProductsId",
+                        column: x => x.ProductsId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -145,14 +143,14 @@ namespace ProductsService.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "CategoryProducts",
-                columns: new[] { "Id", "CategoryId", "ProductId" },
+                table: "CategoryProduct",
+                columns: new[] { "CategoriesId", "ProductsId" },
                 values: new object[,]
                 {
-                    { 1, 1, 1 },
-                    { 8, 1, 2 },
-                    { 15, 2, 3 },
-                    { 24, 2, 4 }
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 2, 3 },
+                    { 2, 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -180,38 +178,38 @@ namespace ProductsService.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "CategoryProducts",
-                columns: new[] { "Id", "CategoryId", "ProductId" },
+                table: "CategoryProduct",
+                columns: new[] { "CategoriesId", "ProductsId" },
                 values: new object[,]
                 {
-                    { 2, 3, 1 },
-                    { 3, 5, 1 },
-                    { 4, 7, 1 },
-                    { 9, 3, 2 },
-                    { 10, 5, 2 },
-                    { 11, 7, 2 },
-                    { 16, 4, 3 },
-                    { 17, 6, 3 },
-                    { 18, 8, 3 },
-                    { 19, 9, 3 },
-                    { 25, 4, 4 },
-                    { 26, 6, 4 },
-                    { 27, 8, 4 },
-                    { 28, 9, 4 },
-                    { 5, 10, 1 },
-                    { 6, 12, 1 },
-                    { 7, 14, 1 },
-                    { 12, 11, 2 },
-                    { 13, 13, 2 },
-                    { 14, 14, 2 },
-                    { 20, 15, 3 },
-                    { 21, 17, 3 },
-                    { 22, 19, 3 },
-                    { 23, 21, 3 },
-                    { 29, 15, 4 },
-                    { 30, 16, 4 },
-                    { 31, 18, 4 },
-                    { 32, 20, 4 }
+                    { 3, 1 },
+                    { 3, 2 },
+                    { 4, 3 },
+                    { 4, 4 },
+                    { 5, 1 },
+                    { 5, 2 },
+                    { 6, 3 },
+                    { 6, 4 },
+                    { 7, 1 },
+                    { 7, 2 },
+                    { 8, 3 },
+                    { 8, 4 },
+                    { 9, 3 },
+                    { 9, 4 },
+                    { 10, 1 },
+                    { 11, 2 },
+                    { 12, 1 },
+                    { 13, 2 },
+                    { 14, 1 },
+                    { 14, 2 },
+                    { 15, 3 },
+                    { 15, 4 },
+                    { 16, 4 },
+                    { 17, 3 },
+                    { 18, 4 },
+                    { 19, 3 },
+                    { 20, 4 },
+                    { 21, 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -220,14 +218,9 @@ namespace ProductsService.Infrastructure.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryProducts_CategoryId",
-                table: "CategoryProducts",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryProducts_ProductId",
-                table: "CategoryProducts",
-                column: "ProductId");
+                name: "IX_CategoryProduct_ProductsId",
+                table: "CategoryProduct",
+                column: "ProductsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Discounts_ProductId",
@@ -239,7 +232,7 @@ namespace ProductsService.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CategoryProducts");
+                name: "CategoryProduct");
 
             migrationBuilder.DropTable(
                 name: "Discounts");

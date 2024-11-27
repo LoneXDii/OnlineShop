@@ -5,6 +5,8 @@ using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 using ProductsService.Application.Models;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteProduct;
@@ -59,10 +61,32 @@ public class ProductsController : ControllerBase
         return Ok();
     }
 
+    [HttpPost]
+    [Route("/attrubite")]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> AddProductAttribute([FromBody] AddProductAttributeDTO productAttribute,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new AddAttributeToProductRequest(productAttribute), cancellationToken);
+
+        return Ok();
+    }
+
     [HttpPut]
     [Route("/attribute")]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProductAttribute([FromBody] UpdateProductAttributeRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    [Route("/attribute")]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteProductAttribute([FromQuery] DeleteAttributeFromProductRequest request,
         CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);

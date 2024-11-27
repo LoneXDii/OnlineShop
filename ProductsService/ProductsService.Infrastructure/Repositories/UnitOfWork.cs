@@ -13,8 +13,7 @@ internal class UnitOfWork : IUnitOfWork
     public UnitOfWork(CommandDbContext commandDbContext, QueryDbContext queryDbContext,
         ICommandRepository<Product> productCommandRepository, IQueryRepository<Product> productQueryRepository,
         ICommandRepository<Category> categoryCommandRepository, IQueryRepository<Category> categoryQueryRepository,
-        ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository,
-		ICommandRepository<CategoryProduct> categoryProductCommandRepository, IQueryRepository<CategoryProduct> categoryProductQueryRepository)
+        ICommandRepository<Discount> discountCommandRepository, IQueryRepository<Discount> discountQueryRepository)
     {
         _commandDbContext = commandDbContext;
         _queryDbContext = queryDbContext;
@@ -25,8 +24,6 @@ internal class UnitOfWork : IUnitOfWork
         CategoryQueryRepository = categoryQueryRepository;
         DiscountCommandRepository = discountCommandRepository;
         DiscountQueryRepository = discountQueryRepository;
-        CategoryProductCommandRepository = categoryProductCommandRepository;
-		CategoryProductQueryRepository = categoryProductQueryRepository;
     }
 
     public ICommandRepository<Product> ProductCommandRepository { get; private set; }
@@ -40,10 +37,8 @@ internal class UnitOfWork : IUnitOfWork
     public ICommandRepository<Discount> DiscountCommandRepository { get; private set; }
 
     public IQueryRepository<Discount> DiscountQueryRepository { get; private set; }
-	public ICommandRepository<CategoryProduct> CategoryProductCommandRepository { get; private set; }
-	public IQueryRepository<CategoryProduct> CategoryProductQueryRepository { get; private set; }
 
-	public async Task EnableMigrationsAsync(CancellationToken cancellationToken = default)
+    public async Task EnableMigrationsAsync(CancellationToken cancellationToken = default)
     {
         await _commandDbContext.Database.MigrateAsync(cancellationToken);
     }

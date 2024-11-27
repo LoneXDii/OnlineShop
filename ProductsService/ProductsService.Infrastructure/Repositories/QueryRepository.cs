@@ -5,7 +5,6 @@ using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
 using ProductsService.Infrastructure.Specification;
 using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProductsService.Infrastructure.Repositories;
 
@@ -22,7 +21,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
 
     public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includedProperties)
     {
-        var query = _entities.AsQueryable();
+        IQueryable<T>? query = _entities.AsQueryable();
 
         foreach (var property in includedProperties)
         {
@@ -65,19 +64,11 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         return entities;
     }
 
-    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default,
-		params Expression<Func<T, object>>[] includedProperties)
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
     {
-        var query = _entities.AsQueryable();
+        var entity = await _entities.FirstOrDefaultAsync(filter, cancellationToken);
 
-		foreach (var property in includedProperties)
-		{
-			query = query.Include(property);
-		}
-
-		var entity = await query.FirstOrDefaultAsync(filter, cancellationToken);
-
-		return entity;
+        return entity;
     }
 
     public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
