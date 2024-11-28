@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.ProductCategories;
 
 public class AddAttributeToProductRequestValidator : AbstractValidator<AddAttributeToProductRequest>
 {

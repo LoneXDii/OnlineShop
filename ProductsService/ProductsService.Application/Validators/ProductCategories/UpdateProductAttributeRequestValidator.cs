@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.ProductCategories;
 
 public class UpdateProductAttributeRequestValidator : AbstractValidator<UpdateProductAttributeRequest>
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.Products;
 
 public class AddProductRequestValidator : AbstractValidator<AddProductRequest>
 {
@@ -39,7 +39,7 @@ public class AddProductRequestValidator : AbstractValidator<AddProductRequest>
     {
         foreach (var id in ids)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return false;
             }

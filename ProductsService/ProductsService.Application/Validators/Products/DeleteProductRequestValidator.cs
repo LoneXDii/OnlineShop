@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteProduct;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.Products;
 
 public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequest>
 {

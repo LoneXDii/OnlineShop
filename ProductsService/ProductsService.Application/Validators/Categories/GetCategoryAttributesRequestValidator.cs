@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryAttributes;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.Categories;
 
 public class GetCategoryAttributesRequestValidator : AbstractValidator<GetCategoryAttributesRequest>
 {

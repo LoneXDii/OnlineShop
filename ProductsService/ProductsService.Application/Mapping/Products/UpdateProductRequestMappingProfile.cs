@@ -2,7 +2,7 @@
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
 using ProductsService.Domain.Entities;
 
-namespace ProductsService.Application.Mapping;
+namespace ProductsService.Application.Mapping.Products;
 
 internal class UpdateProductRequestMappingProfile : Profile
 {

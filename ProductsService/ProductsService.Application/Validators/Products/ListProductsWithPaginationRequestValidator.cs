@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.Products;
 
 public class ListProductsWithPaginationRequestValidator : AbstractValidator<ListProductsWithPaginationRequest>
 {

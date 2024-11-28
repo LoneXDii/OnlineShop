@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetUniqueCategoryAttributesValues;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.Categories;
 
 public class GetUniqueCategoryAttributesValuesRequestValidator : AbstractValidator<GetUniqueCategoryAttributesValuesRequest>
 {

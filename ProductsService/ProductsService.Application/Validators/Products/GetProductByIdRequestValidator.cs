@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductById;
 
-namespace ProductsService.Application.Validators;
+namespace ProductsService.Application.Validators.Products;
 
 public class GetProductByIdRequestValidator : AbstractValidator<GetProductByIdRequest>
 {

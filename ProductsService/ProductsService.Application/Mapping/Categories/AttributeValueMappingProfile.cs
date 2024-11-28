@@ -2,7 +2,7 @@
 using ProductsService.Application.DTO;
 using ProductsService.Domain.Entities;
 
-namespace ProductsService.Application.Mapping;
+namespace ProductsService.Application.Mapping.Categories;
 
 internal class AttributeValueMappingProfile : Profile
 {

@@ -2,7 +2,7 @@
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddCategory;
 using ProductsService.Domain.Entities;
 
-namespace ProductsService.Application.Mapping;
+namespace ProductsService.Application.Mapping.Categories;
 
 internal class AddCategoryRequestMappingProfile : Profile
 {
