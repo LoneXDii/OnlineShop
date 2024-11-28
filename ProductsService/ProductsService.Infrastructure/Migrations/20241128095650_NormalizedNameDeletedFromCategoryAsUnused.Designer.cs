@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductsService.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ProductsService.Infrastructure.Data;
 namespace ProductsService.Infrastructure.Migrations
 {
     [DbContext(typeof(CommandDbContext))]
-    partial class CommandDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241128095650_NormalizedNameDeletedFromCategoryAsUnused")]
+    partial class NormalizedNameDeletedFromCategoryAsUnused
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

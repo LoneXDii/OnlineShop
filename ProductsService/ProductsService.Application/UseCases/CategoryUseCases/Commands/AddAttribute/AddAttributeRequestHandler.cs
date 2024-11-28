@@ -19,8 +19,6 @@ internal class AddAttributeRequestHandler(IUnitOfWork unitOfWork, IMapper mapper
         }
 
         var attribute = mapper.Map<Category>(request);
-        //DELETE THIS
-        attribute.NormalizedName = "";
 
         await unitOfWork.CategoryCommandRepository.AddAsync(attribute, cancellationToken);
 

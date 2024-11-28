@@ -64,145 +64,124 @@ internal class CommandDbContext : DbContext
             {
                 Id = 1,
                 Name = "Smartphones",
-                NormalizedName = "smartphones"
             },
             new Category
             {
                 Id = 2,
                 Name = "Laptops",
-                NormalizedName = "laptops"
             },
             new Category
             {
                 Id = 3,
                 Name = "Brand",
-                NormalizedName = "smartphones_brand",
                 ParentId = 1,
             },
             new Category
             {
                 Id = 4,
                 Name = "Brand",
-                NormalizedName = "laptops_brand",
                 ParentId = 2,
             },
             new Category
             {
                 Id = 5,
                 Name = "RAM",
-                NormalizedName = "smartphones_ram",
                 ParentId = 1,
             },
             new Category
             {
                 Id = 6,
                 Name = "RAM",
-                NormalizedName = "laptops_ram",
                 ParentId = 2,
             },
             new Category
             {
                 Id = 7,
                 Name = "ROM",
-                NormalizedName = "smartphones_rom",
                 ParentId = 1,
             },
             new Category
             {
                 Id = 8,
                 Name = "ROM",
-                NormalizedName = "laptops_rom",
                 ParentId = 2,
             },
             new Category
             {
                 Id = 9,
                 Name = "Processor",
-                NormalizedName = "laptops_processor",
                 ParentId = 2,
             },
             new Category
             {
                 Id = 10,
                 Name = "Samsung",
-                NormalizedName = "smartphones_brand_samsung",
                 ParentId = 3,
             },
             new Category
             {
                 Id = 11,
                 Name = "Apple",
-                NormalizedName = "smartphones_brand_apple",
                 ParentId = 3,
             },
             new Category
             {
                 Id = 12,
                 Name = "12GB",
-                NormalizedName = "smartphones_ram_12gb",
                 ParentId = 5,
             },
             new Category
             {
                 Id = 13,
                 Name = "8GB",
-                NormalizedName = "smartphones_ram_8gb",
                 ParentId = 5,
             },
             new Category
             {
                 Id = 14,
                 Name = "512GB",
-                NormalizedName = "smartphones_rom_512gb",
                 ParentId = 7,
             },
             new Category
             {
                 Id = 15,
                 Name = "Apple",
-                NormalizedName = "laptops_brand_apple",
                 ParentId = 4,
             },
             new Category
             {
                 Id = 16,
                 Name = "16GB",
-                NormalizedName = "laptops_ram_16gb",
                 ParentId = 6,
             },
             new Category
             {
                 Id = 17,
                 Name = "18GB",
-                NormalizedName = "laptops_ram_18gb",
                 ParentId = 6,
             },
             new Category
             {
                 Id = 18,
                 Name = "512GB",
-                NormalizedName = "laptops_rom_512gb",
                 ParentId = 8,
             },
             new Category
             {
                 Id = 19,
                 Name = "1024GB",
-                NormalizedName = "laptops_ram_1024gb",
                 ParentId = 8,
             },
             new Category
             {
                 Id = 20,
                 Name = "M3",
-                NormalizedName = "laptops_processor_m3",
                 ParentId = 9,
             },
             new Category
             {
                 Id = 21,
                 Name = "M3 Pro",
-                NormalizedName = "laptops_processor_m3pro",
                 ParentId = 9,
             }
         );

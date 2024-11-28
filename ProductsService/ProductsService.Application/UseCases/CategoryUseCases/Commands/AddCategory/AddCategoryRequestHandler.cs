@@ -12,9 +12,6 @@ internal class AddCategoryRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         var category = mapper.Map<Category>(request);
 
-        //DELETE THIS
-        category.NormalizedName = "";
-
         await unitOfWork.CategoryCommandRepository.AddAsync(category, cancellationToken);
 
         await unitOfWork.SaveAllAsync(cancellationToken);
