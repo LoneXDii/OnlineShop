@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProductsService.Application.Exceptions;
+using ProductsService.Domain.Abstractions.BlobStorage;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.CategoryUseCases.Commands.UpdateCategory;
 
-internal class UpdateCategoryRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+internal class UpdateCategoryRequestHandler(IUnitOfWork unitOfWork, IBlobService blobService, IMapper mapper)
     : IRequestHandler<UpdateCategoryRequest>
 {
     public async Task Handle(UpdateCategoryRequest request, CancellationToken cancellationToken)
@@ -18,6 +20,18 @@ internal class UpdateCategoryRequestHandler(IUnitOfWork unitOfWork, IMapper mapp
         }
 
         mapper.Map(request, category);
+
+        if (request.Image is not null)
+        {
+            if (category.ImageUrl is not null)
+            {
+                await blobService.DeleteAsync(category.ImageUrl);
+            }
+
+            using Stream stream = request.Image.OpenReadStream();
+
+            category.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
+        }
 
         await unitOfWork.CategoryCommandRepository.UpdateAsync(category, cancellationToken);
 

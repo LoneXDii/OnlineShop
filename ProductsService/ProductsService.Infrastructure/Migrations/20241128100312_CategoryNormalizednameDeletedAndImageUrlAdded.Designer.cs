@@ -12,8 +12,8 @@ using ProductsService.Infrastructure.Data;
 namespace ProductsService.Infrastructure.Migrations
 {
     [DbContext(typeof(CommandDbContext))]
-    [Migration("20241128095650_NormalizedNameDeletedFromCategoryAsUnused")]
-    partial class NormalizedNameDeletedFromCategoryAsUnused
+    [Migration("20241128100312_CategoryNormalizednameDeletedAndImageUrlAdded")]
+    partial class CategoryNormalizednameDeletedAndImageUrlAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,6 +209,9 @@ namespace ProductsService.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
