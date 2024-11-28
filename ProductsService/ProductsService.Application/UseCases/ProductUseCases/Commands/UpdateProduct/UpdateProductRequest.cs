@@ -1,6 +1,7 @@
 ﻿using MediatR;
-using ProductsService.Application.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
 
-public sealed record UpdateProductRequest(UpdateProductDTO productDTO) : IRequest {}
+public sealed record UpdateProductRequest(int Id, string? Name, double? Price, int? Quantity, IFormFile? Image) 
+	: IRequest {}

@@ -2,4 +2,4 @@
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteProduct;
 
-public sealed record DeleteProductRequest(int productId) : IRequest {}
+public sealed record DeleteProductRequest(int ProductId) : IRequest {}

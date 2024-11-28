@@ -10,20 +10,20 @@ internal class UpdateProductRequestHandler(IUnitOfWork unitOfWork, IMapper mappe
 {
     public async Task Handle(UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.productDTO.Id);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.Id);
 
-        mapper.Map(request.productDTO, product);
+        mapper.Map(request, product);
 
-        if (request.productDTO.Image is not null)
+        if (request.Image is not null)
         {
             if (product.ImageUrl is not null)
             {
                 await blobService.DeleteAsync(product.ImageUrl);
             }
 
-            using Stream stream = request.productDTO.Image.OpenReadStream();
+            using Stream stream = request.Image.OpenReadStream();
 
-            product.ImageUrl = await blobService.UploadAsync(stream, request.productDTO.Image.ContentType);
+            product.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
         }
 
         await unitOfWork.ProductCommandRepository.UpdateAsync(product, cancellationToken);

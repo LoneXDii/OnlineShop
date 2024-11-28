@@ -10,7 +10,7 @@ internal class DeleteProductRequestHandler(IUnitOfWork unitOfWork, IBlobService 
 {
     public async Task Handle(DeleteProductRequest request, CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.productId, cancellationToken);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken);
 
         if(product is null)
         {

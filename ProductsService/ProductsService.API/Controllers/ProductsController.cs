@@ -45,9 +45,9 @@ public class ProductsController : ControllerBase
 
 	[HttpPut]
     //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDTO productDTO, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        await _mediator.Send(new UpdateProductRequest(productDTO), cancellationToken);
+        await _mediator.Send(request, cancellationToken);
 
         return Ok();
     }
@@ -62,7 +62,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    [Route("/attrubite")]
+    [Route("attrubite")]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> AddProductAttribute([FromBody] AddAttributeToProductRequest request,
         CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut]
-    [Route("/attribute")]
+    [Route("attribute")]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProductAttribute([FromBody] UpdateProductAttributeRequest request,
         CancellationToken cancellationToken)
@@ -84,7 +84,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("/attribute")]
+    [Route("attribute")]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> DeleteProductAttribute([FromQuery] DeleteAttributeFromProductRequest request,
         CancellationToken cancellationToken)
