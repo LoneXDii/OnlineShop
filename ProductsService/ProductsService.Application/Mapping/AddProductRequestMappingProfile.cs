@@ -6,10 +6,10 @@ namespace ProductsService.Application.Mapping;
 
 internal class AddProductRequestMappingProfile : Profile
 {
-	public AddProductRequestMappingProfile()
-	{
-		CreateMap<AddProductRequest, Product>()
-			.ForMember(dest => dest.Categories, opt => 
-				opt.MapFrom(src => src.Attributes.Select(attr => new Category { Id = attr })));
-	}
+    public AddProductRequestMappingProfile()
+    {
+        CreateMap<AddProductRequest, Product>()
+            .ForMember(dest => dest.Categories, opt => 
+                opt.MapFrom(src => src.Attributes.Select(attr => new Category { Id = attr })));
+    }
 }

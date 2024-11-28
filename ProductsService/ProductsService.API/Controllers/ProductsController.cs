@@ -10,6 +10,7 @@ using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttrib
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteProduct;
+using ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductById;
 
 namespace ProductsService.API.Controllers;
 
@@ -34,16 +35,25 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
-	[HttpPost]
-	//[Authorize(Policy = "admin")]
-	public async Task<IActionResult> CreateProduct([FromForm] AddProductRequest request, CancellationToken cancellationToken)
-	{
-		await _mediator.Send(request, cancellationToken);
+    [HttpGet]
+    [Route("Product")]
+    public async Task<ActionResult<ProductDTO>> GetProductById([FromQuery] GetProductByIdRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(request, cancellationToken);
 
-		return NoContent();
-	}
+        return Ok(result);
+    }
 
-	[HttpPut]
+    [HttpPost]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> CreateProduct([FromForm] AddProductRequest request, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpPut]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductRequest request, CancellationToken cancellationToken)
     {
