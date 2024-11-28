@@ -24,15 +24,6 @@ public class ProductsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
-    //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> CreateProduct([FromForm] PostProductDTO product, CancellationToken cancellationToken)
-    {
-        await _mediator.Send(new AddProductRequest(product), cancellationToken);
-
-        return NoContent();
-    }
-
     [HttpGet]
     public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProductsListProducts(
         [FromQuery] ListProductsWithPaginationRequest request,
@@ -43,7 +34,16 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut]
+	[HttpPost]
+	//[Authorize(Policy = "admin")]
+	public async Task<IActionResult> CreateProduct([FromForm] AddProductRequest request, CancellationToken cancellationToken)
+	{
+		await _mediator.Send(request, cancellationToken);
+
+		return NoContent();
+	}
+
+	[HttpPut]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDTO productDTO, CancellationToken cancellationToken)
     {
