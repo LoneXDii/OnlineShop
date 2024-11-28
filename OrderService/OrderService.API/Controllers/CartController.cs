@@ -57,9 +57,9 @@ public class CartController : ControllerBase
 
     [HttpDelete]
     [Route("remove")]
-    public async Task<IActionResult> RemoveItemFromCart([FromQuery] CartProductDTO product)
+    public async Task<IActionResult> RemoveItemFromCart([FromQuery] RemoveItemFromCartRequest request)
     {
-        await _mediator.Send(new RemoveItemFromCartRequest(product.Id));
+        await _mediator.Send(request);
 
         return Ok();
     }

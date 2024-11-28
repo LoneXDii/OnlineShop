@@ -6,7 +6,7 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.PaymentUseCases.ConfirmPaymentUseCase;
 
-internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrderRepository dbService)
+internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrderRepository orderRepository)
     : IRequestHandler<ConfirmPaymentRequest>
 {
     public async Task Handle(ConfirmPaymentRequest request, CancellationToken cancellationToken)
@@ -18,7 +18,7 @@ internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrd
             throw new NotFoundException("No such order");
         }
 
-        var order = await dbService.GetByIdAsync(orderId, cancellationToken);
+        var order = await orderRepository.GetByIdAsync(orderId, cancellationToken);
 
         if(order is null)
         {
@@ -27,6 +27,6 @@ internal class ConfirmPaymentRequestHandler(IPaymentService paymentService, IOrd
 
         order.PaymentStatus = PaymentStatuses.Paid;
 
-        await dbService.UpdateAsync(order, cancellationToken);
+        await orderRepository.UpdateAsync(order, cancellationToken);
     }
 }

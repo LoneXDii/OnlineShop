@@ -1,17 +1,22 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using OrderService.Application.DTO;
 using OrderService.Application.Exceptions;
-using OrderService.Domain.Abstractions.Cart;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 
-internal class CreateOrderRequestHandler(ICart cart, IProductService productService, IOrderRepository dbService)
+internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStorage, IProductService productService, 
+    IOrderRepository orderRepository, IMapper mapper)
     : IRequestHandler<CreateOrderRequest>
 {
     public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        var products = cart.Items.Values.ToList();
+        var cart = temporaryStorage.GetCart();
+        var cartDto = mapper.Map<CartDTO>(cart);
+
+        var products = cartDto.Products;
 
         if (!products.Any()) 
         {
@@ -28,12 +33,13 @@ internal class CreateOrderRequestHandler(ICart cart, IProductService productServ
         var order = new OrderEntity { 
             CreatedAt = DateTime.Now,
             Products = orderProducts.ToList(),
-            TotalPrice = cart.TotalCost,
+            TotalPrice = cartDto.TotalCost,
             UserId = request.userId
         };
 
-        await dbService.CreateAsync(order, cancellationToken);
+        await orderRepository.CreateAsync(order, cancellationToken);
 
-        cart.ClearAll();
+        cart.Clear();
+        temporaryStorage.SaveCart(cart);
     }
 }

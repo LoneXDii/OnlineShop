@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using OrderService.Application.Exceptions;
-using OrderService.Domain.Abstractions.Cart;
 using OrderService.Domain.Abstractions.Data;
 
 namespace OrderService.Application.UseCases.CartUseCases.SetItemQuantityInCartUseCase;
 
-internal class SetItemQuantityInCartRequestHandler(ICart cart, IProductService productService)
+internal class SetItemQuantityInCartRequestHandler(ITemporaryStorageService temporaryStorage, IProductService productService)
     : IRequestHandler<SetItemQuantityInCartRequest>
 {
     public async Task Handle(SetItemQuantityInCartRequest request, CancellationToken cancellationToken)
@@ -17,7 +16,9 @@ internal class SetItemQuantityInCartRequestHandler(ICart cart, IProductService p
             throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }
 
-        cart.RemoveItems(request.product.Id);
-        cart.AddToCart(product);
+        var cart = temporaryStorage.GetCart();
+        cart.Remove(product.Id);
+        cart.Add(product.Id, product);
+        temporaryStorage.SaveCart(cart);
     }
 }

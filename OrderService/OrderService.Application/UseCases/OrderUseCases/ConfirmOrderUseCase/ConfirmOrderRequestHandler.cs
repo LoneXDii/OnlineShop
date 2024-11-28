@@ -5,12 +5,12 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.OrderUseCases.ConfirmOrderUseCase;
 
-internal class ConfirmOrderRequestHandler(IOrderRepository dbService)
+internal class ConfirmOrderRequestHandler(IOrderRepository orderRepository)
     : IRequestHandler<ConfirmOrderRequest>
 {
     public async Task Handle(ConfirmOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
+        var order = await orderRepository.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {
@@ -24,6 +24,6 @@ internal class ConfirmOrderRequestHandler(IOrderRepository dbService)
 
         order.OrderStatus = OrderStatuses.Confirmed;
 
-        await dbService.UpdateAsync(order, cancellationToken);
+        await orderRepository.UpdateAsync(order, cancellationToken);
     }
 }

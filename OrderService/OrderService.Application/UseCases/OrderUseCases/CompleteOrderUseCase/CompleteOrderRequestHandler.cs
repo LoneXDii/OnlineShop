@@ -5,12 +5,12 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CompleteOrderUseCase;
 
-internal class CompleteOrderRequestHandler(IOrderRepository dbService)
+internal class CompleteOrderRequestHandler(IOrderRepository orderRepository)
     : IRequestHandler<CompleteOrderRequest>
 {
     public async Task Handle(CompleteOrderRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
+        var order = await orderRepository.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {
@@ -29,6 +29,6 @@ internal class CompleteOrderRequestHandler(IOrderRepository dbService)
 
         order.OrderStatus = OrderStatuses.Completed;
 
-        await dbService.UpdateAsync(order, cancellationToken);
+        await orderRepository.UpdateAsync(order, cancellationToken);
     }
 }

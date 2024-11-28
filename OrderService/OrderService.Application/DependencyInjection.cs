@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderService.Application.Mapping;
 using OrderService.Application.Settings;
-using OrderService.Domain.Abstractions.Cart;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Reflection;
 
@@ -22,14 +21,6 @@ public static class DependencyInjection
                     cfg.EnableFormBindingSourceAutomaticValidation = true;
                     cfg.EnableBodyBindingSourceAutomaticValidation = true;
                 });
-
-        services.AddDistributedMemoryCache()
-            .AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
 
         services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
 

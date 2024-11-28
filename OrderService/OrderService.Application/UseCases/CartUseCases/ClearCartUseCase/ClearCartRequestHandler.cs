@@ -1,13 +1,15 @@
 ﻿using MediatR;
-using OrderService.Domain.Abstractions.Cart;
+using OrderService.Domain.Abstractions.Data;
 
 namespace OrderService.Application.UseCases.CartUseCases.ClearCartUseCase;
 
-internal class ClearCartRequestHandler(ICart cart) : IRequestHandler<ClearCartRequest>
+internal class ClearCartRequestHandler(ITemporaryStorageService temporaryStorage) : IRequestHandler<ClearCartRequest>
 {
     public Task Handle(ClearCartRequest request, CancellationToken cancellationToken)
     {
-        cart.ClearAll();
+        var cart = temporaryStorage.GetCart();
+        cart.Clear();
+        temporaryStorage.SaveCart(cart);
 
         return Task.CompletedTask;
     }

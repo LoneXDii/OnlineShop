@@ -6,12 +6,12 @@ using OrderService.Domain.Abstractions.Data;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
 
-internal class GetOrderByIdRequestHandler(IOrderRepository dbService, IMapper mapper)
+internal class GetOrderByIdRequestHandler(IOrderRepository orderRepository, IMapper mapper)
     : IRequestHandler<GetOrderByIdRequest, OrderDTO>
 {
     public async Task<OrderDTO> Handle(GetOrderByIdRequest request, CancellationToken cancellationToken)
     {
-        var order = await dbService.GetByIdAsync(request.orderId, cancellationToken);
+        var order = await orderRepository.GetByIdAsync(request.orderId, cancellationToken);
 
         if (order is null)
         {

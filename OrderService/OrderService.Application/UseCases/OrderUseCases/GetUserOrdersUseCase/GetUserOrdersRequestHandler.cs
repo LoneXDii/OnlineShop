@@ -9,7 +9,7 @@ using OrderService.Application.Settings;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 
-internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper mapper, IOptions<PaginationSettings> paginationOptions)
+internal class GetUserOrdersRequestHandler(IOrderRepository orderRepository, IMapper mapper, IOptions<PaginationSettings> paginationOptions)
     : IRequestHandler<GetUserOrdersRequest, PaginatedListModel<OrderDTO>>
 {
     public async Task<PaginatedListModel<OrderDTO>> Handle(GetUserOrdersRequest request, CancellationToken cancellationToken)
@@ -20,9 +20,9 @@ internal class GetUserOrdersRequestHandler(IOrderRepository dbService, IMapper m
             ? maxPageSize 
             : request.pageSize;
 
-        var items = await dbService.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
+        var items = await orderRepository.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
 
-        var itemsCount = await dbService.CountAsync(cancellationToken, order => order.UserId == request.userId);
+        var itemsCount = await orderRepository.CountAsync(cancellationToken, order => order.UserId == request.userId);
 
         //Move to validator
         var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);

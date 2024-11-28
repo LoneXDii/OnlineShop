@@ -5,8 +5,6 @@ using OrderService.Infrastructure.Services;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using Stripe;
-using OrderService.Domain.Abstractions.Cart;
-using OrderService.Infrastructure.Cart;
 
 namespace OrderService.Infrastructure;
 
@@ -23,9 +21,16 @@ public static class DependencyInjection
 
         services.AddSingleton<IOrderRepository, MongoOrderRepository>()
             .AddSingleton<IProductService, FakeProductService>()
-            .AddScoped<IPaymentService, PaymentService>();
+            .AddScoped<IPaymentService, PaymentService>()
+            .AddScoped<ITemporaryStorageService, SessionStorageService>();
 
-        services.AddScoped<ICart>(sp => SessionCart.GetCart(sp));
+        services.AddDistributedMemoryCache()
+            .AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
         return services;
     }
