@@ -12,7 +12,8 @@ internal class CommandDbContext : DbContext
         modelBuilder.Entity<Category>()
             .HasOne(category => category.Parent)
             .WithMany(category => category.Children)
-            .HasForeignKey(category => category.ParentId);
+            .HasForeignKey(category => category.ParentId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Discount>()
             .HasOne(discount => discount.Product)

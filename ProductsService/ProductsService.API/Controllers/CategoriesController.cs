@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddAttribute;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddCategory;
+using ProductsService.Application.UseCases.CategoryUseCases.Commands.DeleteCategory;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.UpdateCategory;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetAllCategories;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryAttributes;
@@ -43,6 +44,15 @@ public class CategoriesController : ControllerBase
     [HttpPut]
     //[Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpDelete]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
