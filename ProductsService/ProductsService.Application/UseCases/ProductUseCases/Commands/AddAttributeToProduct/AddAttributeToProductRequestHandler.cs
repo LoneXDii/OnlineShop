@@ -11,29 +11,30 @@ internal class AddAttributeToProductRequestHandler(IUnitOfWork unitOfWork, IMapp
 {
     public async Task Handle(AddAttributeToProductRequest request, CancellationToken cancellationToken)
     {
-        //var productAttribute = mapper.Map<ProductAttribute>(request.attributeValue);
+        var attribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.AttributeId, cancellationToken);
 
-        //var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(productAttribute.ProductId, cancellationToken);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, c => c.Categories);
 
-        //var attribute = await unitOfWork.AttributeQueryRepository.GetByIdAsync(productAttribute.AttributeId, cancellationToken);
+        if (product is null || attribute is null)
+        {
+            throw new BadRequestException("No such product or attribute");
+        }
 
-        //if(product is null || attribute is null)
-        //{
-        //    throw new BadRequestException("No such product or attribute");
-        //}
+        if (product.Categories.Any(c => c.Id == attribute.Id))
+        {
+            throw new BadRequestException("Cant add existing product");
+        }
 
-        //var productAttributeDb = await unitOfWork.ProductAttributeQueryRepository.FirstOrDefaultAsync(pa 
-        //    => pa.ProductId == productAttribute.ProductId 
-        //    && pa.AttributeId == productAttribute.AttributeId);
+        if (!product.Categories.Any(c => c.Id == attribute.ParentId))
+        {
+            throw new BadRequestException("No parent for attribute in this product");
+        }
 
-        //if (productAttributeDb is not null) 
-        //{
-        //    throw new BadRequestException("This attribute is already exists for this product");
-        //}
+        unitOfWork.AttachInCommandContext(product);
+        unitOfWork.AttachInCommandContext(attribute);
 
-        //await unitOfWork.ProductAttributeCommandRepository.AddAsync(productAttribute, cancellationToken);
+        product.Categories.Add(attribute);
 
-        //await unitOfWork.SaveAllAsync(cancellationToken);
-        throw new NotImplementedException();
+        await unitOfWork.SaveAllAsync(cancellationToken);
     }
 }

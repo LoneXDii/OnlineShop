@@ -26,7 +26,7 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 			throw new BadRequestException("Attributes must have the same parent");
 		}
 
-		if(product.Categories.FirstOrDefault(c => c.Id == newAttribute.Id) is not null)
+		if(product.Categories.Any(c => c.Id == newAttribute.Id))
 		{
 			throw new BadRequestException("Cant add existing attribute");
 		}
@@ -37,8 +37,6 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 
 		product.Categories.Remove(oldAttribute);
 		product.Categories.Add(newAttribute);
-
-		await unitOfWork.ProductCommandRepository.UpdateAsync(product);
 
 		await unitOfWork.SaveAllAsync(cancellationToken);
     }

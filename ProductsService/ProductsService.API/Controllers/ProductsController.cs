@@ -64,10 +64,10 @@ public class ProductsController : ControllerBase
     [HttpPost]
     [Route("/attrubite")]
     //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> AddProductAttribute([FromBody] AddProductAttributeDTO productAttribute,
+    public async Task<IActionResult> AddProductAttribute([FromBody] AddAttributeToProductRequest request,
         CancellationToken cancellationToken)
     {
-        await _mediator.Send(new AddAttributeToProductRequest(productAttribute), cancellationToken);
+        await _mediator.Send(request, cancellationToken);
 
         return Ok();
     }

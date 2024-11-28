@@ -13,6 +13,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly))
+            .AddAutoMapper(Assembly.GetExecutingAssembly())
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
             .AddFluentValidationAutoValidation(cfg =>
             {
@@ -21,12 +22,6 @@ public static class DependencyInjection
             });
 
         services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
-
-        services.AddAutoMapper(
-            typeof(ProductMappingProfile),
-            typeof(CategoryMappingProfile),
-            typeof(AttributeValueMappingProfile),
-            typeof(CategoryAttributeValuesMappingProfile));
 
         return services;
     }

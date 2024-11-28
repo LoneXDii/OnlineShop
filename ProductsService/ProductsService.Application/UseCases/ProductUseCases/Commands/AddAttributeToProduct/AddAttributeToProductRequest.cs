@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using ProductsService.Application.DTO;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
 
-public sealed record AddAttributeToProductRequest(AddProductAttributeDTO attributeValue) : IRequest { }
+public sealed record AddAttributeToProductRequest(int ProductId, int AttributeId) : IRequest { }
