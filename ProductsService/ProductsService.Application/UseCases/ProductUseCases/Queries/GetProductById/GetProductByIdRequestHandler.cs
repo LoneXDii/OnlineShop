@@ -7,19 +7,19 @@ using ProductsService.Domain.Abstractions.Database;
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductById;
 
 internal class GetProductByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
-	: IRequestHandler<GetProductByIdRequest, ProductDTO>
+    : IRequestHandler<GetProductByIdRequest, ProductDTO>
 {
-	public async Task<ProductDTO> Handle(GetProductByIdRequest request, CancellationToken cancellationToken)
-	{
-		var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, p => p.Categories);
+    public async Task<ProductDTO> Handle(GetProductByIdRequest request, CancellationToken cancellationToken)
+    {
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, p => p.Categories);
 
-		if (product is null)
-		{
-			throw new NotFoundException("No such product");
-		}
+        if (product is null)
+        {
+            throw new NotFoundException("No such product");
+        }
 
-		var productDto = mapper.Map<ProductDTO>(product);
+        var productDto = mapper.Map<ProductDTO>(product);
 
-		return productDto;
-	}
+        return productDto;
+    }
 }
