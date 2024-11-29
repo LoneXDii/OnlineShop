@@ -18,7 +18,8 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
     public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
         var specification = new CombinableSpecification<Product>();
-        specification = specification & new ProductIncludesSpecification();
+        specification = specification & new ProductIncludeCategoriesSpecification();
+        specification = specification & new ProductIncludeDiscountSpecification();
 
         if (request.CategoryId is not null)
         {

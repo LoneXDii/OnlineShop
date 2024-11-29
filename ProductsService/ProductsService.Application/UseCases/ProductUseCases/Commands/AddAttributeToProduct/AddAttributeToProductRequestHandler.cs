@@ -12,7 +12,7 @@ internal class AddAttributeToProductRequestHandler(IUnitOfWork unitOfWork)
     {
         var attribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.AttributeId, cancellationToken);
 
-        var specification = new ProductIncludesSpecification();
+        var specification = new ProductIncludeCategoriesSpecification();
 
         var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 

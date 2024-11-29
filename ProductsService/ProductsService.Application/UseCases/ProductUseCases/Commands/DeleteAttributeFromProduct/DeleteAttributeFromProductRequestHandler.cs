@@ -10,7 +10,7 @@ internal class DeleteAttributeFromProductRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(DeleteAttributeFromProductRequest request, CancellationToken cancellationToken)
     {
-        var specification = new ProductIncludesSpecification();
+        var specification = new ProductIncludeCategoriesSpecification();
 
         var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 

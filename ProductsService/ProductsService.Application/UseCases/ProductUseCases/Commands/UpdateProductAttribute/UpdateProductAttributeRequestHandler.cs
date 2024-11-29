@@ -13,7 +13,7 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 
         var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
 
-        var specification = new ProductIncludesSpecification();
+        var specification = new ProductIncludeCategoriesSpecification();
 
         var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 

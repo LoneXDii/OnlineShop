@@ -2,8 +2,10 @@
 using MediatR;
 using ProductsService.Application.DTO;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Specifications;
 using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductById;
 
@@ -12,7 +14,9 @@ internal class GetProductByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapp
 {
     public async Task<ProductDTO> Handle(GetProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var specification = new ProductIncludesSpecification();
+        var specification = new CombinableSpecification<Product>();
+        specification = specification & new ProductIncludeCategoriesSpecification();
+        specification = specification & new ProductIncludeDiscountSpecification();
 
         var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 
