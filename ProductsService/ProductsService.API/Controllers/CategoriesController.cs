@@ -33,7 +33,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> AddCategory([FromForm] AddCategoryRequest request,CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
@@ -42,7 +42,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
@@ -51,7 +51,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
@@ -71,7 +71,7 @@ public class CategoriesController : ControllerBase
 
     [HttpPost]
     [Route("attributes")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> AddCategoryAttribute([FromBody] AddAttributeRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
