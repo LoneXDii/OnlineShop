@@ -1,17 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProductsService.Application.DTO;
-using ProductsService.Application.Specifications.Categories;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Abstractions.Specifications;
+using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.CategoryUseCases.Queries.GetAllCategories;
 
-internal class GetAllCategoriesRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+internal class GetAllCategoriesRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ISpecificationFactory specificationFactory)
     : IRequestHandler<GetAllCategoriesReguest, List<CategoryDTO>>
 {
     public async Task<List<CategoryDTO>> Handle(GetAllCategoriesReguest request, CancellationToken cancellationToken)
     {
-        var specification = new ParentCategoriesSpecification();
+        var specification = specificationFactory.CreateSpecification<Category>();
+        specification.Includes.Add(category => category.Children);
 
         var categories = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
 

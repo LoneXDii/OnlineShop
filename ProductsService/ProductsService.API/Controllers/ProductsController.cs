@@ -26,7 +26,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProductsListProducts(
+    public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProducts(
         [FromQuery] ListProductsWithPaginationRequest request,
         CancellationToken cancellationToken)
     {

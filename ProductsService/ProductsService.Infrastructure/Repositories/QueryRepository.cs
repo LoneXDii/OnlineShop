@@ -3,7 +3,7 @@ using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
-using ProductsService.Infrastructure.Specification;
+using ProductsService.Infrastructure.Specifications;
 using System.Linq.Expressions;
 
 namespace ProductsService.Infrastructure.Repositories;
@@ -29,7 +29,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     public async Task<T?> GetByIdAsync(int id, ISpecification<T>? specification, CancellationToken cancellationToken = default)
     {
         IQueryable<T>? query = _entities.AsQueryable();
-        query = SpecificationQueryBuilder.GetQuery(query, specification);
+        query = specification?.GetQuery(query);
 
         var entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
@@ -46,7 +46,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
-        query = SpecificationQueryBuilder.GetQuery(query, specification);
+        query = specification.GetQuery(query);
 
         var entities = await query.ToListAsync();
 
@@ -57,7 +57,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
-        query = SpecificationQueryBuilder.GetQuery(query, specification);
+        query = specification.GetQuery(query);
 
         var entities = await query.OrderBy(e => e.Id)
             .Skip((pageNo - 1) * pageSize)
@@ -70,7 +70,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     public async Task<T?> FirstOrDefaultAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
-        query = SpecificationQueryBuilder.GetQuery(query, specification);
+        query = specification.GetQuery(query);
 
         var entity = await query.FirstOrDefaultAsync(cancellationToken);
 
@@ -80,7 +80,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
-        query = SpecificationQueryBuilder.GetQuery(query, specification);
+        query = specification.GetQuery(query);
 
         var count = await query.CountAsync(cancellationToken); 
         

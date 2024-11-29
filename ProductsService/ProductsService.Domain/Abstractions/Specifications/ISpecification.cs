@@ -5,6 +5,6 @@ namespace ProductsService.Domain.Abstractions.Specifications;
 
 public interface ISpecification<T> where T : IEntity
 {
-    Expression<Func<T, bool>>? Criteria { get; }
+    List<Expression<Func<T, bool>>> Criteries { get; }
     List<Expression<Func<T, object>>> Includes { get; }
 }

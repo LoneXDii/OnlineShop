@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
-using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Abstractions.Specifications;
+using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
-internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
+internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork, ISpecificationFactory specificationFactory)
     : IRequestHandler<UpdateProductAttributeRequest>
 {
     public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
@@ -13,7 +14,8 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 
         var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
 
-        var specification = new ProductIncludeCategoriesSpecification();
+        var specification = specificationFactory.CreateSpecification<Product>();
+        specification.Includes.Add(product => product.Categories);
 
         var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 

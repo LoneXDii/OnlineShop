@@ -2,45 +2,45 @@
 using MediatR;
 using ProductsService.Application.DTO;
 using ProductsService.Application.Exceptions;
-using ProductsService.Application.Specifications;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Application.Models;
 using ProductsService.Domain.Entities;
 using Microsoft.Extensions.Options;
 using ProductsService.Application.Configuration;
-using ProductsService.Application.Specifications.Products;
+using ProductsService.Domain.Abstractions.Specifications;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 
-internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, IOptions<PaginationSettings> paginationOptions)
+internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, 
+    IOptions<PaginationSettings> paginationOptions, ISpecificationFactory specificationFactory)
     : IRequestHandler<ListProductsWithPaginationRequest, PaginatedListModel<ProductDTO>>
 {
     public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
-        var specification = new CombinableSpecification<Product>();
-        specification = specification & new ProductIncludeCategoriesSpecification();
-        specification = specification & new ProductIncludeDiscountSpecification();
+        var specification = specificationFactory.CreateSpecification<Product>();
+        specification.Includes.Add(product => product.Categories);
+        specification.Includes.Add(product => product.Discount);
 
         if (request.CategoryId is not null)
         {
-            specification = specification & new ProductCategorySpecification(request.CategoryId.Value);
+            specification.Criteries.Add(product => product.Categories.Any(c => c.Id == request.CategoryId));
         }
 
         if (request.MinPrice is not null)
         {
-            specification = specification & new ProductMinPriceSpecification(request.MinPrice.Value);
+            specification.Criteries.Add(product => product.Price >= request.MinPrice);
         }
 
         if (request.MaxPrice is not null)
         {
-            specification = specification & new ProductMaxPriceSpecification(request.MaxPrice.Value);
+            specification.Criteries.Add(product => product.Price <= request.MaxPrice);
         }
 
         if (request.ValuesIds is not null)
         {
             foreach (var id in request.ValuesIds)
             {
-                specification = specification & new ProductCategorySpecification(id);
+                specification.Criteries.Add(product => product.Categories.Any(c => c.Id == id));
             }
         }
 

@@ -1,18 +1,19 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProductsService.Application.Exceptions;
-using ProductsService.Application.Specifications.Discounts;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.DiscountUseCases.Commands.AddDiscount;
 
-internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ISpecificationFactory specificationFactory)
     : IRequestHandler<AddDiscountRequest>
 {
     public async Task Handle(AddDiscountRequest request, CancellationToken cancellationToken)
     {
-        var specification = new DiscountProductSpecification(request.ProductId);
+        var specification = specificationFactory.CreateSpecification<Discount>();
+        specification.Criteries.Add(discount => discount.ProductId == request.ProductId);
 
         var discount = await unitOfWork.DiscountQueryRepository.FirstOrDefaultAsync(specification, cancellationToken);
 
