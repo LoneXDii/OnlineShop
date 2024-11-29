@@ -7,5 +7,6 @@ internal class ProductIncludesSpecification : CombinableSpecification<Product>
     public ProductIncludesSpecification() : base()
     {
         AddInclude(p => p.Categories);
+        AddInclude(p => p.Discount);
     }
 }

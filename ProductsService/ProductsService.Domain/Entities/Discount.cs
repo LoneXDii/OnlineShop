@@ -8,7 +8,6 @@ public class Discount : IEntity
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int Percent { get; set; }
-    public bool IsActived { get; set; }
     public int? ProductId { get; set; }
     public virtual Product? Product { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProductsService.Domain.Abstractions.Specifications;
+﻿using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Entities.Abstractions;
 using System.Linq.Expressions;
 
@@ -16,15 +15,9 @@ internal abstract class BaseSpecification<T> : ISpecification<T> where T : IEnti
 
     public Expression<Func<T, bool>>? Criteria { get; }
     public List<Expression<Func<T, object>>> Includes { get; } = new();
-    public List<string> IncludeStrings { get; } = new();
 
     protected void AddInclude(Expression<Func<T, object>> includeExpression)
     {
         Includes.Add(includeExpression);
-    }
-
-    protected void AddInclude(string includeString)
-    {
-        IncludeStrings.Add(includeString);
     }
 }

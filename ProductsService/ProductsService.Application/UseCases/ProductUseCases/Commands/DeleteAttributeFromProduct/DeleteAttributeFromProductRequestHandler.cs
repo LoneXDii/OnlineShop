@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
@@ -9,7 +10,9 @@ internal class DeleteAttributeFromProductRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task Handle(DeleteAttributeFromProductRequest request, CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, p => p.Categories);
+        var specification = new ProductIncludesSpecification();
+
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 
         var attribute = product?.Categories?.FirstOrDefault(c => c.Id == request.AttributeId);
 

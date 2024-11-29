@@ -7,6 +7,7 @@ public class ProductDTO
     public double Price { get; set; }
     public int Quantity { get; set; }
     public string? ImageUrl { get; set; }
+    public DiscountDTO? Discount { get; set; }
     public CategoryDTO Category { get; set; }
     public List<AttributeValueDTO> AttributeValues { get; set; }
 }

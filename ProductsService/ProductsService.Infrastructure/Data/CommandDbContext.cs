@@ -15,10 +15,10 @@ internal class CommandDbContext : DbContext
             .HasForeignKey(category => category.ParentId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Discount>()
-            .HasOne(discount => discount.Product)
-            .WithMany(product => product.Discounts)
-            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<Product>()
+            .HasOne(product => product.Discount)
+            .WithOne(discount => discount.Product)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Category>()
             .HasMany(category => category.Products)

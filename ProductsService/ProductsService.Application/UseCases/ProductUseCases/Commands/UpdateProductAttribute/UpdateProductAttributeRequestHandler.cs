@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
@@ -12,7 +13,9 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 
         var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
 
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, p => p.Categories);
+        var specification = new ProductIncludesSpecification();
+
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 
         var oldAttribute = product.Categories.FirstOrDefault(c => c.Id == request.OldAttributeId);
 

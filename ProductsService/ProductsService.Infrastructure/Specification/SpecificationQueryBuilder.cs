@@ -6,9 +6,14 @@ namespace ProductsService.Infrastructure.Specification;
 
 internal static class SpecificationQueryBuilder
 {
-    public static IQueryable<T> GetQuery<T>(IQueryable<T> inputQuery, ISpecification<T> specification)
+    public static IQueryable<T> GetQuery<T>(IQueryable<T> inputQuery, ISpecification<T>? specification)
         where T : class, IEntity
     {
+        if(specification is null)
+        {
+            return inputQuery;
+        }
+
         var query = inputQuery;
 
         if (specification.Criteria is not null)
@@ -17,7 +22,6 @@ internal static class SpecificationQueryBuilder
         }
 
         query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
-        query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         return query;
     }

@@ -72,7 +72,6 @@ internal class CombinableSpecification<T> : BaseSpecification<T> where T : IEnti
     private CombinableSpecification<T> CombineIncludes(CombinableSpecification<T> other)
     {
         Includes.AddRange(other.Includes);
-        IncludeStrings.AddRange(other.IncludeStrings);
 
         return this;
     }

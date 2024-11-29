@@ -1,19 +1,20 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
-using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.AddAttributeToProduct;
 
-internal class AddAttributeToProductRequestHandler(IUnitOfWork unitOfWork, IMapper mapper) 
+internal class AddAttributeToProductRequestHandler(IUnitOfWork unitOfWork) 
     : IRequestHandler<AddAttributeToProductRequest>
 {
     public async Task Handle(AddAttributeToProductRequest request, CancellationToken cancellationToken)
     {
         var attribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.AttributeId, cancellationToken);
 
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken, c => c.Categories);
+        var specification = new ProductIncludesSpecification();
+
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
 
         if (product is null || attribute is null)
         {

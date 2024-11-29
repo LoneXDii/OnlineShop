@@ -19,14 +19,17 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         _entities = _dbContext.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includedProperties)
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var entity = await _entities.FirstOrDefaultAsync(e => e.Id == id);
+
+        return entity;
+    }
+
+    public async Task<T?> GetByIdAsync(int id, ISpecification<T>? specification, CancellationToken cancellationToken = default)
     {
         IQueryable<T>? query = _entities.AsQueryable();
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
+        query = SpecificationQueryBuilder.GetQuery(query, specification);
 
         var entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
@@ -64,9 +67,12 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         return entities;
     }
 
-    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
+    public async Task<T?> FirstOrDefaultAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
-        var entity = await _entities.FirstOrDefaultAsync(filter, cancellationToken);
+        var query = _entities.AsQueryable();
+        query = SpecificationQueryBuilder.GetQuery(query, specification);
+
+        var entity = await query.FirstOrDefaultAsync(cancellationToken);
 
         return entity;
     }
