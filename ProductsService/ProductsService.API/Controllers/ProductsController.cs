@@ -84,7 +84,7 @@ public class ProductsController : ControllerBase
 
     [HttpPut]
     [Route("attribute")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProductAttribute([FromBody] UpdateProductAttributeRequest request,
         CancellationToken cancellationToken)
     {
@@ -95,7 +95,7 @@ public class ProductsController : ControllerBase
 
     [HttpDelete]
     [Route("attribute")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> DeleteProductAttribute([FromQuery] DeleteAttributeFromProductRequest request,
         CancellationToken cancellationToken)
     {
