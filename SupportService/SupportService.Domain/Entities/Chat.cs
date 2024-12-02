@@ -5,8 +5,8 @@ namespace SupportService.Domain.Entities;
 public class Chat : IEntity
 {
     public int Id { get; set; }
-    public int ClientId { get; set; }
-    public int? SupportId { get; set; }
-    public bool IsActive { get; set; }
+    public string ClientName { get; set; }
+    public string ClientId { get; set; }
+    public bool IsActive { get; set; } = true;
     public virtual ICollection<Message>? Messages { get; set; }
 }
