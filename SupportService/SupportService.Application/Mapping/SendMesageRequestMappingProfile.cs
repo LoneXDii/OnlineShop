@@ -6,7 +6,7 @@ namespace SupportService.Application.Mapping;
 
 internal class SendMesageRequestMappingProfile : Profile
 {
-    SendMesageRequestMappingProfile()
+    public SendMesageRequestMappingProfile()
     {
         CreateMap<SendMessageRequest, Message>()
             .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.UserId))

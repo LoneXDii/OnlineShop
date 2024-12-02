@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SupportService.Domain\SupportService.Domain.csproj" />
+    <None Remove="Mapping\ms5ojjau.15e~" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\CloseChat\" />
+    <ProjectReference Include="..\SupportService.Domain\SupportService.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

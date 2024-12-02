@@ -1,4 +1,5 @@
 using SupportService.API.Hubs;
+using SupportService.Application;
 using SupportService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration)
+    .AddApplication();
 
 var app = builder.Build();
 
