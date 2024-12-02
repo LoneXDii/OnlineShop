@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SupportService.Domain.Abstractions;
 using SupportService.Infrastructure.Data;
+using SupportService.Infrastructure.Repositories;
 using System.Text;
 
 namespace SupportService.Infrastructure;
@@ -40,6 +42,9 @@ public static class DependencyInjection
                         new MySqlServerVersion(new Version(8, 0, 36)),
                     opt => opt.EnableRetryOnFailure()),
                     ServiceLifetime.Scoped);
+
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>))
+            .AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

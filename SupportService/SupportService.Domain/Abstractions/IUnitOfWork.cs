@@ -7,7 +7,6 @@ public interface IUnitOfWork
     IRepository<Chat> ChatRepository { get; }
     IRepository<Message> MessageRepository { get; }
 
-    Task SaveAllAsync();
-    Task DeleteDataBaseAsync();
-    Task EnableMigrationsAsync();
+    Task SaveAllAsync(CancellationToken cancellationToken = default);
+    Task EnableMigrationsAsync(CancellationToken cancellationToken = default);
 }
