@@ -8,10 +8,12 @@ using SupportService.Application.UseCases.GetAllChats;
 using SupportService.Application.UseCases.GetChatMessages;
 using SupportService.Application.UseCases.GetUserChats;
 using SupportService.Application.UseCases.SendMessage;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace SupportService.API.Hubs;
 
-//[Authorize]
+[Authorize]
 public class ChatHub : Hub
 {
     private readonly IMediator _mediator;
@@ -23,7 +25,7 @@ public class ChatHub : Hub
     //Add TryCatch everywhere
     public override async Task OnConnectedAsync()
     {
-        var role = Context.User.FindFirst("Role")?.Value;
+        var role = Context.User.FindFirst(ClaimTypes.Role)?.Value;
         var userId = Context.User.FindFirst("Id")?.Value;
 
         if (role == "admin")
@@ -65,7 +67,7 @@ public class ChatHub : Hub
     public async Task CreateChatAsync()
     {
         var userId = Context.User.FindFirst("Id")?.Value;
-        var userEmail = Context.User.FindFirst("Email")?.Value;
+        var userEmail = Context.User.FindFirst(ClaimTypes.Email)?.Value;
 
         var chat = await _mediator.Send(new CreateChatRequest(userId, userEmail));
 
