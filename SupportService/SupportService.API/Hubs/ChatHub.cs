@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SupportService.Application.DTO;
@@ -8,7 +9,6 @@ using SupportService.Application.UseCases.GetAllChats;
 using SupportService.Application.UseCases.GetChatMessages;
 using SupportService.Application.UseCases.GetUserChats;
 using SupportService.Application.UseCases.SendMessage;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace SupportService.API.Hubs;
@@ -17,12 +17,16 @@ namespace SupportService.API.Hubs;
 public class ChatHub : Hub
 {
     private readonly IMediator _mediator;
+    private readonly IValidator<int> _chatIdValidator;
+    private readonly IValidator<AddMessageDTO> _addMessageDTOValidator;
 
-    public ChatHub(IMediator mediator)
+    public ChatHub(IMediator mediator, IValidator<int> chatIdValidator, IValidator<AddMessageDTO> addMessageDTOValidator)
     {
         _mediator = mediator;
+        _chatIdValidator = chatIdValidator;
+        _addMessageDTOValidator = addMessageDTOValidator;
     }
-    //Add TryCatch everywhere
+    
     public override async Task OnConnectedAsync()
     {
         var role = Context.User.FindFirst(ClaimTypes.Role)?.Value;
@@ -59,6 +63,13 @@ public class ChatHub : Hub
 
     public async Task GetChatMessages(int chatId)
     {
+        var validationResult = _chatIdValidator.Validate(chatId);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
         var messages = await _mediator.Send(new GetChatMessagesRequest(chatId));
 
         await Clients.Caller.SendAsync("RecieveChatMessages", messages);
@@ -79,7 +90,22 @@ public class ChatHub : Hub
     //Add admin check here
     public async Task CloseChatAsync(int chatId)
     {
-        var chat = await _mediator.Send(new CloseChatRequest(chatId));
+        var validationResult = _chatIdValidator.Validate(chatId);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
+        string? userId = null;
+		var role = Context.User.FindFirst(ClaimTypes.Role)?.Value;
+
+        if (role != "admin")
+        {
+            userId = Context.User.FindFirst("Id")?.Value;
+        }
+
+		var chat = await _mediator.Send(new CloseChatRequest(chatId, userId));
 
         await Clients.Group("admin").SendAsync("RecieveNewChat", chat);
 
@@ -88,6 +114,13 @@ public class ChatHub : Hub
 
     public async Task SendMessageAsync(AddMessageDTO messageDto)
     {
+        var validationResult = _addMessageDTOValidator.Validate(messageDto);
+
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+
         var userId = Context.User.FindFirst("Id")?.Value;
 
         var message = await _mediator.Send(new SendMessageRequest(messageDto, userId));

@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.SignalR;
+using SupportService.API.Filters;
 using SupportService.API.Hubs;
 using SupportService.Application;
 using SupportService.Infrastructure;
@@ -11,7 +14,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(opt =>
+{
+    opt.AddFilter<HubExceptionsFilter>();
+});
+
+builder.Services.AddSingleton<HubExceptionsFilter>();
 
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddApplication();
