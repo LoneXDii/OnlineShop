@@ -10,7 +10,7 @@ internal class GetChatMessagesRequestHandler(IUnitOfWork unitOfWork, IMapper map
 {
     public async Task<List<MessageDTO>> Handle(GetChatMessagesRequest request, CancellationToken cancellationToken)
     {
-        var messages = await unitOfWork.MessageRepository.ListAsync(message => message.ChatId == request.ChatId, cancellationToken);
+        var messages = await unitOfWork.MessageRepository.ListAsync(message => message.ChatId == request.ChatId, cancellationToken, message => message.Chat);
 
         var messagesDto = mapper.Map<List<MessageDTO>>(messages);
 

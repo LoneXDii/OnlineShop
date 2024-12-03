@@ -24,9 +24,9 @@ internal class CreateChatRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         
         await unitOfWork.ChatRepository.AddAsync(chat, cancellationToken);
 
-		await unitOfWork.SaveAllAsync(cancellationToken);
+        await unitOfWork.SaveAllAsync(cancellationToken);
 
-		var chatDto = mapper.Map<ChatDTO>(chat);
+        var chatDto = mapper.Map<ChatDTO>(chat);
 
         return chatDto;
     }

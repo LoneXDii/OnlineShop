@@ -21,8 +21,8 @@ internal class SendMessageRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
 
         if (!chat.IsActive)
         {
-			throw new BadRequestException("This chat is closed");
-		}
+            throw new BadRequestException("This chat is closed");
+        }
 
         var message = mapper.Map<Message>(request);
 
