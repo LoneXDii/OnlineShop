@@ -14,6 +14,7 @@ internal class GetAllCategoriesRequestHandler(IUnitOfWork unitOfWork, IMapper ma
     {
         var specification = specificationFactory.CreateSpecification<Category>();
         specification.Includes.Add(category => category.Children);
+        specification.Criteries.Add(category => category.ParentId == null);
 
         var categories = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
 
