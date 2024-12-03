@@ -87,7 +87,6 @@ public class ChatHub : Hub
         await Clients.Caller.SendAsync("RecieveNewChat", chat);
     }
 
-    //Add admin check here
     public async Task CloseChatAsync(int chatId)
     {
         var validationResult = _chatIdValidator.Validate(chatId);
