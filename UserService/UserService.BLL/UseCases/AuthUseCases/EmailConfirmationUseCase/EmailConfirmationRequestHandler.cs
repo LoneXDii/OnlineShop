@@ -4,10 +4,12 @@ using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.EmailNotifications;
 using System.Text.Json;
+using UserService.DAL.Services.TemporaryStorage;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 
-internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager, IEmailService emailService)
+internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager, IEmailService emailService, ICacheService cacheService)
     : IRequestHandler<EmailConfirmationRequest>
 {
     public async Task Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
@@ -19,13 +21,17 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
             throw new NotFoundException("No user with such email");
         }
 
-        var result = await userManager.ConfirmEmailAsync(user, request.code);
+        var email = await cacheService.GetEmailByCodeAsync(request.code);
 
-        if (!result.Succeeded)
+        if(user.Email == email)
         {
-            var errors = JsonSerializer.Serialize(result.Errors);
+            user.EmailConfirmed = true;
 
-            throw new BadRequestException($"Email is not confirmed: {errors}");
+            await userManager.UpdateAsync(user);
+        }
+        else
+        {
+            throw new BadRequestException($"Wrong code");
         }
 
         await emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email);
