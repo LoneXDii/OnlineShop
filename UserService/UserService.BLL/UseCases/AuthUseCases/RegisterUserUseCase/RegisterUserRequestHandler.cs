@@ -6,11 +6,12 @@ using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
+using UserService.DAL.Services.TemporaryStorage;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
 internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
-    IEmailService emailService) : IRequestHandler<RegisterUserRequest>
+    IEmailService emailService, ICacheService cacheService) : IRequestHandler<RegisterUserRequest>
 {
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
@@ -27,7 +28,7 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 
         if (result.Succeeded)
         {
-            var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
             await emailService.SendEmailConfirmationCodeAsync(user.Email, code);
         }

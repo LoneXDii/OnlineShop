@@ -12,6 +12,7 @@ using UserService.DAL.Database;
 using UserService.DAL.Services.Authentication;
 using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
+using UserService.DAL.Services.TemporaryStorage;
 
 namespace UserService.DAL;
 
@@ -47,12 +48,19 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
                 });
 
+        services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.Configuration = configuration["Redis:Configuration"];
+            opt.InstanceName = configuration["Redis:InstanceName"];
+        });
+
         services.AddScoped<IBlobService, BlobService>()
             .AddScoped(_ => new BlobServiceClient(configuration["ConnectionStrings:AzureConnection"]));
 
         services.AddScoped<ITokenService, TokenService>()
             .AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
-            .AddScoped<IEmailService, EmailService>();
+            .AddScoped<IEmailService, EmailService>()
+            .AddScoped<ICacheService, CacheService>();
 
         return services;
     }
