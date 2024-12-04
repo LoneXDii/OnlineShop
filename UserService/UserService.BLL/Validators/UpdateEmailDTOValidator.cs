@@ -3,7 +3,7 @@ using UserService.BLL.DTO;
 
 namespace UserService.BLL.Validators;
 
-public class UpdateEmailDTOValidator : AbstractValidator<UpdateEmailDTO>
+public class UpdateEmailDTOValidator : AbstractValidator<EmailDTO>
 {
     public UpdateEmailDTOValidator()
     {
