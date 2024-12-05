@@ -6,6 +6,7 @@ using UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 using UserService.BLL.UseCases.AuthUseCases.LoginUserUseCase;
 using UserService.BLL.UseCases.AuthUseCases.LogoutUserUseCase;
 using UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
+using UserService.BLL.UseCases.AuthUseCases.ResendEmailConfirmationCodeUseCase;
 using UserService.DAL.Models;
 
 namespace UserService.API.Controllers;
@@ -32,7 +33,7 @@ public class AccountController : ControllerBase
 
     [HttpPost]
     [Route("login")]
-    public async Task<ActionResult<TokensDTO>> Login(LoginDTO loginModel)
+    public async Task<ActionResult<TokensDTO>> Login([FromBody] LoginDTO loginModel)
     {
         var tokens = await _mediator.Send(new LoginUserRequest(loginModel));
 
@@ -41,11 +42,20 @@ public class AccountController : ControllerBase
 
     [HttpGet]
     [Route("confirm")]
-    public async Task<IActionResult> ConfirmEmail(string email, string code)
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string code)
     {
         await _mediator.Send(new EmailConfirmationRequest(email, code));
 
         return Ok("Email confirmed");
+    }
+
+    [HttpGet]
+    [Route("confirm/resend")]
+    public async Task<IActionResult> ResendEmailConfirmation([FromQuery] ResendEmailConfirmationCodeRequest request)
+    {
+        await _mediator.Send(request);
+
+        return Ok();
     }
 
     [HttpGet]

@@ -39,7 +39,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     [Route("update/email")]
     [Authorize]
-    public async Task<IActionResult> UpdateEmail(EmailDTO newEmail)
+    public async Task<IActionResult> UpdateEmail([FromBody] EmailDTO newEmail)
     {
         var userId = HttpContext.User.FindFirst("Id").Value;
 
@@ -51,7 +51,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     [Route("update/password")]
     [Authorize]
-    public async Task<ActionResult<string>> UpdatePassword(UpdatePasswordDTO updatePasswordDTO)
+    public async Task<ActionResult<string>> UpdatePassword([FromBody] UpdatePasswordDTO updatePasswordDTO)
     {
         var userId = HttpContext.User.FindFirst("Id").Value;
 
@@ -82,9 +82,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Route("info/id={userId}")]
+    [Route("info/id")]
     [Authorize(Policy = "admin")]
-    public async Task<ActionResult<UserInfoDTO>> GetUserInfo(string userId)
+    public async Task<ActionResult<UserInfoDTO>> GetUserInfo([FromQuery] string userId)
     {
         var user = await _mediator.Send(new GetUserInfoRequest(userId));
 
@@ -104,8 +104,8 @@ public class UsersController : ControllerBase
     [Route("reset")]
     public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordRequest request)
     {
-        var token = await _mediator.Send(request);
+        await _mediator.Send(request);
 
-        return Ok(token);
+        return Ok();
     }
 }
