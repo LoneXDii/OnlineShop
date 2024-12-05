@@ -22,15 +22,13 @@ public static class DependencyInjection
         services.AddSingleton<IOrderRepository, MongoOrderRepository>()
             .AddSingleton<IProductService, FakeProductService>()
             .AddScoped<IPaymentService, PaymentService>()
-            .AddScoped<ITemporaryStorageService, SessionStorageService>();
+            .AddScoped<ITemporaryStorageService, RedisStorageService>();
 
-        services.AddDistributedMemoryCache()
-            .AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+        services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.Configuration = configuration["Redis:Configuration"];
+            opt.InstanceName = configuration["Redis:InstanceName"];
+        });
 
         return services;
     }

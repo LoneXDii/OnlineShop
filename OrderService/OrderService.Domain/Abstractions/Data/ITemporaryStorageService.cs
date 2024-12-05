@@ -4,6 +4,6 @@ namespace OrderService.Domain.Abstractions.Data;
 
 public interface ITemporaryStorageService
 {
-    public void SaveCart(Dictionary<int, ProductEntity> cart);
-    public Dictionary<int, ProductEntity> GetCart();
+    Task  SaveCartAsync(Dictionary<int, ProductEntity> cart, CancellationToken cancellationToken = default);
+    Task<Dictionary<int, ProductEntity>> GetCartAsync(CancellationToken cancellationToken = default);
 }

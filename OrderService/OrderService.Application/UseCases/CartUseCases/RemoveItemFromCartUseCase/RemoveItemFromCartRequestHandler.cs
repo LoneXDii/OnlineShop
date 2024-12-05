@@ -5,12 +5,12 @@ namespace OrderService.Application.UseCases.CartUseCases.RemoveItemFromCartUseCa
 
 internal class RemoveItemFromCartRequestHandler(ITemporaryStorageService temporaryStorage) : IRequestHandler<RemoveItemFromCartRequest>
 {
-    public Task Handle(RemoveItemFromCartRequest request, CancellationToken cancellationToken)
+    public async Task Handle(RemoveItemFromCartRequest request, CancellationToken cancellationToken)
     {
-        var cart = temporaryStorage.GetCart();
-        cart.Remove(request.itemId);
-        temporaryStorage.SaveCart(cart);
+        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
 
-        return Task.CompletedTask;
+        cart.Remove(request.itemId);
+
+        await temporaryStorage.SaveCartAsync(cart, cancellationToken);
     }
 }

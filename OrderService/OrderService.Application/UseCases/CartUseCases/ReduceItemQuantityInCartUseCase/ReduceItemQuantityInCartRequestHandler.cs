@@ -6,9 +6,9 @@ namespace OrderService.Application.UseCases.CartUseCases.ReduceItemQuantityInCar
 internal class ReduceItemQuantityInCartRequestHandler(ITemporaryStorageService temporaryStorage)
     : IRequestHandler<ReduceItemsInCartRequest>
 {
-    public Task Handle(ReduceItemsInCartRequest request, CancellationToken cancellationToken)
+    public async Task Handle(ReduceItemsInCartRequest request, CancellationToken cancellationToken)
     {
-        var cart = temporaryStorage.GetCart();
+        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
 
         if (cart.ContainsKey(request.product.Id))
         {
@@ -20,8 +20,6 @@ internal class ReduceItemQuantityInCartRequestHandler(ITemporaryStorageService t
             }
         }
 
-        temporaryStorage.SaveCart(cart);
-
-        return Task.CompletedTask;
+        await temporaryStorage.SaveCartAsync(cart, cancellationToken);
     }
 }

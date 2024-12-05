@@ -8,11 +8,12 @@ namespace OrderService.Application.UseCases.CartUseCases.GetCartUseCase;
 internal class GetCartRequestHandler(ITemporaryStorageService temporaryStorage, IMapper mapper)
     : IRequestHandler<GetCartRequest, CartDTO>
 {
-    public Task<CartDTO> Handle(GetCartRequest request, CancellationToken cancellationToken)
+    public async Task<CartDTO> Handle(GetCartRequest request, CancellationToken cancellationToken)
     {
-        var cart = temporaryStorage.GetCart();
+        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
+
         var cartDto = mapper.Map<CartDTO>(cart);
 
-        return Task.FromResult(cartDto);
+        return cartDto;
     }
 }

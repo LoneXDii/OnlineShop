@@ -13,7 +13,8 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
 {
     public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        var cart = temporaryStorage.GetCart();
+        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
+
         var cartDto = mapper.Map<CartDTO>(cart);
 
         var products = cartDto.Products;
@@ -40,6 +41,7 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
         await orderRepository.CreateAsync(order, cancellationToken);
 
         cart.Clear();
-        temporaryStorage.SaveCart(cart);
+
+        await temporaryStorage.SaveCartAsync(cart, cancellationToken);
     }
 }
