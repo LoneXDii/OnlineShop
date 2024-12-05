@@ -10,9 +10,9 @@ namespace UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
 
 internal class ResetPasswordRequestHandler(UserManager<AppUser> userManager, ICacheService cacheService, 
     IEmailService emailService, ITokenService tokenService)
-    : IRequestHandler<ResetPasswordRequest, string>
+    : IRequestHandler<ResetPasswordRequest>
 {
-    public async Task<string> Handle(ResetPasswordRequest request, CancellationToken cancellationToken)
+    public async Task Handle(ResetPasswordRequest request, CancellationToken cancellationToken)
     {
         var email = await cacheService.GetEmailByResetPasswordCodeAsync(request.Code);
 
@@ -35,9 +35,5 @@ internal class ResetPasswordRequestHandler(UserManager<AppUser> userManager, ICa
         await emailService.SendPasswordResetSucceededNotificationAsync(email);
 
         await tokenService.InvalidateRefreshTokenAsync(user);
-
-        var refreshToken = await tokenService.GetRefreshTokenAsync(user);
-
-        return refreshToken;
     }
 }
