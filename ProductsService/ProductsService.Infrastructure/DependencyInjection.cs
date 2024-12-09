@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProductsService.Domain.Abstractions.BlobStorage;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Abstractions.Specifications;
+using ProductsService.Infrastructure.Configuration;
 using ProductsService.Infrastructure.Data;
 using ProductsService.Infrastructure.Repositories;
 using ProductsService.Infrastructure.Services;
@@ -35,6 +36,8 @@ public static class DependencyInjection
             .AddScoped(typeof(IQueryRepository<>), typeof(QueryRepository<>))
             .AddScoped<ISpecificationFactory, SpecificationFactory>()
             .AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.Configure<BlobServiceOptions>(options => configuration.GetSection("Blobs").Bind(options));
 
         return services;
     }
