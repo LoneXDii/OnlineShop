@@ -1,0 +1,33 @@
+﻿{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7000"
+  },
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/login",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/api/account/login",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "SwaggerKey": "users"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "users",
+      "Config": [
+        {
+          "Name": "Users service API",
+          "Version": "v1",
+          "Url": "https://localhost:7001/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}
+
