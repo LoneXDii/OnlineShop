@@ -13,6 +13,7 @@ using UserService.DAL.Services.Authentication;
 using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
+using UserService.DAL.Models;
 
 namespace UserService.DAL;
 
@@ -61,6 +62,8 @@ public static class DependencyInjection
             .AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
             .AddScoped<IEmailService, EmailService>()
             .AddScoped<ICacheService, CacheService>();
+
+        services.Configure<BlobServiceOptions>(options => configuration.GetSection("Blobs").Bind(options));
 
         return services;
     }

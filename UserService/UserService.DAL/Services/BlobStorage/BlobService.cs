@@ -1,23 +1,26 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs;
+using UserService.DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace UserService.DAL.Services.BlobStorage;
 
 internal class BlobService : IBlobService
 {
     private readonly BlobServiceClient _blobServiceClient;
-    private const string _containerName = "avatars";
+    private readonly BlobServiceOptions _containerOptions;
 
-    public BlobService(BlobServiceClient blobServiceClient)
+    public BlobService(BlobServiceClient blobServiceClient, IOptions<BlobServiceOptions> containerOptions)
     {
         _blobServiceClient = blobServiceClient;
-        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        _containerOptions = containerOptions.Value;
+        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerOptions.Container);
         containerClient.CreateIfNotExists(PublicAccessType.Blob);
     }
 
     public async Task<string> UploadAsync(Stream stream, string contentType)
     {
-        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerOptions.Container);
 
         var fileId = Guid.NewGuid();
         var blobClient = containerClient.GetBlobClient(fileId.ToString());
@@ -25,15 +28,14 @@ internal class BlobService : IBlobService
         await blobClient.UploadAsync(stream,
             new BlobHttpHeaders { ContentType = contentType });
 
-        //Later will be replace by Ocelot endpoint
-        var fileUrl = $"http://127.0.0.1:10000/devstoreaccount1/avatars/{fileId}";
+        var fileUrl = $"{_containerOptions.BaseUrl}/{_containerOptions.Container}/{fileId}";
 
         return fileUrl;
     }
 
     public async Task DeleteAsync(string fileUrl)
     {
-        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+        var containerClient = _blobServiceClient.GetBlobContainerClient(_containerOptions.Container);
 
         var fileId = fileUrl.Split("/").Last();
         var blobClient = containerClient.GetBlobClient(fileId);
