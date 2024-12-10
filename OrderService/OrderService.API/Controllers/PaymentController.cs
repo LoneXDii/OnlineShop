@@ -18,14 +18,14 @@ public class PaymentController : ControllerBase
     }
 
     [HttpGet]
-    [Route("pay")]
+    [Route("/api/orders/{orderId}/pay")]
     [Authorize]
-    public async Task<ActionResult<string>> Pay([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
+    public async Task<ActionResult<string>> Pay(string orderId, CancellationToken cancellationToken)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
         var stribeId = HttpContext.User.FindFirst("StribeId")?.Value;
 
-        var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId.OrderId, userId, stribeId), cancellationToken);
+        var stribeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stribeId), cancellationToken);
 
         return Ok(stribeUrl);
     }
