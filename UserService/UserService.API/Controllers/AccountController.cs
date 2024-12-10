@@ -7,6 +7,8 @@ using UserService.BLL.UseCases.AuthUseCases.LoginUserUseCase;
 using UserService.BLL.UseCases.AuthUseCases.LogoutUserUseCase;
 using UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 using UserService.BLL.UseCases.AuthUseCases.ResendEmailConfirmationCodeUseCase;
+using UserService.BLL.UseCases.UserUseCases.AskForResetPasswordUseCase;
+using UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
 using UserService.DAL.Models;
 
 namespace UserService.API.Controllers;
@@ -52,6 +54,24 @@ public class AccountController : ControllerBase
     [HttpGet]
     [Route("confirm/resend")]
     public async Task<IActionResult> ResendEmailConfirmation([FromQuery] ResendEmailConfirmationCodeRequest request)
+    {
+        await _mediator.Send(request);
+
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("reset-password")]
+    public async Task<IActionResult> AskForResetPassword([FromQuery] AskForResetPasswordRequest request)
+    {
+        await _mediator.Send(request);
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("reset-password")]
+    public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordRequest request)
     {
         await _mediator.Send(request);
 

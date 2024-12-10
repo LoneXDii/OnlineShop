@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.BLL.DTO;
 using UserService.BLL.Models;
-using UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
-using UserService.BLL.UseCases.UserUseCases.AskForResetPasswordUseCase;
 using UserService.BLL.UseCases.UserUseCases.GetUserInfoUseCase;
 using UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 using UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
@@ -89,23 +87,5 @@ public class UsersController : ControllerBase
         var user = await _mediator.Send(new GetUserInfoRequest(userId));
 
         return user;
-    }
-
-    [HttpGet]
-    [Route("reset")]
-    public async Task<IActionResult> AskForResetPassword([FromQuery] AskForResetPasswordRequest request)
-    {
-        await _mediator.Send(request);
-
-        return Ok();
-    }
-
-    [HttpPost]
-    [Route("reset")]
-    public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordRequest request)
-    {
-        await _mediator.Send(request);
-
-        return Ok();
     }
 }
