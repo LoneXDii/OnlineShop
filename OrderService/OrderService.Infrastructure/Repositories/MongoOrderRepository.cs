@@ -5,7 +5,7 @@ using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;
 using System.Linq.Expressions;
 
-namespace OrderService.Infrastructure.Services;
+namespace OrderService.Infrastructure.Repositories;
 
 internal class MongoOrderRepository : IOrderRepository
 {
@@ -66,12 +66,12 @@ internal class MongoOrderRepository : IOrderRepository
 
     public async Task<long> CountAsync(CancellationToken cancellationToken = default)
     {
-        var count = await _ordersCollection.CountDocumentsAsync(Builders<OrderEntity>.Filter.Empty,null, cancellationToken);
+        var count = await _ordersCollection.CountDocumentsAsync(Builders<OrderEntity>.Filter.Empty, null, cancellationToken);
 
         return count;
     }
 
-    public async Task<long> CountAsync(CancellationToken cancellationToken = default, 
+    public async Task<long> CountAsync(CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
         var mongoFilters = new List<FilterDefinition<OrderEntity>>();

@@ -17,8 +17,7 @@ internal class SetItemQuantityInCartRequestHandler(ITemporaryStorageService temp
         }
 
         var cart = temporaryStorage.GetCart();
-        cart.Remove(product.Id);
-        cart.Add(product.Id, product);
+        cart[product.Id] = product;
         temporaryStorage.SaveCart(cart);
     }
 }

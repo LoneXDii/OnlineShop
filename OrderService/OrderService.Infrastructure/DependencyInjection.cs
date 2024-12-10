@@ -5,6 +5,7 @@ using OrderService.Infrastructure.Services;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using Stripe;
+using OrderService.Infrastructure.Repositories;
 
 namespace OrderService.Infrastructure;
 

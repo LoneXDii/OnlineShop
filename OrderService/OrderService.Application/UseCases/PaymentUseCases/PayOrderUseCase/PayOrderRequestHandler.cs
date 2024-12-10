@@ -28,8 +28,8 @@ internal class PayOrderRequestHandler(IOrderRepository orderRepository, IPayment
             throw new BadRequestException("This order is already paid");
         }
 
-        var stribeUrl = await paymentService.PayAsync(order, request.stribeId);
+        var stripeUrl = await paymentService.PayAsync(order, request.stribeId);
 
-        return stribeUrl;
+        return stripeUrl;
     }
 }
