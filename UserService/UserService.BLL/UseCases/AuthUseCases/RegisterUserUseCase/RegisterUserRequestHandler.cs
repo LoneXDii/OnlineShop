@@ -7,6 +7,7 @@ using UserService.BLL.Exceptions;
 using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
+using Hangfire;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
@@ -30,7 +31,7 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         {
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
-            await emailService.SendEmailConfirmationCodeAsync(user.Email, code);
+            BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
         }
         else
         {

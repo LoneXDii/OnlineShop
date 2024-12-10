@@ -6,6 +6,7 @@ using UserService.DAL.Services.EmailNotifications;
 using System.Text.Json;
 using UserService.DAL.Services.TemporaryStorage;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Hangfire;
 
 namespace UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 
@@ -34,6 +35,6 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
             throw new BadRequestException($"Wrong code");
         }
 
-        await emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email);
+        BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email));
     }
 }

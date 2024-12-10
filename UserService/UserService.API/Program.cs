@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using UserService.API.Middleware;
 using UserService.BLL;
@@ -16,7 +17,7 @@ builder.Services.AddAuthorization(opt =>
         opt.AddPolicy("admin", p => p.RequireRole("admin"));
     });
 
-builder.Services.AddApplication()
+builder.Services.AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
@@ -36,6 +37,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard("/dashboard");
 
 using (var scope = app.Services.CreateScope())
 {

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Hangfire;
+using MediatR;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 
@@ -11,6 +12,6 @@ internal class AskForResetPasswordRequestHandler(IEmailService emailService, ICa
     {
         var code = await cacheService.SetResetPasswordCodeAsync(request.Email);
 
-        await emailService.SendPasswordResetCodeAsync(request.Email, code);
+        BackgroundJob.Enqueue(() => emailService.SendPasswordResetCodeAsync(request.Email, code));
     }
 }
