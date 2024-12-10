@@ -53,6 +53,18 @@
           "Port": 10000
         }
       ]
+    },
+    {
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
+      "UpstreamPathTemplate": "/chat/{everything}",
+      "DownstreamPathTemplate": "/chat-hub/{everything}",
+      "DownstreamScheme": "wss",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7004
+        }
+      ]
     }
   ],
   "SwaggerEndPoints": [
