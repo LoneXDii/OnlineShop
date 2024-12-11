@@ -11,6 +11,7 @@ using OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 using OrderService.Application.Models;
 using OrderService.Application.UseCases.PaymentUseCases.PayOrderUseCase;
+using AutoMapper;
 
 namespace OrderService.API.Controllers;
 
@@ -19,10 +20,12 @@ namespace OrderService.API.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public OrderController(IMediator mediator)
+    public OrderController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpPost]
@@ -40,9 +43,10 @@ public class OrderController : ControllerBase
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(CancellationToken cancellationToken,
         [FromQuery] PaginationDTO pagination)
     {
-        var userId = HttpContext.User.FindFirst("Id")?.Value;
+        var request = _mapper.Map<GetUserOrdersRequest>(pagination);
+        request.UserId = HttpContext.User.FindFirst("Id")?.Value;
 
-        var data = await _mediator.Send(new GetUserOrdersRequest(userId, pagination.PageNo, pagination.PageSize), cancellationToken);
+        var data = await _mediator.Send(request, cancellationToken);
 
         return Ok(data);
     }
@@ -52,7 +56,9 @@ public class OrderController : ControllerBase
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetAllOrders(CancellationToken cancellationToken,
         [FromQuery] PaginationDTO pagination)
     {
-        var data = await _mediator.Send(new GetAllOrdersRequest(pagination.PageNo, pagination.PageSize), cancellationToken);
+        var request = _mapper.Map<GetAllOrdersRequest>(pagination);
+
+        var data = await _mediator.Send(request, cancellationToken);
 
         return Ok(data);
     }
@@ -63,7 +69,10 @@ public class OrderController : ControllerBase
         [FromRoute] string userId,
         [FromQuery] PaginationDTO pagination)
     {
-        var data = await _mediator.Send(new GetUserOrdersRequest(userId, pagination.PageNo, pagination.PageSize), cancellationToken);
+        var request = _mapper.Map<GetUserOrdersRequest>(pagination);
+        request.UserId = userId;
+
+        var data = await _mediator.Send(request, cancellationToken);
 
         return Ok(data);
     }
