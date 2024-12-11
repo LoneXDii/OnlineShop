@@ -20,6 +20,7 @@ public static class DependencyInjection
                 {
                     cfg.EnableFormBindingSourceAutomaticValidation = true;
                     cfg.EnableBodyBindingSourceAutomaticValidation = true;
+                    cfg.EnablePathBindingSourceAutomaticValidation = true;
                 });
 
         services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));

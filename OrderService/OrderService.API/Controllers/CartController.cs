@@ -37,24 +37,24 @@ public class CartController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("products/{productId:int}/quantity")]
-    public async Task<IActionResult> SetQuantity(int productId, [FromBody] int quantity)
+    [HttpPost("products/{productId:min(1)}/quantity")]
+    public async Task<IActionResult> SetQuantity([FromRoute] int productId, [FromBody] QuantityDTO quantity)
     {
-        await _mediator.Send(new SetItemQuantityInCartRequest(productId, quantity));
+        await _mediator.Send(new SetItemQuantityInCartRequest(productId, quantity.Quantity));
 
         return NoContent();
     }
 
-    [HttpPatch("products/{productId:int}/quantity")]
-    public async Task<IActionResult> ReduceQuantity(int productId, [FromBody] int quantity)
+    [HttpPatch("products/{productId:min(1)}/quantity")]
+    public async Task<IActionResult> ReduceQuantity([FromRoute] int productId, [FromBody] QuantityDTO quantity)
     {
-        await _mediator.Send(new ReduceItemsInCartRequest(productId, quantity));
+        await _mediator.Send(new ReduceItemsInCartRequest(productId, quantity.Quantity));
 
         return NoContent();
     }
 
-    [HttpDelete("products/{productId:int}")]
-    public async Task<IActionResult> RemoveItemFromCart(int productId)
+    [HttpDelete("products/{productId:min(1)}")]
+    public async Task<IActionResult> RemoveItemFromCart([FromRoute] int productId)
     {
         await _mediator.Send(new RemoveItemFromCartRequest(productId));
 
