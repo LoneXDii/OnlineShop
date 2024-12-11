@@ -117,7 +117,7 @@ public class OrderController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/confirmation")]
+    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/confirmation/admin")]
     [Authorize(Policy = "admin")]
     public async Task<IActionResult> ConfirmOrder([FromRoute] string orderId, CancellationToken cancellationToken)
     {
@@ -126,7 +126,7 @@ public class OrderController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/completion")]
+    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/completion/admin")]
     [Authorize(Policy = "admin")]
     public async Task<IActionResult> CompleteOrder([FromRoute] string orderId, CancellationToken cancellationToken)
     {
