@@ -33,7 +33,7 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork, ISpe
 
         if(product.Categories.Any(c => c.Id == newAttribute.Id))
         {
-            throw new BadRequestException("Cant add existing attribute");
+            throw new BadRequestException("Сan't add an existing attribute");
         }
 
         unitOfWork.AttachInCommandContext(newAttribute);

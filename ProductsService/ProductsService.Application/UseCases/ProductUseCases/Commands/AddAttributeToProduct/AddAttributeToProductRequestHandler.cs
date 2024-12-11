@@ -25,7 +25,7 @@ internal class AddAttributeToProductRequestHandler(IUnitOfWork unitOfWork, ISpec
 
         if (product.Categories.Any(c => c.Id == attribute.Id))
         {
-            throw new BadRequestException("Cant add existing product");
+            throw new BadRequestException("Сan't add an existing product");
         }
 
         if (!product.Categories.Any(c => c.Id == attribute.ParentId))

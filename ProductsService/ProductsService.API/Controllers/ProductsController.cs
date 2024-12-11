@@ -73,7 +73,7 @@ public class ProductsController : ControllerBase
 
     [HttpPost]
     [Route("attrubite")]
-    [Authorize(Policy = "admin")]
+    //[Authorize(Policy = "admin")]
     public async Task<IActionResult> AddProductAttribute([FromBody] AddAttributeToProductRequest request,
         CancellationToken cancellationToken)
     {

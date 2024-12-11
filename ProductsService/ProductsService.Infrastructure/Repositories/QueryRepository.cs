@@ -21,7 +21,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
 
     public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var entity = await _entities.FirstOrDefaultAsync(e => e.Id == id);
+        var entity = await _entities.FindAsync([id], cancellationToken);
 
         return entity;
     }
