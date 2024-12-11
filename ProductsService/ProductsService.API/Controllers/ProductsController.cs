@@ -48,8 +48,10 @@ public class ProductsController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> CreateProduct([FromForm] AddProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromForm] AddProductDTO product, CancellationToken cancellationToken)
     {
+        var request = _mapper.Map<AddProductRequest>(product);
+
         await _mediator.Send(request, cancellationToken);
 
         return NoContent();
@@ -57,7 +59,7 @@ public class ProductsController : ControllerBase
 
     [HttpPut("{productId:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateProduct([FromRoute] int productId, [FromForm] RequestProductDTO product, 
+    public async Task<IActionResult> UpdateProduct([FromRoute] int productId, [FromForm] UpdateProductDTO product, 
         CancellationToken cancellationToken)
     {
         var request = _mapper.Map<UpdateProductRequest>(product);

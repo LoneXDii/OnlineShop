@@ -2,7 +2,7 @@
 
 namespace ProductsService.Application.DTO;
 
-public class RequestCategoryDTO
+public class UpdateCategoryDTO
 {
     public string Name { get; set; }
     public IFormFile? Image { get; set; }

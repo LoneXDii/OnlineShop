@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using ProductsService.Application.UseCases.ProductUseCases.Commands.AddProduct;
+using ProductsService.Application.DTO;
 
 namespace ProductsService.Application.Validators.Products;
 
-public class AddProductRequestValidator : AbstractValidator<AddProductRequest>
+public class AddProductDtoValidator : AbstractValidator<AddProductDTO>
 {
-    public AddProductRequestValidator()
+    public AddProductDtoValidator()
     {
         RuleFor(req => req.Name)
             .NotEmpty()

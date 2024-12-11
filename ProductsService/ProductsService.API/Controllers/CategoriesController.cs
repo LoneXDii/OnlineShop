@@ -36,8 +36,10 @@ public class CategoriesController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> AddCategory([FromForm] AddCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddCategory([FromForm] AddCategoryDTO category, CancellationToken cancellationToken)
     {
+        var request = _mapper.Map<AddCategoryRequest>(category);
+
         await _mediator.Send(request, cancellationToken);
 
         return NoContent();
@@ -45,7 +47,7 @@ public class CategoriesController : ControllerBase
 
     [HttpPut("{id:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromForm] RequestCategoryDTO categoryDTO, 
+    public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromForm] UpdateCategoryDTO categoryDTO, 
         CancellationToken cancellationToken)
     {
         var request = _mapper.Map<UpdateCategoryRequest>(categoryDTO);

@@ -15,9 +15,9 @@ internal class AddCategoryRequestHandler(IUnitOfWork unitOfWork, IBlobService bl
 
         if (request.Image is not null)
         {
-            using var stream = request.Image.OpenReadStream();
+            category.ImageUrl = await blobService.UploadAsync(request.Image, request.ImageContentType);
 
-            category.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
+            request.Image.Dispose();
         }
 
         await unitOfWork.CategoryCommandRepository.AddAsync(category, cancellationToken);

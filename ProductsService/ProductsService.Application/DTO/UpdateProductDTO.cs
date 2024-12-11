@@ -2,7 +2,7 @@
 
 namespace ProductsService.Application.DTO;
 
-public class RequestProductDTO
+public class UpdateProductDTO
 {
     public string? Name { get; set; }
     public double? Price { get; set; }

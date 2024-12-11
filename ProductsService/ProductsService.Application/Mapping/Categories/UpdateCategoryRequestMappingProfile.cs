@@ -11,6 +11,7 @@ internal class UpdateCategoryRequestMappingProfile : Profile
     {
         CreateMap<UpdateCategoryRequest, Category>();
 
-        CreateMap<RequestCategoryDTO, UpdateCategoryRequest>();
+        CreateMap<UpdateCategoryDTO, UpdateCategoryRequest>()
+            .ForMember(dest => dest.ImageContentType, opt => opt.MapFrom(src => src.Image != null ? src.Image.ContentType : null));
     }
 }

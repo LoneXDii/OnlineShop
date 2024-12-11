@@ -4,9 +4,9 @@ using ProductsService.Application.DTO;
 
 namespace ProductsService.Application.Validators.Categories;
 
-public class RequestCategoryDtoValidator : AbstractValidator<RequestCategoryDTO>
+public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryDTO>
 {
-    public RequestCategoryDtoValidator()
+    public UpdateCategoryDtoValidator()
     {
         RuleFor(req => req.Name)
             .NotEmpty()

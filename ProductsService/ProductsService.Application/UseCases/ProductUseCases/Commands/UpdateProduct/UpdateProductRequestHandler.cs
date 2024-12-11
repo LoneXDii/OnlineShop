@@ -21,9 +21,9 @@ internal class UpdateProductRequestHandler(IUnitOfWork unitOfWork, IMapper mappe
                 await blobService.DeleteAsync(product.ImageUrl);
             }
 
-            using Stream stream = request.Image.OpenReadStream();
+            product.ImageUrl = await blobService.UploadAsync(request.Image, request.ImageContentType);
 
-            product.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
+            request.Image.Dispose();
         }
 
         await unitOfWork.ProductCommandRepository.UpdateAsync(product, cancellationToken);
