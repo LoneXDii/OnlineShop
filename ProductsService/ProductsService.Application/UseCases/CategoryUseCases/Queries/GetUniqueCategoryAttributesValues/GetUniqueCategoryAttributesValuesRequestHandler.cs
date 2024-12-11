@@ -13,7 +13,7 @@ internal class GetUniqueCategoryAttributesValuesRequestHandler (IUnitOfWork unit
     public async Task<List<CategoryAttributesValuesDTO>> Handle(GetUniqueCategoryAttributesValuesRequest request, CancellationToken cancellationToken)
     {
         var specification = specificationFactory.CreateSpecification<Category>();
-        specification.Criteries.Add(category => category.ParentId == request.categoryId);
+        specification.Criteries.Add(category => category.ParentId == request.CategoryId);
         specification.Includes.Add(category => category.Children);
 
         var categoriesValues = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);

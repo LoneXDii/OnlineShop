@@ -13,9 +13,9 @@ namespace ProductsService.Application.UseCases.ProductUseCases.Queries.ListProdu
 
 internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, 
     IOptions<PaginationSettings> paginationOptions, ISpecificationFactory specificationFactory)
-    : IRequestHandler<ListProductsWithPaginationRequest, PaginatedListModel<ProductDTO>>
+    : IRequestHandler<ListProductsWithPaginationRequest, PaginatedListModel<ResponseProductDTO>>
 {
-    public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
+    public async Task<PaginatedListModel<ResponseProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
         var specification = specificationFactory.CreateSpecification<Product>();
         specification.Includes.Add(product => product.Categories);
@@ -60,9 +60,9 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
             throw new NotFoundException("No such page");
         }
 
-        var data = new PaginatedListModel<ProductDTO>
+        var data = new PaginatedListModel<ResponseProductDTO>
         {
-            Items = mapper.Map<List<ProductDTO>>(items),
+            Items = mapper.Map<List<ResponseProductDTO>>(items),
             CurrentPage = request.PageNo,
             TotalPages = totalPages
         };

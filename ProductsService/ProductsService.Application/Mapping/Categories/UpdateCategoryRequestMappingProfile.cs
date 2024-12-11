@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.UpdateCategory;
 using ProductsService.Domain.Entities;
 
@@ -9,5 +10,7 @@ internal class UpdateCategoryRequestMappingProfile : Profile
     public UpdateCategoryRequestMappingProfile()
     {
         CreateMap<UpdateCategoryRequest, Category>();
+
+        CreateMap<RequestCategoryDTO, UpdateCategoryRequest>();
     }
 }

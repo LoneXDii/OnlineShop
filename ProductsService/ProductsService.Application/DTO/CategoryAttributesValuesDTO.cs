@@ -2,6 +2,6 @@
 
 public class CategoryAttributesValuesDTO
 {
-    public CategoryDTO Attribute { get; set; }
-    public List<CategoryDTO> Values { get; set; }
+    public ResponseCategoryDTO Attribute { get; set; }
+    public List<ResponseCategoryDTO> Values { get; set; }
 }

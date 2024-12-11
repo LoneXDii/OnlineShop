@@ -8,16 +8,16 @@ using ProductsService.Domain.Entities;
 namespace ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryAttributes;
 
 internal class GetCategoryAttributesRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ISpecificationFactory specificationFactory)
-    : IRequestHandler<GetCategoryAttributesRequest, List<CategoryDTO>>
+    : IRequestHandler<GetCategoryAttributesRequest, List<ResponseCategoryDTO>>
 {
-    public async Task<List<CategoryDTO>> Handle(GetCategoryAttributesRequest request, CancellationToken cancellationToken)
+    public async Task<List<ResponseCategoryDTO>> Handle(GetCategoryAttributesRequest request, CancellationToken cancellationToken)
     {
         var specification = specificationFactory.CreateSpecification<Category>();
-        specification.Criteries.Add(category => category.ParentId == request.categoryId);
+        specification.Criteries.Add(category => category.ParentId == request.CategoryId);
 
         var attributes = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
 
-        var attributesDto = mapper.Map<List<CategoryDTO>>(attributes);
+        var attributesDto = mapper.Map<List<ResponseCategoryDTO>>(attributes);
 
         return attributesDto;
 

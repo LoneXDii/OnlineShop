@@ -8,9 +8,9 @@ using ProductsService.Domain.Entities;
 namespace ProductsService.Application.UseCases.CategoryUseCases.Queries.GetAllCategories;
 
 internal class GetAllCategoriesRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ISpecificationFactory specificationFactory)
-    : IRequestHandler<GetAllCategoriesReguest, List<CategoryDTO>>
+    : IRequestHandler<GetAllCategoriesReguest, List<ResponseCategoryDTO>>
 {
-    public async Task<List<CategoryDTO>> Handle(GetAllCategoriesReguest request, CancellationToken cancellationToken)
+    public async Task<List<ResponseCategoryDTO>> Handle(GetAllCategoriesReguest request, CancellationToken cancellationToken)
     {
         var specification = specificationFactory.CreateSpecification<Category>();
         specification.Includes.Add(category => category.Children);
@@ -18,7 +18,7 @@ internal class GetAllCategoriesRequestHandler(IUnitOfWork unitOfWork, IMapper ma
 
         var categories = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
 
-        var categoriesDto = mapper.Map<List<CategoryDTO>>(categories);
+        var categoriesDto = mapper.Map<List<ResponseCategoryDTO>>(categories);
 
         return categoriesDto;
     }

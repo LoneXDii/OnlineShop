@@ -7,7 +7,7 @@ public class GetUniqueCategoryAttributesValuesRequestValidator : AbstractValidat
 {
     public GetUniqueCategoryAttributesValuesRequestValidator()
     {
-        RuleFor(req => req.categoryId)
+        RuleFor(req => req.CategoryId)
             .GreaterThan(0)
             .WithMessage("Wrong category id");
     }

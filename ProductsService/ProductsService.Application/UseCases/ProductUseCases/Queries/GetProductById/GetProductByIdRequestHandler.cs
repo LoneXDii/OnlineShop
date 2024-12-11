@@ -9,9 +9,9 @@ using ProductsService.Domain.Entities;
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductById;
 
 internal class GetProductByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ISpecificationFactory specificationFactory)
-    : IRequestHandler<GetProductByIdRequest, ProductDTO>
+    : IRequestHandler<GetProductByIdRequest, ResponseProductDTO>
 {
-    public async Task<ProductDTO> Handle(GetProductByIdRequest request, CancellationToken cancellationToken)
+    public async Task<ResponseProductDTO> Handle(GetProductByIdRequest request, CancellationToken cancellationToken)
     {
         var specification = specificationFactory.CreateSpecification<Product>();
         specification.Includes.Add(product => product.Categories);
@@ -24,7 +24,7 @@ internal class GetProductByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapp
             throw new NotFoundException("No such product");
         }
 
-        var productDto = mapper.Map<ProductDTO>(product);
+        var productDto = mapper.Map<ResponseProductDTO>(product);
 
         return productDto;
     }
