@@ -16,8 +16,12 @@ public class AddDiscountRequestValidator : AbstractValidator<AddDiscountRequest>
             .LessThan(100)
             .WithMessage("Wrong discount percent");
 
-        RuleFor(req => req.EndDate)
-            .GreaterThan(DateTime.UtcNow)
+        RuleFor(req => req.StartDate)
+            .GreaterThanOrEqualTo(DateTime.UtcNow)
+            .WithMessage("Wrong discount start time");
+
+        RuleFor(req => req)
+            .Must(req => req.EndDate > req.StartDate)
             .WithMessage("Wrong discount end time");
     }
 }
