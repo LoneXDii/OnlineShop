@@ -10,34 +10,34 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
     public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
     {
 
-        var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
+        var newAttributeValue = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
 
         var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken,
             product => product.Categories);
 
-        var oldAttribute = product.Categories.FirstOrDefault(c => c.Id == request.OldAttributeId);
+        var oldAttributeValue = product.Categories.FirstOrDefault(c => c.Id == request.OldAttributeId);
 
-        if (newAttribute is null || oldAttribute is null || product is null)
+        if (newAttributeValue is null || oldAttributeValue is null || product is null)
         {
             throw new BadRequestException("No entities with this isd");
         }
 
-        if (newAttribute.ParentId != oldAttribute.ParentId)
+        if (newAttributeValue.ParentId != oldAttributeValue.ParentId)
         {
             throw new BadRequestException("Attributes must have the same parent");
         }
 
-        if (product.Categories.Any(c => c.Id == newAttribute.Id))
+        if (product.Categories.Any(c => c.Id == newAttributeValue.Id))
         {
             throw new BadRequestException("Сan't add an existing attribute");
         }
 
-        unitOfWork.AttachInCommandContext(newAttribute);
-        unitOfWork.AttachInCommandContext(oldAttribute);
+        unitOfWork.AttachInCommandContext(newAttributeValue);
+        unitOfWork.AttachInCommandContext(oldAttributeValue);
         unitOfWork.AttachInCommandContext(product);
 
-        product.Categories.Remove(oldAttribute);
-        product.Categories.Add(newAttribute);
+        product.Categories.Remove(oldAttributeValue);
+        product.Categories.Add(newAttributeValue);
 
         await unitOfWork.SaveAllAsync(cancellationToken);
     }

@@ -17,14 +17,11 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
     public async Task<PaginatedListModel<ResponseProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
         var categorySpecification = new ProductCategorySpecification(request.CategoryId);
-        var minPriceSpecification = new ProductMinPriceSpecification(request.MinPrice);
-        var maxPriceSpecification = new ProductMaxPriceSpecification(request.MaxPrice);
-        var attributesSpecification = new ProductAttributesSpecification(request.ValuesIds);
 
         var specification = categorySpecification
-            .And(minPriceSpecification)
-            .And(maxPriceSpecification)
-            .And(attributesSpecification);
+            .And(new ProductMinPriceSpecification(request.MinPrice);)
+            .And(new ProductMaxPriceSpecification(request.MaxPrice);)
+            .And(new ProductAttributesSpecification(request.ValuesIds););
 
 
         var maxPageSize = paginationOptions.Value.MaxPageSize;
