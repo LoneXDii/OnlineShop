@@ -30,8 +30,6 @@ internal class SendMessageRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
 
         await unitOfWork.SaveAllAsync(cancellationToken);
 
-        var messageDto = mapper.Map<MessageDTO>(message);
-
-        return messageDto;
+        return mapper.Map<MessageDTO>(message);
     }
 }

@@ -19,26 +19,14 @@ internal class Repository<T> : IRepository<T> where T : class, IEntity
         _entities = _dbContext.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includedProperties)
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var query = _entities.AsQueryable();
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
-
-        var entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
-
-        return entity;
+        return await _entities.FindAsync([id], cancellationToken);
     }
 
     public async Task<IEnumerable<T>> ListAllAsync(CancellationToken cancellationToken = default)
     {
-        var entities = await _entities.AsQueryable().ToListAsync(cancellationToken);
-
-        return entities;
+        return await _entities.AsQueryable().ToListAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, 
@@ -56,9 +44,7 @@ internal class Repository<T> : IRepository<T> where T : class, IEntity
             query = query.Where(filter);
         }
 
-        var entities = await query.ToListAsync(cancellationToken);
-
-        return entities;
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
@@ -68,7 +54,7 @@ internal class Repository<T> : IRepository<T> where T : class, IEntity
 
     public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
-        _dbContext.Entry(entity).State = EntityState.Modified;
+        _dbContext.Update(entity);
 
         return Task.CompletedTask;
     }
@@ -82,8 +68,6 @@ internal class Repository<T> : IRepository<T> where T : class, IEntity
 
     public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default)
     {
-        var entity = await _entities.FirstOrDefaultAsync(filter, cancellationToken);
-
-        return entity;
+        return await _entities.FirstOrDefaultAsync(filter, cancellationToken);
     }
 }

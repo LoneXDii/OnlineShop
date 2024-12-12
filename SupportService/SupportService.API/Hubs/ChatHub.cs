@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SupportService.Application.DTO;
@@ -17,14 +16,10 @@ namespace SupportService.API.Hubs;
 public class ChatHub : Hub
 {
     private readonly IMediator _mediator;
-    private readonly IValidator<int> _chatIdValidator;
-    private readonly IValidator<AddMessageDTO> _addMessageDTOValidator;
 
-    public ChatHub(IMediator mediator, IValidator<int> chatIdValidator, IValidator<AddMessageDTO> addMessageDTOValidator)
+    public ChatHub(IMediator mediator)
     {
         _mediator = mediator;
-        _chatIdValidator = chatIdValidator;
-        _addMessageDTOValidator = addMessageDTOValidator;
     }
     
     public override async Task OnConnectedAsync()
@@ -52,7 +47,7 @@ public class ChatHub : Hub
         await Clients.Caller.SendAsync("RecieveChats", chats);
     }
 
-    public async Task GetUserChastAsync()
+    public async Task GetUserChatsAsync()
     {
         var userId = Context.User.FindFirst("Id")?.Value;
 
@@ -63,13 +58,6 @@ public class ChatHub : Hub
 
     public async Task GetChatMessages(int chatId)
     {
-        var validationResult = _chatIdValidator.Validate(chatId);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
-
         var messages = await _mediator.Send(new GetChatMessagesRequest(chatId));
 
         await Clients.Caller.SendAsync("RecieveChatMessages", messages);
@@ -89,13 +77,6 @@ public class ChatHub : Hub
 
     public async Task CloseChatAsync(int chatId)
     {
-        var validationResult = _chatIdValidator.Validate(chatId);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
-
         string? userId = null;
 		var role = Context.User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -113,13 +94,6 @@ public class ChatHub : Hub
 
     public async Task SendMessageAsync(AddMessageDTO messageDto)
     {
-        var validationResult = _addMessageDTOValidator.Validate(messageDto);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
-
         var userId = Context.User.FindFirst("Id")?.Value;
 
         var message = await _mediator.Send(new SendMessageRequest(messageDto, userId));

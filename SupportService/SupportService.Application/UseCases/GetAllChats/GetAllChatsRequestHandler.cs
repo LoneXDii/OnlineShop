@@ -12,8 +12,6 @@ internal class GetAllChatsRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         var chats = await unitOfWork.ChatRepository.ListAllAsync(cancellationToken);
 
-        var chatsDto = mapper.Map<List<ChatDTO>>(chats);
-
-        return chatsDto;
+        return mapper.Map<List<ChatDTO>>(chats);
     }
 }
