@@ -23,7 +23,7 @@ internal class CommandRepository<T> : ICommandRepository<T> where T : class, IEn
 
     public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
-        _dbContext.Entry(entity).State = EntityState.Modified;
+        _dbContext.Update(entity);
 
         return Task.CompletedTask;
     }

@@ -8,7 +8,6 @@ internal class AddDiscountRequestMappingProfile : Profile
 {
     public AddDiscountRequestMappingProfile()
     {
-        CreateMap<AddDiscountRequest, Discount>()
-            .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+        CreateMap<AddDiscountRequest, Discount>();
     }
 }

@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductsService.Application.DTO;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddAttribute;
@@ -13,19 +13,21 @@ using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetUniqueCat
 
 namespace ProductsService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/categories")]
 [ApiController]
 public class CategoriesController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public CategoriesController(IMediator mediator)
+    public CategoriesController(IMediator mediator, IMapper maper)
     {
         _mediator = mediator;
+        _mapper = maper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<CategoryDTO>>> GetCategories(CancellationToken cancellationToken)
+    public async Task<ActionResult<List<ResponseCategoryDTO>>> GetCategories(CancellationToken cancellationToken)
     {
         var categories = await _mediator.Send(new GetAllCategoriesReguest(), cancellationToken);
 
@@ -34,34 +36,39 @@ public class CategoriesController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> AddCategory([FromForm] AddCategoryRequest request,CancellationToken cancellationToken)
+    public async Task<IActionResult> AddCategory([FromForm] AddCategoryDTO category, CancellationToken cancellationToken)
     {
+        var request = _mapper.Map<AddCategoryRequest>(category);
+
         await _mediator.Send(request, cancellationToken);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpPut]
+    [HttpPut("{id:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromForm] UpdateCategoryDTO categoryDTO, 
+        CancellationToken cancellationToken)
     {
+        var request = _mapper.Map<UpdateCategoryRequest>(categoryDTO);
+        request.CategoryId = id;
+
         await _mediator.Send(request, cancellationToken);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{CategoryId:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> DeleteCategory([FromQuery] DeleteCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteCategory([FromRoute] DeleteCategoryRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpGet]
-    [Route("attributes")]
-    public async Task<ActionResult<List<CategoryDTO>>> GetCategoryAttributes([FromQuery] GetCategoryAttributesRequest request,
+    [HttpGet("{CategoryId:min(1)}/attributes")]
+    public async Task<ActionResult<List<ResponseCategoryDTO>>> GetCategoryAttributes([FromRoute] GetCategoryAttributesRequest request,
         CancellationToken cancellationToken)
     {
         var attributes = await _mediator.Send(request, cancellationToken);
@@ -69,20 +76,19 @@ public class CategoriesController : ControllerBase
         return Ok(attributes);
     }
 
-    [HttpPost]
-    [Route("attributes")]
+    [HttpPost("{categoryId:min(1)}/attributes")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> AddCategoryAttribute([FromBody] AddAttributeRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddCategoryAttribute([FromRoute] int categoryId, [FromBody] CategoryNameDTO categoryName,
+        CancellationToken cancellationToken)
     {
-        await _mediator.Send(request, cancellationToken);
+        await _mediator.Send(new AddAttributeRequest(categoryId, categoryName.Name), cancellationToken);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpGet]
-    [Route("attributes/values")]
+    [HttpGet("{CategoryId:min(1)}/attributes/values")]
     public async Task<ActionResult<List<CategoryAttributesValuesDTO>>> GetCategoryAttributesValues(
-        [FromQuery] GetUniqueCategoryAttributesValuesRequest request,
+        [FromRoute] GetUniqueCategoryAttributesValuesRequest request,
         CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken);

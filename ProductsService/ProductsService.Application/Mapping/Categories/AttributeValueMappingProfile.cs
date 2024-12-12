@@ -8,7 +8,7 @@ internal class AttributeValueMappingProfile : Profile
 {
     public AttributeValueMappingProfile()
     {
-        CreateMap<Category, AttributeValueDTO>()
+        CreateMap<Category, ResponseAttributeValueDTO>()
             .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.ParentId))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Parent.Name))
             .ForMember(dest => dest.ValueId, opt => opt.MapFrom(src => src.Id))

@@ -11,22 +11,25 @@ using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProduc
 using ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 using ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteProduct;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductById;
+using AutoMapper;
 
 namespace ProductsService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/products")]
 [ApiController]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public ProductsController(IMediator mediator)
+    public ProductsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedListModel<ProductDTO>>> GetProducts(
+    public async Task<ActionResult<PaginatedListModel<ResponseProductDTO>>> GetProducts(
         [FromQuery] ListProductsWithPaginationRequest request,
         CancellationToken cancellationToken)
     {
@@ -35,9 +38,8 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet]
-    [Route("Product")]
-    public async Task<ActionResult<ProductDTO>> GetProductById([FromQuery] GetProductByIdRequest request, CancellationToken cancellationToken)
+    [HttpGet("{ProductId:min(1)}")]
+    public async Task<ActionResult<ResponseProductDTO>> GetProductById([FromRoute] GetProductByIdRequest request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request, cancellationToken);
 
@@ -46,61 +48,67 @@ public class ProductsController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> CreateProduct([FromForm] AddProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromForm] AddProductDTO product, CancellationToken cancellationToken)
+    {
+        var request = _mapper.Map<AddProductRequest>(product);
+
+        await _mediator.Send(request, cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpPut("{productId:min(1)}")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> UpdateProduct([FromRoute] int productId, [FromForm] UpdateProductDTO product, 
+        CancellationToken cancellationToken)
+    {
+        var request = _mapper.Map<UpdateProductRequest>(product);
+        request.Id = productId;
+
+        await _mediator.Send(request, cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{ProductId:min(1)}")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteProduct([FromRoute] DeleteProductRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
         return NoContent();
     }
 
-    [HttpPut]
+    [HttpPost("{ProductId:min(1)}/attributes/{AttributeId:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductRequest request, CancellationToken cancellationToken)
-    {
-        await _mediator.Send(request, cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpDelete]
-    [Authorize(Policy = "admin")]
-    public async Task<IActionResult> DeleteProduct([FromQuery] DeleteProductRequest request, CancellationToken cancellationToken)
-    {
-        await _mediator.Send(request, cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpPost]
-    [Route("attrubite")]
-    [Authorize(Policy = "admin")]
-    public async Task<IActionResult> AddProductAttribute([FromBody] AddAttributeToProductRequest request,
+    public async Task<IActionResult> AddProductAttribute([FromRoute] AddAttributeToProductRequest request,
         CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
-        return Ok();
+        return NoContent();
     }
 
-    [HttpPut]
-    [Route("attribute")]
+    [HttpPut("{ProductId:min(1)}/attributes/{AttributeId:min(1)}")]
+    //[Authorize(Policy = "admin")]
+    public async Task<IActionResult> UpdateProductAttribute([FromRoute] RequestAttributeValueDTO productAttrubute, 
+        [FromBody] UpdateAttributeDTO newAttribute, CancellationToken cancellationToken)
+    {
+        var request = _mapper.Map<UpdateProductAttributeRequest>(productAttrubute);
+        request.NewAttributeId = newAttribute.AttributeId;
+
+        await _mediator.Send(request, cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{ProductId:min(1)}/attributes/{AttributeId:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> UpdateProductAttribute([FromBody] UpdateProductAttributeRequest request,
+    public async Task<IActionResult> DeleteProductAttribute([FromRoute] DeleteAttributeFromProductRequest request,
         CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
-        return Ok();
-    }
-
-    [HttpDelete]
-    [Route("attribute")]
-    [Authorize(Policy = "admin")]
-    public async Task<IActionResult> DeleteProductAttribute([FromQuery] DeleteAttributeFromProductRequest request,
-        CancellationToken cancellationToken)
-    {
-        await _mediator.Send(request, cancellationToken);
-
-        return Ok();
+        return NoContent();
     }
 }

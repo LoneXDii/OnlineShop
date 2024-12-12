@@ -4,45 +4,24 @@ using ProductsService.Application.DTO;
 using ProductsService.Application.Exceptions;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Application.Models;
-using ProductsService.Domain.Entities;
 using Microsoft.Extensions.Options;
 using ProductsService.Application.Configuration;
-using ProductsService.Domain.Abstractions.Specifications;
+using ProductsService.Application.Specifications.Products;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.ListProducts;
 
 internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, 
-    IOptions<PaginationSettings> paginationOptions, ISpecificationFactory specificationFactory)
-    : IRequestHandler<ListProductsWithPaginationRequest, PaginatedListModel<ProductDTO>>
+    IOptions<PaginationSettings> paginationOptions)
+    : IRequestHandler<ListProductsWithPaginationRequest, PaginatedListModel<ResponseProductDTO>>
 {
-    public async Task<PaginatedListModel<ProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
+    public async Task<PaginatedListModel<ResponseProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
-        var specification = specificationFactory.CreateSpecification<Product>();
-        specification.Includes.Add(product => product.Categories);
-        specification.Includes.Add(product => product.Discount);
+        var categorySpecification = new ProductCategorySpecification(request.CategoryId);
 
-        if (request.CategoryId is not null)
-        {
-            specification.Criteries.Add(product => product.Categories.Any(c => c.Id == request.CategoryId));
-        }
-
-        if (request.MinPrice is not null)
-        {
-            specification.Criteries.Add(product => product.Price >= request.MinPrice);
-        }
-
-        if (request.MaxPrice is not null)
-        {
-            specification.Criteries.Add(product => product.Price <= request.MaxPrice);
-        }
-
-        if (request.ValuesIds is not null)
-        {
-            foreach (var id in request.ValuesIds)
-            {
-                specification.Criteries.Add(product => product.Categories.Any(c => c.Id == id));
-            }
-        }
+        var specification = categorySpecification
+            .And(new ProductMinPriceSpecification(request.MinPrice))
+            .And(new ProductMaxPriceSpecification(request.MaxPrice))
+            .And(new ProductAttributesSpecification(request.ValuesIds));
 
         var maxPageSize = paginationOptions.Value.MaxPageSize;
 
@@ -51,7 +30,9 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
             : request.PageSize;
 
         var items = await unitOfWork.ProductQueryRepository.ListWithPaginationAsync(request.PageNo, pageSize,
-            specification, cancellationToken);
+            specification, cancellationToken, 
+            product => product.Categories,
+            product => product.Discount);
 
         var totalPages = (int)Math.Ceiling(items.Count() / (double)pageSize);
 
@@ -60,9 +41,9 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
             throw new NotFoundException("No such page");
         }
 
-        var data = new PaginatedListModel<ProductDTO>
+        var data = new PaginatedListModel<ResponseProductDTO>
         {
-            Items = mapper.Map<List<ProductDTO>>(items),
+            Items = mapper.Map<List<ResponseProductDTO>>(items),
             CurrentPage = request.PageNo,
             TotalPages = totalPages
         };

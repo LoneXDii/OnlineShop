@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddCategory;
+using ProductsService.Application.DTO;
 
 namespace ProductsService.Application.Validators.Categories;
 
-public class AddCategoryRequestValidator : AbstractValidator<AddCategoryRequest>
+public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryDTO>
 {
-    public AddCategoryRequestValidator()
+    public UpdateCategoryDtoValidator()
     {
         RuleFor(req => req.Name)
             .NotEmpty()

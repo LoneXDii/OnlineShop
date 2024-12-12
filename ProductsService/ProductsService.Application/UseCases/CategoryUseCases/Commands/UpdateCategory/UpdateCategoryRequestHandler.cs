@@ -28,9 +28,9 @@ internal class UpdateCategoryRequestHandler(IUnitOfWork unitOfWork, IBlobService
                 await blobService.DeleteAsync(category.ImageUrl);
             }
 
-            using Stream stream = request.Image.OpenReadStream();
+            category.ImageUrl = await blobService.UploadAsync(request.Image, request.ImageContentType);
 
-            category.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
+            request.Image.Dispose();
         }
 
         await unitOfWork.CategoryCommandRepository.UpdateAsync(category, cancellationToken);

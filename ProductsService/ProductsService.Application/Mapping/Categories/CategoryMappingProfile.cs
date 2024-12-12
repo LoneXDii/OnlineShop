@@ -8,6 +8,6 @@ internal class CategoryMappingProfile : Profile
 {
     public CategoryMappingProfile()
     {
-        CreateMap<Category, CategoryDTO>();
+        CreateMap<Category, ResponseCategoryDTO>();
     }
 }

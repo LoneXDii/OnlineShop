@@ -1,6 +1,6 @@
 ﻿namespace ProductsService.Application.DTO;
 
-public class ProductDTO
+public class ResponseProductDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -8,6 +8,6 @@ public class ProductDTO
     public int Quantity { get; set; }
     public string? ImageUrl { get; set; }
     public DiscountDTO? Discount { get; set; }
-    public CategoryDTO Category { get; set; }
-    public List<AttributeValueDTO> AttributeValues { get; set; }
+    public ResponseCategoryDTO Category { get; set; }
+    public List<ResponseAttributeValueDTO> AttributeValues { get; set; }
 }

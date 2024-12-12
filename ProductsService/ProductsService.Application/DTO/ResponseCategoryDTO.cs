@@ -1,6 +1,6 @@
 ﻿namespace ProductsService.Application.DTO;
 
-public class CategoryDTO
+public class ResponseCategoryDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }

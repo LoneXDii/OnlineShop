@@ -11,5 +11,5 @@ public sealed record ListProductsWithPaginationRequest(
     int PageNo = 1, 
     int PageSize = 10, 
     params int[]? ValuesIds)
-    : IRequest<PaginatedListModel<ProductDTO>>
+    : IRequest<PaginatedListModel<ResponseProductDTO>>
 { }
