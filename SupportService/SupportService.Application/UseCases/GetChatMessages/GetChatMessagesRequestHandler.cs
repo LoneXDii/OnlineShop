@@ -13,6 +13,5 @@ internal class GetChatMessagesRequestHandler(IUnitOfWork unitOfWork, IMapper map
         var messages = await unitOfWork.MessageRepository.ListAsync(message => message.ChatId == request.ChatId, cancellationToken);
 
         return mapper.Map<List<MessageDTO>>(messages);
-
     }
 }
