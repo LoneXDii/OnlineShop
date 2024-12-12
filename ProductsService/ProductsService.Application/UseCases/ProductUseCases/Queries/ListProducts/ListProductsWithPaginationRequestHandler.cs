@@ -19,10 +19,9 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
         var categorySpecification = new ProductCategorySpecification(request.CategoryId);
 
         var specification = categorySpecification
-            .And(new ProductMinPriceSpecification(request.MinPrice);)
-            .And(new ProductMaxPriceSpecification(request.MaxPrice);)
-            .And(new ProductAttributesSpecification(request.ValuesIds););
-
+            .And(new ProductMinPriceSpecification(request.MinPrice))
+            .And(new ProductMaxPriceSpecification(request.MaxPrice))
+            .And(new ProductAttributesSpecification(request.ValuesIds));
 
         var maxPageSize = paginationOptions.Value.MaxPageSize;
 
