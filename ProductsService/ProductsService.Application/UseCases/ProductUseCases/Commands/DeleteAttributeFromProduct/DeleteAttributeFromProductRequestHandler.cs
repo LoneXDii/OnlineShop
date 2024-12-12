@@ -1,20 +1,16 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Domain.Abstractions.Database;
-using ProductsService.Domain.Abstractions.Specifications;
-using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.DeleteAttributeFromProduct;
 
-internal class DeleteAttributeFromProductRequestHandler(IUnitOfWork unitOfWork, ISpecificationFactory specificationFactory)
+internal class DeleteAttributeFromProductRequestHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteAttributeFromProductRequest>
 {
     public async Task Handle(DeleteAttributeFromProductRequest request, CancellationToken cancellationToken)
     {
-        var specification = specificationFactory.CreateSpecification<Product>();
-        specification.Includes.Add(product => product.Categories);
-
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken,
+            product => product.Categories);
 
         var attribute = product?.Categories?.FirstOrDefault(c => c.Id == request.AttributeId);
 

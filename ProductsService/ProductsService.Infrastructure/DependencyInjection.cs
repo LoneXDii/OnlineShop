@@ -4,11 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductsService.Domain.Abstractions.BlobStorage;
 using ProductsService.Domain.Abstractions.Database;
-using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Infrastructure.Data;
 using ProductsService.Infrastructure.Repositories;
 using ProductsService.Infrastructure.Services;
-using ProductsService.Infrastructure.Specifications;
 
 namespace ProductsService.Infrastructure;
 
@@ -33,7 +31,6 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(ICommandRepository<>), typeof(CommandRepository<>))
             .AddScoped(typeof(IQueryRepository<>), typeof(QueryRepository<>))
-            .AddScoped<ISpecificationFactory, SpecificationFactory>()
             .AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

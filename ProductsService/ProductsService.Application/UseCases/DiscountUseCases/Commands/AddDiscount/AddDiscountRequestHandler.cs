@@ -7,25 +7,26 @@ using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.DiscountUseCases.Commands.AddDiscount;
 
-internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ISpecificationFactory specificationFactory)
+internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<AddDiscountRequest>
 {
     public async Task Handle(AddDiscountRequest request, CancellationToken cancellationToken)
     {
-        var specification = specificationFactory.CreateSpecification<Discount>();
-        specification.Criteries.Add(discount => discount.ProductId == request.ProductId);
+        //var specification = specificationFactory.CreateSpecification<Discount>();
+        //specification.Criteries.Add(discount => discount.ProductId == request.ProductId);
 
-        var discount = await unitOfWork.DiscountQueryRepository.FirstOrDefaultAsync(specification, cancellationToken);
+        //var discount = await unitOfWork.DiscountQueryRepository.FirstOrDefaultAsync(specification, cancellationToken);
 
-        if(discount is not null)
-        {
-            throw new BadRequestException("This product already have discount");
-        }
+        //if(discount is not null)
+        //{
+        //    throw new BadRequestException("This product already have discount");
+        //}
 
-        discount = mapper.Map<Discount>(request);
+        //discount = mapper.Map<Discount>(request);
 
-        await unitOfWork.DiscountCommandRepository.AddAsync(discount, cancellationToken);
+        //await unitOfWork.DiscountCommandRepository.AddAsync(discount, cancellationToken);
 
-        await unitOfWork.SaveAllAsync(cancellationToken);
+        //await unitOfWork.SaveAllAsync(cancellationToken);
+        throw new NotImplementedException();
     }
 }

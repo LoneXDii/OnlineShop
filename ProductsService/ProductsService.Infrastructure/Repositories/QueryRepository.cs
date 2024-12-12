@@ -3,7 +3,6 @@ using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
-using ProductsService.Infrastructure.Specifications;
 using System.Linq.Expressions;
 
 namespace ProductsService.Infrastructure.Repositories;
@@ -19,71 +18,83 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         _entities = _dbContext.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-    {
-        var entity = await _entities.FindAsync([id], cancellationToken);
-
-        return entity;
-    }
-
-    public async Task<T?> GetByIdAsync(int id, ISpecification<T>? specification, CancellationToken cancellationToken = default)
-    {
-        IQueryable<T>? query = _entities.AsQueryable();
-        query = specification?.GetQuery(query);
-
-        var entity = await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
-
-        return entity;
-    }
-
-    public async Task<IEnumerable<T>> ListAllAsync(CancellationToken cancellationToken = default)
-    {
-        var entities = await _entities.AsQueryable().ToListAsync(cancellationToken);
-
-        return entities;
-    }
-
-    public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default,
+        params Expression<Func<T, object>>[] includedProperties)
     {
         var query = _entities.AsQueryable();
-        query = specification.GetQuery(query);
 
-        var entities = await query.ToListAsync();
+        foreach (var property in includedProperties)
+        {
+            query = query.Include(property);
+        }
 
-        return entities;
+        return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+    }
+
+    public async Task<IEnumerable<T>> ListAllAsync(CancellationToken cancellationToken = default, 
+        params Expression<Func<T, object>>[] includedProperties)
+    {
+        var query = _entities.AsQueryable();
+
+        foreach (var property in includedProperties)
+        {
+            query = query.Include(property);
+        }
+
+        return await query.ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification, CancellationToken cancellationToken = default, 
+        params Expression<Func<T, object>>[] includedProperties)
+    {
+        var query = _entities.AsQueryable();
+        query = query.Where(specification.ToExpression());
+
+        foreach (var property in includedProperties)
+        {
+            query = query.Include(property);
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<List<T>> ListWithPaginationAsync(int pageNo, int pageSize, 
-        ISpecification<T> specification, CancellationToken cancellationToken = default)
+        ISpecification<T> specification, CancellationToken cancellationToken = default,
+        params Expression<Func<T, object>>[] includedProperties)
     {
         var query = _entities.AsQueryable();
-        query = specification.GetQuery(query);
+        query = query.Where(specification.ToExpression());
 
-        var entities = await query.OrderBy(e => e.Id)
+        foreach (var property in includedProperties)
+        {
+            query = query.Include(property);
+        }
+
+        return await query.OrderBy(e => e.Id)
             .Skip((pageNo - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
-
-        return entities;
     }
 
-    public async Task<T?> FirstOrDefaultAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+    public async Task<T?> FirstOrDefaultAsync(ISpecification<T> specification, CancellationToken cancellationToken = default, 
+        params Expression<Func<T, object>>[] includedProperties)
     {
         var query = _entities.AsQueryable();
-        query = specification.GetQuery(query);
+        query = query.Where(specification.ToExpression());
 
-        var entity = await query.FirstOrDefaultAsync(cancellationToken);
+        foreach (var property in includedProperties)
+        {
+            query = query.Include(property);
+        }
 
-        return entity;
+        return await query.FirstOrDefaultAsync(cancellationToken); ;
     }
 
     public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         var query = _entities.AsQueryable();
-        query = specification.GetQuery(query);
-
-        var count = await query.CountAsync(cancellationToken); 
+        query = query.Where(specification.ToExpression());
         
-        return count;
+        return await query.CountAsync(cancellationToken);
     }
 }

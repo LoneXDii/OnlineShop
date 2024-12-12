@@ -1,12 +1,10 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Domain.Abstractions.Database;
-using ProductsService.Domain.Abstractions.Specifications;
-using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
-internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork, ISpecificationFactory specificationFactory)
+internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<UpdateProductAttributeRequest>
 {
     public async Task Handle(UpdateProductAttributeRequest request, CancellationToken cancellationToken)
@@ -14,24 +12,22 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork, ISpe
 
         var newAttribute = await unitOfWork.CategoryQueryRepository.GetByIdAsync(request.NewAttributeId, cancellationToken);
 
-        var specification = specificationFactory.CreateSpecification<Product>();
-        specification.Includes.Add(product => product.Categories);
-
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, specification, cancellationToken);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.ProductId, cancellationToken,
+            product => product.Categories);
 
         var oldAttribute = product.Categories.FirstOrDefault(c => c.Id == request.OldAttributeId);
 
-        if (newAttribute is null || oldAttribute is null || product is null) 
+        if (newAttribute is null || oldAttribute is null || product is null)
         {
             throw new BadRequestException("No entities with this isd");
         }
 
-        if(newAttribute.ParentId != oldAttribute.ParentId)
+        if (newAttribute.ParentId != oldAttribute.ParentId)
         {
             throw new BadRequestException("Attributes must have the same parent");
         }
 
-        if(product.Categories.Any(c => c.Id == newAttribute.Id))
+        if (product.Categories.Any(c => c.Id == newAttribute.Id))
         {
             throw new BadRequestException("Сan't add an existing attribute");
         }
