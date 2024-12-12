@@ -10,129 +10,141 @@ using OrderService.Application.UseCases.OrderUseCases.GetAllOrdersUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetOrderByIdUseCase;
 using OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 using OrderService.Application.Models;
+using OrderService.Application.UseCases.PaymentUseCases.PayOrderUseCase;
+using AutoMapper;
 
 namespace OrderService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/orders")]
 [ApiController]
 public class OrderController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public OrderController(IMediator mediator)
+    public OrderController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    [Route("create")]
-    [Authorize]
     public async Task<IActionResult> CreateOrder(CancellationToken cancellationToken)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
 
         await _mediator.Send(new CreateOrderRequest(userId), cancellationToken);
 
-        return Ok();
-    }
-
-    [HttpGet]
-    [Route("get/user")]
-    [Authorize]
-    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(CancellationToken cancellationToken, 
-        [FromQuery] PaginationDTO pagination)
-    {
-        var userId = HttpContext.User.FindFirst("Id")?.Value;
-
-        var data = await _mediator.Send(new GetUserOrdersRequest(userId, pagination.PageNo, pagination.PageSize), cancellationToken);
-
-        return Ok(data);
-    }
-
-    [HttpGet]
-    [Route("get/user/admin")]
-    [Authorize(Policy = "admin")]
-    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(CancellationToken cancellationToken, 
-        [FromQuery] string userId,
-        [FromQuery] PaginationDTO pagination)
-    {
-        var data = await _mediator.Send(new GetUserOrdersRequest(userId, pagination.PageNo, pagination.PageSize), cancellationToken);
-
-        return Ok(data);
-    }
-
-    [HttpGet]
-    [Route("get/all")]
-    [Authorize(Policy = "admin")]
-    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetAllOrders(CancellationToken cancellationToken, 
-        [FromQuery] PaginationDTO pagination)
-    {
-        var data = await _mediator.Send(new GetAllOrdersRequest(pagination.PageNo, pagination.PageSize), cancellationToken);
-
-        return Ok(data);
+        return NoContent();
     }
 
     [HttpGet]
     [Authorize]
-    [Route("get/id")]
-    public async Task<ActionResult<OrderDTO>> GetOrder([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetOrders(CancellationToken cancellationToken,
+        [FromQuery] PaginationDTO pagination)
+    {
+        var request = _mapper.Map<GetUserOrdersRequest>(pagination);
+        request.UserId = HttpContext.User.FindFirst("Id")?.Value;
+
+        var data = await _mediator.Send(request, cancellationToken);
+
+        return Ok(data);
+    }
+
+    [HttpGet("all")]
+    [Authorize(Policy = "admin")]
+    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetAllOrders(CancellationToken cancellationToken,
+        [FromQuery] PaginationDTO pagination)
+    {
+        var request = _mapper.Map<GetAllOrdersRequest>(pagination);
+
+        var data = await _mediator.Send(request, cancellationToken);
+
+        return Ok(data);
+    }
+
+    [HttpGet("user/{userId:regex(^[[a-fA-F0-9]]{{24}}$)}")]
+    [Authorize(Policy = "Admin")]
+    public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetUserOrders(CancellationToken cancellationToken,
+        [FromRoute] string userId,
+        [FromQuery] PaginationDTO pagination)
+    {
+        var request = _mapper.Map<GetUserOrdersRequest>(pagination);
+        request.UserId = userId;
+
+        var data = await _mediator.Send(request, cancellationToken);
+
+        return Ok(data);
+    }
+
+    [HttpGet("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}")]
+    [Authorize]
+    public async Task<ActionResult<OrderDTO>> GetOrder([FromRoute] string orderId, CancellationToken cancellationToken)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
 
-        var data = await _mediator.Send(new GetOrderByIdRequest(orderId.OrderId, userId), cancellationToken);
+        var data = await _mediator.Send(new GetOrderByIdRequest(orderId, userId), cancellationToken);
 
         return Ok(data);
+    }
+
+    [HttpGet("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/admin")]
+    [Authorize(Policy = "admin")]
+    public async Task<ActionResult<OrderDTO>> GetOrderAdmin([FromRoute] string orderId, CancellationToken cancellationToken)
+    {
+        var data = await _mediator.Send(new GetOrderByIdRequest(orderId), cancellationToken);
+
+        return Ok(data);
+    }
+
+    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/cancellation")]
+    [Authorize]
+    public async Task<IActionResult> CancelOrder([FromRoute] string orderId, CancellationToken cancellationToken)
+    {
+        var userId = HttpContext.User.FindFirst("Id")?.Value;
+
+        await _mediator.Send(new CancelOrderRequest(orderId, userId), cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/cancellation/admin")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> CancelOrderAdmin([FromRoute] string orderId, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new CancelOrderRequest(orderId), cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/confirmation/admin")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> ConfirmOrder([FromRoute] string orderId, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new ConfirmOrderRequest(orderId), cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpPut("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/completion/admin")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> CompleteOrder([FromRoute] string orderId, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new CompleteOrderRequest(orderId), cancellationToken);
+
+        return NoContent();
     }
 
     [HttpGet]
-    [Route("get/admin")]
-    [Authorize(Policy = "admin")]
-    public async Task<ActionResult<OrderDTO>> GetOrderAdmin([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
-    {
-        var data = await _mediator.Send(new GetOrderByIdRequest(orderId.OrderId), cancellationToken);
-
-        return Ok(data);
-    }
-
-    [HttpPut]
-    [Route("cancel")]
+    [Route("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/pay")]
     [Authorize]
-    public async Task<IActionResult> CancelOrder([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
+    public async Task<ActionResult<string>> Pay([FromRoute] string orderId, CancellationToken cancellationToken)
     {
         var userId = HttpContext.User.FindFirst("Id")?.Value;
+        var stripeId = HttpContext.User.FindFirst("StripeId")?.Value;
 
-        await _mediator.Send(new CancelOrderRequest(orderId.OrderId, userId), cancellationToken);
+        var stripeUrl = await _mediator.Send(new PayOrderRequest(orderId, userId, stripeId), cancellationToken);
 
-        return Ok();
-    }
-
-    [HttpPut]
-    [Route("cancel/admin")]
-    [Authorize(Policy = "admin")]
-    public async Task<IActionResult> CancelOrderAdmin([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
-    {
-        await _mediator.Send(new CancelOrderRequest(orderId.OrderId), cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpPut]
-    [Route("confirm")]
-    [Authorize(Policy = "admin")]
-    public async Task<IActionResult> ConfirmOrder([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
-    {
-        await _mediator.Send(new ConfirmOrderRequest(orderId.OrderId), cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpPut]
-    [Route("complete")]
-    [Authorize(Policy = "admin")]
-    public async Task<IActionResult> CompleteOrder([FromQuery] OrderIdDTO orderId, CancellationToken cancellationToken)
-    {
-        await _mediator.Send(new CompleteOrderRequest(orderId.OrderId), cancellationToken);
-
-        return Ok();
+        return Ok(stripeUrl);
     }
 }

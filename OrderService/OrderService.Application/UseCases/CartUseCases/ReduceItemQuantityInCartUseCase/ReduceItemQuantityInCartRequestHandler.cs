@@ -10,13 +10,13 @@ internal class ReduceItemQuantityInCartRequestHandler(ITemporaryStorageService t
     {
         var cart = await temporaryStorage.GetCartAsync(cancellationToken);
 
-        if (cart.ContainsKey(request.product.Id))
+        if (cart.ContainsKey(request.ProductId))
         {
-            cart[request.product.Id].Quantity -= request.product.Quantity;
+            cart[request.ProductId].Quantity -= request.Quantity;
 
-            if (cart[request.product.Id].Quantity < 0)
+            if (cart[request.ProductId].Quantity < 0)
             {
-                cart.Remove(request.product.Id);
+                cart.Remove(request.ProductId);
             }
         }
 
