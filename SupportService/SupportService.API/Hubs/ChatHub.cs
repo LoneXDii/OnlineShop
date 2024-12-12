@@ -52,7 +52,7 @@ public class ChatHub : Hub
         await Clients.Caller.SendAsync("RecieveChats", chats);
     }
 
-    public async Task GetUserChastAsync()
+    public async Task GetUserChatsAsync()
     {
         var userId = Context.User.FindFirst("Id")?.Value;
 
