@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using MediatR;
 using SupportService.Application.DTO;
 using SupportService.Application.Exceptions;
@@ -31,6 +32,8 @@ internal class CloseChatRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         await unitOfWork.ChatRepository.UpdateAsync(chat, cancellationToken);
 
         await unitOfWork.SaveAllAsync(cancellationToken);
+
+        BackgroundJob.Schedule(() => unitOfWork.ChatRepository.DeleteAsync(chat, default), TimeSpan.FromDays(7));
 
         return mapper.Map<ChatDTO>(chat);
     }

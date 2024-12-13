@@ -1,9 +1,12 @@
+using Hangfire;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.SignalR;
 using SupportService.API.Filters;
 using SupportService.API.Hubs;
 using SupportService.Application;
+using SupportService.Domain.Abstractions;
 using SupportService.Infrastructure;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +25,7 @@ builder.Services.AddSignalR(opt =>
 builder.Services.AddSingleton<HubExceptionsFilter>();
 
 builder.Services.AddInfrastructure(builder.Configuration)
-    .AddApplication();
+    .AddApplication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -40,5 +43,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapHub<ChatHub>("chat-hub");
+
+app.UseHangfireDashboard("/dashboard");
+
+using (var scope = app.Services.CreateScope())
+{
+    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+    await unitOfWork.EnableMigrationsAsync();
+}
 
 app.Run();
