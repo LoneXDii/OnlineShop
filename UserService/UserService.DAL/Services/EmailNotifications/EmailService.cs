@@ -61,4 +61,32 @@ internal class EmailService : IEmailService
 
         await _sendGridClient.SendEmailAsync(msg);
     }
+
+    public async Task SendUnconfirmedAccountDeletedNotificationAsync(string email)
+    {
+        var subject = "Your account wasn't created";
+        var plainTextContent = $"Your account was deleted because you didn't confirm your email";
+        var htmlContent = $"<span>{plainTextContent}</span>";
+        var to = new EmailAddress(email);
+
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+
+        await _sendGridClient.SendEmailAsync(msg);
+    }
+
+    public async Task SendEmailNotChangedNotificationAsync(string oldEmail, string newEmail)
+    {
+        var subject = "Your email wasn't changed";
+        var plainTextContent = $"Your email wasn't changed because you didn't confirm your new email\nYour actual email is {oldEmail}";
+        var htmlContent = $"<span>{plainTextContent}</span>";
+        var toOld = new EmailAddress(oldEmail);
+        var toNew = new EmailAddress(newEmail);
+
+        var messageOld = MailHelper.CreateSingleEmail(mailSender, toOld, subject, plainTextContent, htmlContent);
+        var messageNew = MailHelper.CreateSingleEmail(mailSender, toNew, subject, plainTextContent, htmlContent);
+
+        await _sendGridClient.SendEmailAsync(messageOld);
+
+        await _sendGridClient.SendEmailAsync(messageNew);
+    }
 }

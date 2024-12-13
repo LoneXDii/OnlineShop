@@ -55,6 +55,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
             }
 
             await userManager.DeleteAsync(user);
+
+            await emailService.SendUnconfirmedAccountDeletedNotificationAsync(email);
         }
     }
 }

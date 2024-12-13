@@ -28,6 +28,8 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
             throw new NotFoundException("No such user");
         }
 
+        BackgroundJob.Schedule(() => ReturnOldEmailAsync(user.Email, request.newEmail), TimeSpan.FromHours(1));
+
         user.Email = request.newEmail;
         user.UserName = request.newEmail;
         user.EmailConfirmed = false;
@@ -37,5 +39,20 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
         BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
+    }
+
+    public async Task ReturnOldEmailAsync(string oldEmail, string newEmail)
+    {
+        var user = await userManager.FindByEmailAsync(newEmail);
+
+        if (!user.EmailConfirmed)
+        {
+            user.Email = oldEmail;
+            user.EmailConfirmed = true;
+
+            await userManager.UpdateAsync(user);
+
+            await emailService.SendEmailNotChangedNotificationAsync(oldEmail, newEmail);
+        }
     }
 }
