@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Application.Specifications.Discounts;
@@ -27,5 +28,7 @@ internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         await unitOfWork.DiscountCommandRepository.AddAsync(discount, cancellationToken);
 
         await unitOfWork.SaveAllAsync(cancellationToken);
+
+        BackgroundJob.Schedule(() => unitOfWork.DiscountCommandRepository.DeleteAsync(discount, default), discount.EndDate);
     }
 }
