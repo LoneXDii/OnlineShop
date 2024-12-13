@@ -1,20 +1,16 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using ProductsService.Application.UseCases.CategoryUseCases.Commands.UpdateCategory;
+using ProductsService.Application.DTO;
 
 namespace ProductsService.Application.Validators.Categories;
 
-public class UpdateCategoryRequestValidator : AbstractValidator<UpdateCategoryRequest>
+public class AddCategoryDtoValidator : AbstractValidator<AddCategoryDTO>
 {
-    public UpdateCategoryRequestValidator()
+    public AddCategoryDtoValidator()
     {
         RuleFor(req => req.Name)
             .NotEmpty()
             .WithMessage("Wrong category name");
-
-        RuleFor(req => req.CategoryId)
-            .GreaterThan(0)
-            .WithMessage("Wrong category id");
 
         RuleFor(req => req.Image)
             .Must(BeAnImage)

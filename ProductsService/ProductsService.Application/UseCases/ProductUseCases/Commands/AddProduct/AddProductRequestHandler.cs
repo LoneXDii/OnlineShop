@@ -15,9 +15,9 @@ internal class AddProductRequestHandler(IUnitOfWork unitOfWork, IBlobService blo
 
         if(request.Image is not null)
         {
-            using var stream = request.Image.OpenReadStream();
+            product.ImageUrl = await blobService.UploadAsync(request.Image, request.ImageContentType);
 
-            product.ImageUrl = await blobService.UploadAsync(stream, request.Image.ContentType);
+            request.Image.Dispose();
         }
 
         foreach (var category in product.Categories)

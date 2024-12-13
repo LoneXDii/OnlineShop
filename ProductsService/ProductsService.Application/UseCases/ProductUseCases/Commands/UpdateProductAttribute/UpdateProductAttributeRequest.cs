@@ -2,4 +2,9 @@
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
-public sealed record UpdateProductAttributeRequest(int ProductId, int OldAttributeId, int NewAttributeId) : IRequest { }
+public sealed class UpdateProductAttributeRequest() : IRequest 
+{
+    public int ProductId { get; set; }
+    public int OldAttributeId { get; set; }
+    public int NewAttributeId { get; set; }
+}

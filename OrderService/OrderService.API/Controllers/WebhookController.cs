@@ -4,7 +4,7 @@ using OrderService.Application.UseCases.PaymentUseCases.ConfirmPaymentUseCase;
 
 namespace OrderService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/webhook")]
 [ApiController]
 public class WebhookController : ControllerBase
 {

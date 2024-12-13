@@ -9,6 +9,6 @@ internal class MessageDtoMappingProfile : Profile
     public MessageDtoMappingProfile()
     {
         CreateMap<Message, MessageDTO>()
-            .ForMember(dest => dest.ChatOwnerId, opt => opt.MapFrom(src => src.Chat.ClientId));
+            .ForMember(dest => dest.ChatOwnerId, opt => opt.MapFrom(src => src.Chat != null ? src.Chat.ClientId : ""));
     }
 }

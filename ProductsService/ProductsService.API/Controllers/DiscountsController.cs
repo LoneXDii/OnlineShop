@@ -7,7 +7,7 @@ using ProductsService.Application.UseCases.DiscountUseCases.Commands.DeleteDisco
 
 namespace ProductsService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/discounts")]
 [ApiController]
 public class DiscountsController : ControllerBase
 {
@@ -24,7 +24,7 @@ public class DiscountsController : ControllerBase
     {
         await _mediator.Send(request, cancellationToken);
 
-        return Created();
+        return NoContent();
     }
 
     [HttpDelete]
@@ -33,6 +33,6 @@ public class DiscountsController : ControllerBase
     {
         await _mediator.Send(request, cancellationToken);
 
-        return Created();
+        return NoContent();
     }
 }

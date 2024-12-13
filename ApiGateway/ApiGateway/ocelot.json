@@ -135,23 +135,7 @@
     {
       "UpstreamPathTemplate": "/orders/{everything}",
       "UpstreamHttpMethod": [ "POST", "GET", "PUT" ],
-      "DownstreamPathTemplate": "/api/order/{everything}",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7003
-        }
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      },
-      "SwaggerKey": "orders"
-    },
-    {
-      "UpstreamPathTemplate": "/payment/{everything}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/payment/{everything}",
+      "DownstreamPathTemplate": "/api/orders/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

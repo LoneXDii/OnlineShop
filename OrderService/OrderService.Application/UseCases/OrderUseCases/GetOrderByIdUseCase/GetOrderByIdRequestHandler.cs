@@ -26,8 +26,6 @@ internal class GetOrderByIdRequestHandler(IOrderRepository orderRepository, IMap
             }
         }
 
-        var returnOrder = mapper.Map<OrderDTO>(order);
-
-        return returnOrder;
+        return mapper.Map<OrderDTO>(order);
     }
 }

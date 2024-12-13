@@ -16,18 +16,17 @@ internal class GetUserOrdersRequestHandler(IOrderRepository orderRepository, IMa
     {
         var maxPageSize = paginationOptions.Value.MaxPageSize;
         
-        var pageSize = request.pageSize > maxPageSize 
+        var pageSize = request.PageSize > maxPageSize 
             ? maxPageSize 
-            : request.pageSize;
+            : request.PageSize;
 
-        var items = await orderRepository.ListWithPaginationAsync(request.pageNo, pageSize, cancellationToken, order => order.UserId == request.userId);
+        var items = await orderRepository.ListWithPaginationAsync(request.PageNo, pageSize, cancellationToken, order => order.UserId == request.UserId);
 
-        var itemsCount = await orderRepository.CountAsync(cancellationToken, order => order.UserId == request.userId);
+        var itemsCount = await orderRepository.CountAsync(cancellationToken, order => order.UserId == request.UserId);
 
-        //Move to validator
         var totalPages = (int)Math.Ceiling(itemsCount / (double)pageSize);
 
-        if (request.pageNo > totalPages)
+        if (request.PageNo > totalPages)
         {
             throw new NotFoundException("No such page");
         }
@@ -35,7 +34,7 @@ internal class GetUserOrdersRequestHandler(IOrderRepository orderRepository, IMa
         var data = new PaginatedListModel<OrderDTO>
         {
             Items = mapper.Map<List<OrderDTO>>(items),
-            CurrentPage = request.pageNo,
+            CurrentPage = request.PageNo,
             TotalPages = totalPages
         };
 

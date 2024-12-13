@@ -5,7 +5,7 @@ using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;
 using System.Linq.Expressions;
 
-namespace OrderService.Infrastructure.Services;
+namespace OrderService.Infrastructure.Repositories;
 
 internal class MongoOrderRepository : IOrderRepository
 {
@@ -39,21 +39,17 @@ internal class MongoOrderRepository : IOrderRepository
             ? Builders<OrderEntity>.Filter.And(mongoFilters)
             : Builders<OrderEntity>.Filter.Empty;
 
-        var orders = await _ordersCollection.Find(combinedFilter)
+        return await _ordersCollection.Find(combinedFilter)
             .SortByDescending(order => order.CreatedAt)
             .Skip((pageNo - 1) * pageSize)
             .Limit(pageSize)
             .ToListAsync(cancellationToken);
-
-        return orders;
     }
 
     public async Task<OrderEntity?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var order = await _ordersCollection.Find(order => order.Id == id)
+        return await _ordersCollection.Find(order => order.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
-
-        return order;
     }
 
     public async Task UpdateAsync(OrderEntity order, CancellationToken cancellationToken = default)
@@ -66,12 +62,10 @@ internal class MongoOrderRepository : IOrderRepository
 
     public async Task<long> CountAsync(CancellationToken cancellationToken = default)
     {
-        var count = await _ordersCollection.CountDocumentsAsync(Builders<OrderEntity>.Filter.Empty,null, cancellationToken);
-
-        return count;
+        return await _ordersCollection.CountDocumentsAsync(Builders<OrderEntity>.Filter.Empty, null, cancellationToken);
     }
 
-    public async Task<long> CountAsync(CancellationToken cancellationToken = default, 
+    public async Task<long> CountAsync(CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
         var mongoFilters = new List<FilterDefinition<OrderEntity>>();
@@ -86,8 +80,6 @@ internal class MongoOrderRepository : IOrderRepository
             ? Builders<OrderEntity>.Filter.And(mongoFilters)
             : Builders<OrderEntity>.Filter.Empty;
 
-        var count = await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
-
-        return count;
+        return await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
     }
 }

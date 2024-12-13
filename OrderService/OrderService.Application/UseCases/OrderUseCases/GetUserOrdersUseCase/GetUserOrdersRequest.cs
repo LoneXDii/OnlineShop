@@ -4,4 +4,9 @@ using OrderService.Application.Models;
 
 namespace OrderService.Application.UseCases.OrderUseCases.GetUserOrdersUseCase;
 
-public sealed record GetUserOrdersRequest(string userId, int pageNo = 1, int pageSize = 10) : IRequest<PaginatedListModel<OrderDTO>> { }
+public sealed class GetUserOrdersRequest() : IRequest<PaginatedListModel<OrderDTO>> 
+{
+    public string UserId { get; set; } = "";
+    public int PageNo { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+}

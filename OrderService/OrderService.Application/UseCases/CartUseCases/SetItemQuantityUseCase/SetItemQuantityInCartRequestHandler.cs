@@ -9,18 +9,17 @@ internal class SetItemQuantityInCartRequestHandler(ITemporaryStorageService temp
 {
     public async Task Handle(SetItemQuantityInCartRequest request, CancellationToken cancellationToken)
     {
-        var product = await productService.GetByIdIfSufficientQuantityAsync(request.product.Id, request.product.Quantity);
+        var product = await productService.GetByIdIfSufficientQuantityAsync(request.ProductId, request.Quantity);
 
         if (product is null)
         {
             throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }
 
-        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
+        var cart = await temporaryStorage.GetCartAsync();
 
-        cart.Remove(product.Id);
-        cart.Add(product.Id, product);
+        cart[product.Id] = product;
 
-        await temporaryStorage.SaveCartAsync(cart, cancellationToken);
+        await temporaryStorage.SaveCartAsync(cart);
     }
 }

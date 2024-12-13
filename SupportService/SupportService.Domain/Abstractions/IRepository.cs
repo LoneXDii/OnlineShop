@@ -5,8 +5,7 @@ namespace SupportService.Domain.Abstractions;
 
 public interface IRepository<T> where T : IEntity
 {
-    Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default, 
-        params Expression<Func<T, object>>[] includedProperties);
+    Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<IEnumerable<T>> ListAllAsync(CancellationToken cancellationToken = default);
     Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default, 
         params Expression<Func<T, object>>[] includedProperties);

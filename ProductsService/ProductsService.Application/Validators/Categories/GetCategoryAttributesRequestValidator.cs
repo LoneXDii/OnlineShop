@@ -7,7 +7,7 @@ public class GetCategoryAttributesRequestValidator : AbstractValidator<GetCatego
 {
     public GetCategoryAttributesRequestValidator()
     {
-        RuleFor(req => req.categoryId)
+        RuleFor(req => req.CategoryId)
             .GreaterThan(0)
             .WithMessage("Wrong category id");
     }
