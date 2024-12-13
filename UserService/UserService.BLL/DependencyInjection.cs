@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Reflection;
 using UserService.BLL.Mapping;
-using Hangfire;
 using Hangfire.MySql;
 using Microsoft.Extensions.Configuration;
 

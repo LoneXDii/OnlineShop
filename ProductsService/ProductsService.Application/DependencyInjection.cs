@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using ProductsService.Application.Mapping;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using ProductsService.Application.Configuration;
+using Hangfire;
+using Hangfire.MySql;
 
 namespace ProductsService.Application;
 
@@ -22,6 +23,9 @@ public static class DependencyInjection
             });
 
         services.Configure<PaginationSettings>(options => configuration.GetSection("Pagination").Bind(options));
+
+        services.AddHangfire(opt => opt.UseStorage(new MySqlStorage(configuration["ConnectionStrings:HangfireDbConnection"], new MySqlStorageOptions())));
+        services.AddHangfireServer();
 
         return services;
     }
