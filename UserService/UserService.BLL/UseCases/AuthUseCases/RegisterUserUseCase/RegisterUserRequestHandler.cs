@@ -32,12 +32,29 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
             BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
+
+            BackgroundJob.Schedule(() => DeleteUnconfirmedUser(user.Email), TimeSpan.FromMinutes(15));
         }
         else
         {
             var errors = JsonSerializer.Serialize(result.Errors);
 
             throw new BadRequestException($"Cannot register user: {errors}");
+        }
+    }
+
+    public async Task DeleteUnconfirmedUser(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+
+        if (!user.EmailConfirmed)
+        {
+            if (user.AvatarUrl is not null)
+            {
+                await blobService.DeleteAsync(user.AvatarUrl);
+            }
+
+            await userManager.DeleteAsync(user);
         }
     }
 }
