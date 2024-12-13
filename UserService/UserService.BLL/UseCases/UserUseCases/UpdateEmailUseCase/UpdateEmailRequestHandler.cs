@@ -5,6 +5,7 @@ using System.Web;
 using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.EmailNotifications;
+using Hangfire;
 
 namespace UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
 
@@ -35,6 +36,6 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
 
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        await emailService.SendEmailConfirmationCodeAsync(user.Email, code);
+        BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
     }
 }
