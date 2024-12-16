@@ -9,6 +9,7 @@ public class Product : IEntity
     public double Price { get; set; }
     public int Quantity { get; set; }
     public string? ImageUrl { get; set; }
+    public string? PriceId { get; set; }
     public virtual Discount? Discount { get; set; }
     public virtual ICollection<Category>? Categories { get; set; }
 }

@@ -1,18 +1,36 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 
 option csharp_namespace = "ProductsService.API.Protos";
 
 package products;
 
 service Products {
-	rpc GetProduct (GetProductRequest) returns (GetProductResponse);
+	rpc GetProduct (ProductRequest) returns (ProductResponse);
+
+	rpc TakeProducts (ProductsListRequest) returns (ProductsListResponse);
+
+	rpc ReturnProducts (ProductsListRequest) returns (google.protobuf.Empty);
 }
 
-message GetProductRequest{
+message ProductsListRequest{
+	repeated ProductRequest products = 1;
+}
+
+message ProductsListResponse{
+	repeated ProductResponse products = 1;
+}
+
+message ProductRequest{
 	int32 id = 1;
 	int32 quantity = 2;
 }
 
-message GetProductResponse{
-	string message = 1;
+message ProductResponse{
+	int32 id = 1;
+	string name = 2;
+	double price = 3;
+	int32 quantity = 4;
+	string imageUrl = 5;
+	string priceId = 6;
 }
