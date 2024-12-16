@@ -2,14 +2,14 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using ProductsService.API.Protos;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductIfSufficientQuantity;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.ReturnProducts;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.TakeProducts;
 
 namespace ProductsService.API.Services;
-//TODO
-//Add Auth
+
 public class ProductsGrpcService : Products.ProductsBase
 {
     private readonly IMediator _mediator;
@@ -28,6 +28,7 @@ public class ProductsGrpcService : Products.ProductsBase
         return _mapper.Map<ProductResponse>(product);
     }
 
+    [Authorize]
     public override async Task<ProductsListResponse> TakeProducts(ProductsListRequest request, ServerCallContext context)
     {
         var dict = request.Products.ToDictionary(pr => pr.Id, pr => pr.Quantity);
@@ -42,6 +43,7 @@ public class ProductsGrpcService : Products.ProductsBase
         return response;
     }
 
+    [Authorize]
     public override async Task<Empty> ReturnProducts(ProductsListRequest request, ServerCallContext context)
     {
         var products = request.Products.ToDictionary(pr => pr.Id, pr => pr.Quantity);
