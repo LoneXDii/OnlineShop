@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 namespace ProductsService.API;
@@ -30,6 +31,8 @@ public static class DependencyInjection
         {
             opt.AddPolicy("admin", p => p.RequireRole("admin"));
         });
+
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

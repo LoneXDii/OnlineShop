@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
 using ProductsService.API.Protos;
@@ -8,30 +9,23 @@ using ProductsService.Application.UseCases.ProductUseCases.Queries.TakeProducts;
 
 namespace ProductsService.API.Services;
 //TODO
-//Add Auth, Validation, Mapping and Exceptions handling
+//Add Auth
 public class ProductsGrpcService : Products.ProductsBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public ProductsGrpcService(IMediator mediator)
+    public ProductsGrpcService(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
     
     public override async Task<ProductResponse> GetProduct(ProductRequest request, ServerCallContext context)
     {
         var product = await _mediator.Send(new GetProductIfSufficientQuantityRequest(request.Id, request.Quantity));
 
-        var response = new ProductResponse { 
-            Id = product.Id,
-            Name = product.Name,
-            Price = product.Price,
-            Quantity = product.Quantity,
-            ImageUrl = product.ImageUrl ?? "",
-            PriceId = product.PriceId ?? ""
-        };
-
-        return response;
+        return _mapper.Map<ProductResponse>(product);
     }
 
     public override async Task<ProductsListResponse> TakeProducts(ProductsListRequest request, ServerCallContext context)
@@ -40,20 +34,7 @@ public class ProductsGrpcService : Products.ProductsBase
 
         var data = await _mediator.Send(new TakeProductsRequest(dict));
 
-        var products = new List<ProductResponse>();
-
-        foreach (var item in data)
-        {
-            products.Add(new ProductResponse
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Price = item.Price,
-                Quantity = item.Quantity,
-                ImageUrl = item.ImageUrl ?? "",
-                PriceId = item.PriceId ?? ""
-            });
-        }
+        var products = _mapper.Map<List<ProductResponse>>(data);
 
         var response = new ProductsListResponse();
         response.Products.AddRange(products);
