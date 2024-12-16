@@ -1,10 +1,11 @@
 using Hangfire;
 using ProductsService.API;
 using ProductsService.API.Middleware;
+using ProductsService.API.Services;
 using ProductsService.Application;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Infrastructure;
-using System;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddGrpc();
+builder.Services.AddGrpcReflection();
 
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddApplication(builder.Configuration)
@@ -31,12 +34,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGrpcReflectionService();
+app.MapGrpcService<ProductsGrpcService>();
 
 app.UseHangfireDashboard("/dashboard");
 
