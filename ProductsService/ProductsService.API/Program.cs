@@ -1,5 +1,6 @@
 using Hangfire;
 using ProductsService.API;
+using ProductsService.API.Interceptors;
 using ProductsService.API.Middleware;
 using ProductsService.API.Services;
 using ProductsService.Application;
@@ -16,7 +17,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<ExceptionsInterceptor>();
+});
 builder.Services.AddGrpcReflection();
 
 builder.Services.AddInfrastructure(builder.Configuration)
