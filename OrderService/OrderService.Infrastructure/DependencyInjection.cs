@@ -6,6 +6,8 @@ using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using Stripe;
 using OrderService.Infrastructure.Repositories;
+using OrderService.Infrastructure.Mapping;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace OrderService.Infrastructure;
 
@@ -32,6 +34,11 @@ public static class DependencyInjection
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddExpressionMapping();
+        },typeof(MongoOrderMappingProfile));
 
         return services;
     }

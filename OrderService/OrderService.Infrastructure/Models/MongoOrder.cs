@@ -1,9 +1,14 @@
-﻿using OrderService.Domain.Common.Statuses;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using OrderService.Domain.Common.Statuses;
+using OrderService.Domain.Entities;
 
-namespace OrderService.Domain.Entities;
+namespace OrderService.Infrastructure.Models;
 
-public class OrderEntity
+public class MongoOrder
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
     public OrderStatuses OrderStatus { get; set; } = OrderStatuses.Created;
     public PaymentStatuses PaymentStatus { get; set; } = PaymentStatuses.NotPaid;
