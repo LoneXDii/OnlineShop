@@ -43,7 +43,7 @@ namespace SupportService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chats", (string)null);
                 });
 
             modelBuilder.Entity("SupportService.Domain.Entities.Message", b =>
@@ -72,7 +72,7 @@ namespace SupportService.Infrastructure.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("SupportService.Domain.Entities.Message", b =>
