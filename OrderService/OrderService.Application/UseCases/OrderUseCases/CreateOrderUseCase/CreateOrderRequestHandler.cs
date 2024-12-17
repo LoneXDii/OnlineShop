@@ -24,7 +24,7 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
             throw new BadRequestException("Your cart is empty");
         }
 
-        var orderProducts = await productService.TakeProductsIfSufficientQuantityAsync(products);
+        var orderProducts = await productService.TakeProductsIfSufficientQuantityAsync(products, cancellationToken);
 
         if(orderProducts is null)
         {

@@ -114,7 +114,7 @@ internal class FakeProductService : IProductService
         };
     }
 
-    public async Task<ProductEntity?> GetByIdIfSufficientQuantityAsync(int id, int quantity)
+    public async Task<ProductEntity?> GetByIdIfSufficientQuantityAsync(int id, int quantity, CancellationToken cancellationToken = default)
     {
         var product = _products.FirstOrDefault(p => p.Id == id);
         ProductEntity? returnProduct = null;
@@ -139,7 +139,8 @@ internal class FakeProductService : IProductService
         return returnProduct;
     }
 
-    public async Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products)
+    public async Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products, 
+        CancellationToken cancellationToken = default)
     {
         var retProducts = new List<ProductEntity>();
 
@@ -175,7 +176,7 @@ internal class FakeProductService : IProductService
         return retProducts;
     }
 
-    public async Task ReturnProductsAsync(IEnumerable<ProductEntity> products)
+    public async Task ReturnProductsAsync(IEnumerable<ProductEntity> products, CancellationToken cancellationToken = default)
     {
         foreach (var product in products)
         {

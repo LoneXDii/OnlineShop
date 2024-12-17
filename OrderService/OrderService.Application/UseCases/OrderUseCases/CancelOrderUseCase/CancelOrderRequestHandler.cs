@@ -34,6 +34,6 @@ internal class CancelOrderRequestHandler(IOrderRepository orderRepository, IProd
 
         await orderRepository.UpdateAsync(order, cancellationToken);
 
-        await productService.ReturnProductsAsync(order.Products);
+        await productService.ReturnProductsAsync(order.Products, cancellationToken);
     }
 }

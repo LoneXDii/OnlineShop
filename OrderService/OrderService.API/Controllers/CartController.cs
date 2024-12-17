@@ -7,6 +7,7 @@ using OrderService.Application.UseCases.CartUseCases.GetCartUseCase;
 using OrderService.Application.UseCases.CartUseCases.ReduceItemQuantityInCartUseCase;
 using OrderService.Application.UseCases.CartUseCases.RemoveItemFromCartUseCase;
 using OrderService.Application.UseCases.CartUseCases.SetItemQuantityInCartUseCase;
+using System.Threading;
 
 namespace OrderService.API.Controllers;
 
@@ -22,49 +23,52 @@ public class CartController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<CartDTO>> GetCart()
+    public async Task<ActionResult<CartDTO>> GetCart(CancellationToken cancellationToken)
     {
-        var cart = await _mediator.Send(new GetCartRequest());
+        var cart = await _mediator.Send(new GetCartRequest(), cancellationToken);
 
         return Ok(cart);
     }
 
     [HttpPost("products")]
-    public async Task<IActionResult> AddToCart([FromBody] CartProductDTO product)
+    public async Task<IActionResult> AddToCart([FromBody] CartProductDTO product, CancellationToken cancellationToken)
     {
-        await _mediator.Send(new AddProductToCartRequest(product));
+        await _mediator.Send(new AddProductToCartRequest(product), cancellationToken);
 
         return NoContent();
     }
 
     [HttpPost("products/{productId:min(1)}/quantity")]
-    public async Task<IActionResult> SetQuantity([FromRoute] int productId, [FromBody] QuantityDTO quantity)
+    public async Task<IActionResult> SetQuantity([FromRoute] int productId, [FromBody] QuantityDTO quantity, 
+        CancellationToken cancellationToken)
     {
-        await _mediator.Send(new SetItemQuantityInCartRequest(productId, quantity.Quantity));
+        await _mediator.Send(new SetItemQuantityInCartRequest(productId, quantity.Quantity), cancellationToken);
 
         return NoContent();
     }
 
     [HttpPatch("products/{productId:min(1)}/quantity")]
-    public async Task<IActionResult> ReduceQuantity([FromRoute] int productId, [FromBody] QuantityDTO quantity)
+    public async Task<IActionResult> ReduceQuantity([FromRoute] int productId, [FromBody] QuantityDTO quantity, 
+        CancellationToken cancellationToken)
     {
-        await _mediator.Send(new ReduceItemsInCartRequest(productId, quantity.Quantity));
+        await _mediator.Send(new ReduceItemsInCartRequest(productId, quantity.Quantity), cancellationToken);
 
         return NoContent();
     }
 
     [HttpDelete("products/{productId:min(1)}")]
-    public async Task<IActionResult> RemoveItemFromCart([FromRoute] int productId)
+    public async Task<IActionResult> RemoveItemFromCart([FromRoute] int productId, 
+        CancellationToken cancellationToken)
     {
-        await _mediator.Send(new RemoveItemFromCartRequest(productId));
+        await _mediator.Send(new RemoveItemFromCartRequest(productId), cancellationToken);
 
         return NoContent();
     }
 
     [HttpDelete]
-    public async Task<IActionResult> ClearCart()
+    public async Task<IActionResult> ClearCart(CancellationToken cancellationToken)
     {
-        await _mediator.Send(new ClearCartRequest());
+        await _mediator.Send(new ClearCartRequest(), cancellationToken);
 
         return NoContent();
     }

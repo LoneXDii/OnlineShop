@@ -24,7 +24,7 @@ public static class DependencyInjection
             .AddScoped<PriceService>();
 
         services.AddSingleton<IOrderRepository, MongoOrderRepository>()
-            .AddSingleton<IProductService, FakeProductService>()
+            .AddSingleton<IProductService, GrpcProductService>()
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<ITemporaryStorageService, RedisStorageService>();
 

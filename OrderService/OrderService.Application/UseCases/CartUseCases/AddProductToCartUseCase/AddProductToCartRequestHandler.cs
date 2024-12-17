@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using OrderService.Application.Exceptions;
 using OrderService.Domain.Abstractions.Data;
-using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.CartUseCases.AddProductToCartUseCase;
 
@@ -19,7 +18,7 @@ internal class AddProductToCartRequestHandler(ITemporaryStorageService temporary
             cartProductQuantity = cart[request.product.Id].Quantity;
         }
 
-        var product = await productService.GetByIdIfSufficientQuantityAsync(request.product.Id, request.product.Quantity + cartProductQuantity);
+        var product = await productService.GetByIdIfSufficientQuantityAsync(request.product.Id, request.product.Quantity + cartProductQuantity, cancellationToken);
 
         if (product is null)
         {
