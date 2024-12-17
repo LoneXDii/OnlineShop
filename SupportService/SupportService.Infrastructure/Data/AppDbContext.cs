@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SupportService.Domain.Entities;
+using SupportService.Infrastructure.Data.Configuration;
 
 namespace SupportService.Infrastructure.Data;
 
@@ -12,8 +13,6 @@ internal class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Chat>()
-            .HasMany(chat => chat.Messages)
-            .WithOne(message => message.Chat);
+        modelBuilder.ApplyConfiguration(new ChatConfiguration());
     }
 }
