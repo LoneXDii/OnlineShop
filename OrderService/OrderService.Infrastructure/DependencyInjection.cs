@@ -8,6 +8,8 @@ using Stripe;
 using OrderService.Infrastructure.Repositories;
 using OrderService.Infrastructure.Mapping;
 using AutoMapper.Extensions.ExpressionMapping;
+using OrderService.Infrastructure.Protos;
+using OrderService.Infrastructure.Interceptors;
 
 namespace OrderService.Infrastructure;
 
@@ -16,8 +18,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<MongoDBSettings>(options => configuration.GetSection("MongoDB").Bind(options))
-            .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options))
-            .Configure<GrpcSettings>(options => configuration.GetSection("gRPC").Bind(options));
+            .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
 
         services.AddScoped<CustomerService>()
             .AddScoped<Stripe.ProductService>()
@@ -38,6 +39,13 @@ public static class DependencyInjection
         {
             cfg.AddExpressionMapping();
         },typeof(MongoOrderMappingProfile));
+
+        services.AddScoped<AuthInterceptor>()
+            .AddGrpcClient<Products.ProductsClient>(opt =>
+            {
+                opt.Address = new Uri(configuration["gRPC:ServerUrl"]);
+            })
+            .AddInterceptor<AuthInterceptor>();
 
         return services;
     }
