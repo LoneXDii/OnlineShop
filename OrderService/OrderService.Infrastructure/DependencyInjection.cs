@@ -6,6 +6,8 @@ using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using Stripe;
 using OrderService.Infrastructure.Repositories;
+using OrderService.Infrastructure.Mapping;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace OrderService.Infrastructure;
 
@@ -30,6 +32,11 @@ public static class DependencyInjection
             opt.Configuration = configuration["Redis:Configuration"];
             opt.InstanceName = configuration["Redis:InstanceName"];
         });
+
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddExpressionMapping();
+        },typeof(MongoOrderMappingProfile));
 
         return services;
     }
