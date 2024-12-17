@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using OrderService.Application.Exceptions;
 using OrderService.Domain.Abstractions.Data;
+using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.CartUseCases.AddProductToCartUseCase;
 
@@ -9,18 +10,25 @@ internal class AddProductToCartRequestHandler(ITemporaryStorageService temporary
 {
     public async Task Handle(AddProductToCartRequest request, CancellationToken cancellationToken)
     {
-        var product = await productService.GetByIdIfSufficientQuantityAsync(request.product.Id, request.product.Quantity);
+        var cartProductQuantity = 0;
+
+        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
+
+        if (cart.ContainsKey(request.product.Id))
+        {
+            cartProductQuantity = cart[request.product.Id].Quantity;
+        }
+
+        var product = await productService.GetByIdIfSufficientQuantityAsync(request.product.Id, request.product.Quantity + cartProductQuantity);
 
         if (product is null)
         {
             throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }
 
-        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
-
         if (cart.ContainsKey(product.Id))
         {
-            cart[product.Id].Quantity += product.Quantity;
+            cart[product.Id] = product;
         }
         else
         {
