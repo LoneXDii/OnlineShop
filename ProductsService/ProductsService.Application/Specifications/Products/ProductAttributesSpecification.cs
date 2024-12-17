@@ -19,20 +19,6 @@ internal class ProductAttributesSpecification : Specification<Product>
             return product => true;
         }
 
-        Expression<Func<Product, bool>> expression = product => true;
-
-        foreach (var attributeId in _attributeIds)
-        {
-            Expression<Func<Product, bool>> rightExpression = product => product.Categories.Any(c => c.Id == attributeId);
-            var parameter = Expression.Parameter(typeof(Product), nameof(Product));
-
-            var binaryExpression = Expression.AndAlso(
-                Expression.Invoke(expression, parameter),
-                Expression.Invoke(rightExpression, parameter));
-
-            expression = Expression.Lambda<Func<Product, bool>>(binaryExpression, parameter);
-        }
-
-        return expression;
+        return p => p.Categories.Count(c => _attributeIds.Contains(c.Id)) == _attributeIds.Count();
     }
 }
