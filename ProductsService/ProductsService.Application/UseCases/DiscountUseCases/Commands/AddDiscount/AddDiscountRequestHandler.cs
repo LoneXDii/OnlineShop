@@ -4,7 +4,6 @@ using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Application.Specifications.Discounts;
 using ProductsService.Domain.Abstractions.Database;
-using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.DiscountUseCases.Commands.AddDiscount;

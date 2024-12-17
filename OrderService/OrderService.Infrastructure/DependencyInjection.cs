@@ -14,7 +14,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<MongoDBSettings>(options => configuration.GetSection("MongoDB").Bind(options))
-            .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
+            .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options))
+            .Configure<GrpcSettings>(options => configuration.GetSection("gRPC").Bind(options));
 
         services.AddScoped<CustomerService>()
             .AddScoped<Stripe.ProductService>()
