@@ -33,14 +33,22 @@ internal class GrpcProductService : IProductService
         return _mapper.Map<ProductEntity>(response);
     }
 
-    public Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products, 
+    public async Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products, 
         CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var request = new ProductsListRequest();
+        request.Products.AddRange(_mapper.Map<List<ProductRequest>>(products));
+
+        var resposne = await _gprcClient.TakeProductsAsync(request, null, null, cancellationToken);
+
+        return _mapper.Map<List<ProductEntity>>(resposne.Products);
     }
 
-    public Task ReturnProductsAsync(IEnumerable<ProductEntity> products, CancellationToken cancellationToken = default)
+    public async Task ReturnProductsAsync(IEnumerable<ProductEntity> products, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var request = new ProductsListRequest();
+        request.Products.AddRange(_mapper.Map<List<ProductRequest>>(products));
+
+        await _gprcClient.ReturnProductsAsync(request, null, null, cancellationToken);
     }
 }

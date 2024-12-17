@@ -1,22 +1,21 @@
 ﻿using Grpc.Core;
 using Grpc.Core.Interceptors;
 using Microsoft.AspNetCore.Http;
-using System.Net.Http;
 
 namespace OrderService.Infrastructure.Interceptors;
 
 internal class AuthInterceptor : Interceptor
 {
-    private readonly HttpContext _httpContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public AuthInterceptor(IHttpContextAccessor httpContextAccessor)
     {
-        _httpContext = httpContextAccessor.HttpContext;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
     {
-        var header = _httpContext.Request.Headers["Authorization"].ToString();
+        var header = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
 
         var metadata = new Metadata
         {

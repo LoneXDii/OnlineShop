@@ -10,15 +10,18 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDTO>
     {
         RuleFor(req => req.Name)
             .NotEmpty()
-            .WithMessage("Wrong product name");
+            .WithMessage("Wrong product name")
+            .When(req => req.Name is not null);
 
         RuleFor(req => req.Price)
             .GreaterThan(0)
-            .WithMessage("Wrong price");
+            .WithMessage("Wrong price")
+            .When(req => req.Price is not null);
 
         RuleFor(req => req.Quantity)
             .GreaterThanOrEqualTo(0)
-            .WithMessage("Wrong quantity");
+            .WithMessage("Wrong quantity")
+            .When(req => req.Quantity is not null);
 
         RuleFor(req => req.Image)
             .Must(BeAnImage)
