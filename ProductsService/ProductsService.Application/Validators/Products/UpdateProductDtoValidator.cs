@@ -24,12 +24,12 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDTO>
             .When(req => req.Quantity is not null);
 
         RuleFor(req => req.Image)
-            .Must(BeAnImage)
+            .Must(IsAnImage)
             .WithMessage("You should upload only image files")
             .When(req => req.Image is not null);
     }
 
-    private bool BeAnImage(IFormFile? file)
+    private bool IsAnImage(IFormFile? file)
     {
         return file != null && file.ContentType.StartsWith("image/");
     }
