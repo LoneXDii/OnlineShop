@@ -1,12 +1,9 @@
 ﻿using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using SendGrid;
-using System.Text;
 using UserService.DAL.Entities;
 using UserService.DAL.Database;
 using UserService.DAL.Services.Authentication;
@@ -14,6 +11,8 @@ using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 using UserService.DAL.Models;
+using Confluent.Kafka;
+using UserService.DAL.Services.MessageBrocker.ProducerService;
 
 namespace UserService.DAL;
 
@@ -31,24 +30,6 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddAuthentication(options => 
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(opt =>
-                opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["JWT:Issuer"],
-                    ValidAudience = configuration["JWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-                });
-
         services.AddStackExchangeRedisCache(opt =>
         {
             opt.Configuration = configuration["Redis:Configuration"];
@@ -61,9 +42,30 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>()
             .AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
             .AddScoped<IEmailService, EmailService>()
-            .AddScoped<ICacheService, CacheService>();
+            .AddScoped<ICacheService, CacheService>()
+            .AddScoped<IProducerService, ProducerService>();
 
         services.Configure<BlobServiceOptions>(options => configuration.GetSection("Blobs").Bind(options));
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ProducerConfig
+            {
+                BootstrapServers = configuration["Kafka:Server"],
+                AllowAutoCreateTopics = true,
+                Acks = Acks.All
+            };
+        });
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ConsumerConfig
+            {
+                BootstrapServers = configuration["Kafka:Server"],
+                GroupId = "test-group",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+        });
 
         return services;
     }

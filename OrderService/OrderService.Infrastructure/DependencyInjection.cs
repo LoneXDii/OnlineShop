@@ -13,6 +13,8 @@ using OrderService.Infrastructure.Interceptors;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using OrderService.Infrastructure.Models;
+using Confluent.Kafka;
+using Microsoft.Extensions.Hosting;
 
 
 namespace OrderService.Infrastructure;
@@ -59,6 +61,28 @@ public static class DependencyInjection
                 opt.Address = new Uri(configuration["gRPC:ServerUrl"]);
             })
             .AddInterceptor<AuthInterceptor>();
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ProducerConfig
+            {
+                BootstrapServers = configuration["Kafka:Server"],
+                AllowAutoCreateTopics = true,
+                Acks = Acks.All
+            };
+        });
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ConsumerConfig
+            {
+                BootstrapServers = configuration["Kafka:Server"],
+                GroupId = "test-group",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+        });
+
+        services.AddSingleton<IHostedService, ConsumerService>();
 
         return services;
     }

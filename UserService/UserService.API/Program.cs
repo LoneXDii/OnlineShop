@@ -1,5 +1,6 @@
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using UserService.API;
 using UserService.API.Middleware;
 using UserService.BLL;
 using UserService.DAL;
@@ -12,13 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthorization(opt =>
-    {
-        opt.AddPolicy("admin", p => p.RequireRole("admin"));
-    });
-
 builder.Services.AddApplication(builder.Configuration)
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddAuth(builder.Configuration);
 
 var app = builder.Build();
 
