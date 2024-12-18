@@ -16,6 +16,6 @@ internal class GetUniqueCategoryAttributesValuesRequestHandler (IUnitOfWork unit
         var categoriesValues = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken,
             category => category.Children);
 
-        return mapper.Map<List<CategoryAttributesValuesDTO>>(categoriesValues); ;
+        return mapper.Map<List<CategoryAttributesValuesDTO>>(categoriesValues);
     }
 }
