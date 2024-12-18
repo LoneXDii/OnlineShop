@@ -32,9 +32,7 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
             throw new BadRequestException("Сan't add an existing attribute");
         }
 
-        unitOfWork.AttachInCommandContext(newAttributeValue);
-        unitOfWork.AttachInCommandContext(oldAttributeValue);
-        unitOfWork.AttachInCommandContext(product);
+        unitOfWork.AttachInCommandContext(newAttributeValue, oldAttributeValue, product);
 
         product.Categories.Remove(oldAttributeValue);
         product.Categories.Add(newAttributeValue);

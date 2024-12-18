@@ -27,11 +27,10 @@ internal class AddAttributeToProductRequestHandler(IUnitOfWork unitOfWork)
 
         if (!product.Categories.Any(c => c.Id == attribute.ParentId))
         {
-            throw new BadRequestException("No parent for attribute in this product");
+            throw new BadRequestException("No parent for this attribute in this product");
         }
 
-        unitOfWork.AttachInCommandContext(product);
-        unitOfWork.AttachInCommandContext(attribute);
+        unitOfWork.AttachInCommandContext(product, attribute);
 
         product.Categories.Add(attribute);
 

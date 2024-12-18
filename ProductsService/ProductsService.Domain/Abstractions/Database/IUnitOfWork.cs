@@ -13,5 +13,6 @@ public interface IUnitOfWork
     IQueryRepository<Discount> DiscountQueryRepository { get; }
     Task SaveAllAsync(CancellationToken cancellationToken = default);
     Task EnableMigrationsAsync(CancellationToken cancellationToken = default);
-    void AttachInCommandContext(IEntity entity);
+    void AttachInCommandContext(params IEntity[] entities);
+    void AttachInCommandContext(IEnumerable<IEntity> entities);
 }
