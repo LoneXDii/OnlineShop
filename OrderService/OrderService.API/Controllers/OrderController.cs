@@ -136,7 +136,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/pay")]
+    [Route("{orderId:regex(^[[a-fA-F0-9]]{{24}}$)}/payment")]
     [Authorize]
     public async Task<ActionResult<string>> Pay([FromRoute] string orderId, CancellationToken cancellationToken)
     {
