@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using ProductsService.Application.Exceptions;
 using ProductsService.Domain.Abstractions.Database;
+using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Commands.UpdateProductAttribute;
 
@@ -17,6 +18,18 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
 
         var oldAttributeValue = product.Categories.FirstOrDefault(c => c.Id == request.OldAttributeId);
 
+        CheckDbData(oldAttributeValue, newAttributeValue, product);
+
+        unitOfWork.AttachInCommandContext(newAttributeValue, oldAttributeValue, product);
+
+        product.Categories.Remove(oldAttributeValue);
+        product.Categories.Add(newAttributeValue);
+
+        await unitOfWork.SaveAllAsync(cancellationToken);
+    }
+
+    private void CheckDbData(Category? oldAttributeValue, Category? newAttributeValue, Product? product)
+    {
         if (newAttributeValue is null || oldAttributeValue is null || product is null)
         {
             throw new BadRequestException("No entities with this isd");
@@ -31,12 +44,5 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork)
         {
             throw new BadRequestException("Сan't add an existing attribute");
         }
-
-        unitOfWork.AttachInCommandContext(newAttributeValue, oldAttributeValue, product);
-
-        product.Categories.Remove(oldAttributeValue);
-        product.Categories.Add(newAttributeValue);
-
-        await unitOfWork.SaveAllAsync(cancellationToken);
     }
 }
