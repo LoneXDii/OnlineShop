@@ -51,7 +51,7 @@ public class OrderController : ControllerBase
         return Ok(data);
     }
 
-    [HttpGet("all")]
+    [HttpGet("admin")]
     [Authorize(Policy = "admin")]
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetAllOrders(CancellationToken cancellationToken,
         [FromQuery] PaginationDTO pagination)
@@ -63,7 +63,7 @@ public class OrderController : ControllerBase
         return Ok(data);
     }
 
-    [HttpGet("user/{userId:regex(^[[a-fA-F0-9]]{{24}}$)}")]
+    [HttpGet("/api/users/{userId:regex(^[[a-fA-F0-9]]{{24}}$)}/orders")]
     [Authorize(Policy = "Admin")]
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetUserOrders(CancellationToken cancellationToken,
         [FromRoute] string userId,
