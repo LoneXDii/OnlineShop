@@ -11,20 +11,18 @@ namespace OrderService.Infrastructure.Repositories;
 
 internal class MongoOrderRepository : IOrderRepository
 {
-    private readonly IMongoCollection<MongoOrder> _ordersCollection;
+    private readonly IMongoCollection<Order> _ordersCollection;
     private readonly IMapper _mapper;
 
-    public MongoOrderRepository(IOptions<MongoDBSettings> settings, IMapper mapper)
+    public MongoOrderRepository(IMongoCollection<Order> ordersCollection, IMapper mapper)
     {
         _mapper = mapper;
-        var client = new MongoClient(settings.Value.ConnectionURI);
-        var database = client.GetDatabase(settings.Value.DatabaseName);
-        _ordersCollection = database.GetCollection<MongoOrder>(settings.Value.CollectionName);
+        _ordersCollection = ordersCollection;
     }
 
     public async Task CreateAsync(OrderEntity order, CancellationToken cancellationToken = default)
     {
-        var mongoOrder = _mapper.Map<MongoOrder>(order);
+        var mongoOrder = _mapper.Map<Order>(order);
 
         await _ordersCollection.InsertOneAsync(mongoOrder, null, cancellationToken);
     }
@@ -33,18 +31,18 @@ internal class MongoOrderRepository : IOrderRepository
         CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
-        var mongoFilters = new List<FilterDefinition<MongoOrder>>();
+        var mongoFilters = new List<FilterDefinition<Order>>();
 
         foreach (var expression in filters)
         {
-            var mongoExpression = _mapper.Map<Expression<Func<MongoOrder, bool>>>(expression);
-            var mongoFilter = Builders<MongoOrder>.Filter.Where(mongoExpression);
+            var mongoExpression = _mapper.Map<Expression<Func<Order, bool>>>(expression);
+            var mongoFilter = Builders<Order>.Filter.Where(mongoExpression);
             mongoFilters.Add(mongoFilter);
         }
 
         var combinedFilter = mongoFilters.Any()
-            ? Builders<MongoOrder>.Filter.And(mongoFilters)
-            : Builders<MongoOrder>.Filter.Empty;
+            ? Builders<Order>.Filter.And(mongoFilters)
+            : Builders<Order>.Filter.Empty;
 
         var orders = await _ordersCollection.Find(combinedFilter)
             .SortByDescending(order => order.CreatedAt)
@@ -65,33 +63,33 @@ internal class MongoOrderRepository : IOrderRepository
 
     public async Task UpdateAsync(OrderEntity order, CancellationToken cancellationToken = default)
     {
-        var filter = Builders<MongoOrder>.Filter.Where(o => o.Id == order.Id);
+        var filter = Builders<Order>.Filter.Where(o => o.Id == order.Id);
         var replaceOptions = new ReplaceOptions();
-        var mongoOrder = _mapper.Map<MongoOrder>(order);
+        var mongoOrder = _mapper.Map<Order>(order);
 
         await _ordersCollection.ReplaceOneAsync(filter, mongoOrder, replaceOptions, cancellationToken);
     }
 
     public async Task<long> CountAsync(CancellationToken cancellationToken = default)
     {
-        return await _ordersCollection.CountDocumentsAsync(Builders<MongoOrder>.Filter.Empty, null, cancellationToken);
+        return await _ordersCollection.CountDocumentsAsync(Builders<Order>.Filter.Empty, null, cancellationToken);
     }
 
     public async Task<long> CountAsync(CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
-        var mongoFilters = new List<FilterDefinition<MongoOrder>>();
+        var mongoFilters = new List<FilterDefinition<Order>>();
 
         foreach (var expression in filters)
         {
-            var mongoExpression = _mapper.Map<Expression<Func<MongoOrder, bool>>>(expression);
-            var mongoFilter = Builders<MongoOrder>.Filter.Where(mongoExpression);
+            var mongoExpression = _mapper.Map<Expression<Func<Order, bool>>>(expression);
+            var mongoFilter = Builders<Order>.Filter.Where(mongoExpression);
             mongoFilters.Add(mongoFilter);
         }
 
         var combinedFilter = mongoFilters.Any()
-            ? Builders<MongoOrder>.Filter.And(mongoFilters)
-            : Builders<MongoOrder>.Filter.Empty;
+            ? Builders<Order>.Filter.And(mongoFilters)
+            : Builders<Order>.Filter.Empty;
 
         return await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
     }
