@@ -29,7 +29,7 @@ public static class DependencyInjection
             .AddScoped<PriceService>();
 
         services.AddSingleton<IOrderRepository, MongoOrderRepository>()
-            .AddSingleton<IProductService, GrpcProductService>()
+            .AddScoped<IProductService, GrpcProductService>()
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<ITemporaryStorageService, RedisStorageService>();
 
