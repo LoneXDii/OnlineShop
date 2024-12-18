@@ -20,10 +20,7 @@ internal class AddProductRequestHandler(IUnitOfWork unitOfWork, IBlobService blo
             request.Image.Dispose();
         }
 
-        foreach (var category in product.Categories)
-        {
-            unitOfWork.AttachInCommandContext(category);
-        }
+        unitOfWork.AttachInCommandContext(product.Categories);
 
         await unitOfWork.ProductCommandRepository.AddAsync(product, cancellationToken);
 
