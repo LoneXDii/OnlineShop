@@ -121,7 +121,7 @@
     },
     {
       "UpstreamPathTemplate": "/cart/{everything}",
-      "UpstreamHttpMethod": [ "POST", "GET", "DELETE" ],
+      "UpstreamHttpMethod": [ "POST", "GET", "DELETE", "PATCH" ],
       "DownstreamPathTemplate": "/api/cart/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -136,6 +136,22 @@
       "UpstreamPathTemplate": "/orders/{everything}",
       "UpstreamHttpMethod": [ "POST", "GET", "PUT" ],
       "DownstreamPathTemplate": "/api/orders/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "SwaggerKey": "orders"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{everything}",
+      "UpstreamHttpMethod": [ "GET"],
+      "DownstreamPathTemplate": "/api/users/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

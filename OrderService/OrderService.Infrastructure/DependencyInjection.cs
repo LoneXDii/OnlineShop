@@ -10,6 +10,10 @@ using OrderService.Infrastructure.Mapping;
 using AutoMapper.Extensions.ExpressionMapping;
 using OrderService.Infrastructure.Protos;
 using OrderService.Infrastructure.Interceptors;
+using MongoDB.Driver;
+using Microsoft.Extensions.Options;
+using OrderService.Infrastructure.Models;
+
 
 namespace OrderService.Infrastructure;
 
@@ -29,6 +33,15 @@ public static class DependencyInjection
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<ITemporaryStorageService, RedisStorageService>();
 
+        services.AddSingleton(serviceProvider =>
+        {
+            var settings = serviceProvider.GetRequiredService<IOptions<MongoDBSettings>>().Value;
+            var client = new MongoClient(settings.ConnectionURI);
+            var database = client.GetDatabase(settings.DatabaseName);
+
+            return database.GetCollection<Order>(settings.CollectionName);
+        });
+
         services.AddStackExchangeRedisCache(opt =>
         {
             opt.Configuration = configuration["Redis:Configuration"];
@@ -38,7 +51,7 @@ public static class DependencyInjection
         services.AddAutoMapper(cfg =>
         {
             cfg.AddExpressionMapping();
-        },typeof(MongoOrderMappingProfile));
+        },typeof(OrderMappingProfile));
 
         services.AddScoped<AuthInterceptor>()
             .AddGrpcClient<Products.ProductsClient>(opt =>
