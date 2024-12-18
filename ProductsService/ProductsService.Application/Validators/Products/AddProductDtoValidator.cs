@@ -21,7 +21,7 @@ public class AddProductDtoValidator : AbstractValidator<AddProductDTO>
             .WithMessage("Wrong quantity");
 
         RuleFor(req => req.Image)
-            .Must(BeAnImage)
+            .Must(IsAnImage)
             .WithMessage("You should upload only image files")
             .When(req => req.Image is not null);
 
@@ -30,7 +30,7 @@ public class AddProductDtoValidator : AbstractValidator<AddProductDTO>
             .WithMessage("Wrong param id");
     }
 
-    private bool BeAnImage(IFormFile? file)
+    private bool IsAnImage(IFormFile? file)
     {
         return file != null && file.ContentType.StartsWith("image/");
     }

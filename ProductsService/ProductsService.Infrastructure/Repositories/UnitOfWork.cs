@@ -49,8 +49,19 @@ internal class UnitOfWork : IUnitOfWork
         await _commandDbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public void AttachInCommandContext(IEntity entity)
+    public void AttachInCommandContext(params IEntity[] entities)
     {
-        _commandDbContext.Attach(entity);
+        foreach (var entity in entities)
+        {
+            _commandDbContext.Attach(entity);
+        }
+    }
+
+    public void AttachInCommandContext(IEnumerable<IEntity> entities)
+    {
+        foreach (var entity in entities)
+        {
+            _commandDbContext.Attach(entity);
+        }
     }
 }
