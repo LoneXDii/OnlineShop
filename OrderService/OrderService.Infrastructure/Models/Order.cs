@@ -5,7 +5,7 @@ using OrderService.Domain.Entities;
 
 namespace OrderService.Infrastructure.Models;
 
-public class MongoOrder
+public class Order
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

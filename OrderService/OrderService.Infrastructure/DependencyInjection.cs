@@ -38,7 +38,7 @@ public static class DependencyInjection
         services.AddAutoMapper(cfg =>
         {
             cfg.AddExpressionMapping();
-        },typeof(MongoOrderMappingProfile));
+        },typeof(OrderMappingProfile));
 
         return services;
     }

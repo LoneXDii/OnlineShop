@@ -31,7 +31,7 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
         }
 
         var order = new OrderEntity { 
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
             Products = orderProducts.ToList(),
             TotalPrice = cartDto.TotalCost,
             UserId = request.userId

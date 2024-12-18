@@ -3,11 +3,11 @@ using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Models;
 namespace OrderService.Infrastructure.Mapping;
 
-internal class MongoOrderMappingProfile : Profile
+internal class OrderMappingProfile : Profile
 {
-    public MongoOrderMappingProfile()
+    public OrderMappingProfile()
     {
-        CreateMap<OrderEntity, MongoOrder>()
+        CreateMap<OrderEntity, Order>()
             .ReverseMap();
     }
 }
