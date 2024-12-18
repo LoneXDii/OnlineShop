@@ -14,12 +14,10 @@ internal class MongoOrderRepository : IOrderRepository
     private readonly IMongoCollection<Order> _ordersCollection;
     private readonly IMapper _mapper;
 
-    public MongoOrderRepository(IOptions<MongoDBSettings> settings, IMapper mapper)
+    public MongoOrderRepository(IMongoCollection<Order> ordersCollection, IMapper mapper)
     {
         _mapper = mapper;
-        var client = new MongoClient(settings.Value.ConnectionURI);
-        var database = client.GetDatabase(settings.Value.DatabaseName);
-        _ordersCollection = database.GetCollection<Order>(settings.Value.CollectionName);
+        _ordersCollection = ordersCollection;
     }
 
     public async Task CreateAsync(OrderEntity order, CancellationToken cancellationToken = default)
