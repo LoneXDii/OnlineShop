@@ -86,6 +86,7 @@ public static class DependencyInjection
         });
 
         services.AddHostedService<UserCreationConsumer>();
+        services.AddHostedService<ProductCreationConsumer>();
 
         return services;
     }

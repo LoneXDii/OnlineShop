@@ -1,6 +1,7 @@
 using OrderService.API;
 using OrderService.API.Middleware;
 using OrderService.Application;
+using OrderService.Domain.Abstractions.Payments;
 using OrderService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

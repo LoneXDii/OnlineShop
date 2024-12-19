@@ -28,7 +28,7 @@ internal class StripeIdConsumer : BackgroundService
 
     private async Task ConsumeMessages(CancellationToken cancellationToken)
     {
-        //Need this because UserCreationConsumer is a singletone service, while PaymentService and ProducerServiec are scoped
+        //Need this because StripeIdConsumer is a singletone service, while UserManager is scoped
         using var scope = _serviceScopeFactory.CreateScope();
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();

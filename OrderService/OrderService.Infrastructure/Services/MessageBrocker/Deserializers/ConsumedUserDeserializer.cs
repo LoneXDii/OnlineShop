@@ -3,9 +3,9 @@ using OrderService.Infrastructure.Models;
 using System.Text;
 using System.Text.Json;
 
-namespace OrderService.Infrastructure.Services.MessageBrocker.Consumers.Deserealizers;
+namespace OrderService.Infrastructure.Services.MessageBrocker.Deserializers;
 
-internal class ConsumedUserDeserealizer : IDeserializer<ConsumedUser>
+internal class ConsumedUserDeserializer : IDeserializer<ConsumedUser>
 {
     public ConsumedUser Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
     {

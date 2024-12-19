@@ -72,11 +72,11 @@ internal class PaymentService : IPaymentService
         return customer.Id;
     }
 
-    public async Task<string> CreateProductAsync(ProductEntity product)
+    public async Task<string> CreateProductAsync(string name, double price)
     {
         var productOptions = new ProductCreateOptions
         {
-            Name = product.Name
+            Name = name
         };
 
         var stripeProduct = await _productService.CreateAsync(productOptions);
@@ -84,13 +84,13 @@ internal class PaymentService : IPaymentService
         var priceOptions = new PriceCreateOptions
         {
             Product = stripeProduct.Id,
-            UnitAmount = (long)(product.Price * 100),
+            UnitAmount = (long)(price * 100),
             Currency = "usd"
         };
 
-        var price = await _priceService.CreateAsync(priceOptions);
+        var stripePrice = await _priceService.CreateAsync(priceOptions);
 
-        return price.Id;
+        return stripePrice.Id;
     }
 
     public string? GetSuccessPaymentOrderId(string eventJson, string signature)

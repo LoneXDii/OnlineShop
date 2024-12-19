@@ -8,12 +8,12 @@ using OrderService.Infrastructure.Services.MessageBrocker.Deserializers;
 
 namespace OrderService.Infrastructure.Services.MessageBrocker.Consumers;
 
-internal class UserCreationConsumer : BackgroundService
+internal class ProductCreationConsumer : BackgroundService
 {
     private readonly ConsumerConfig _consumerConfig;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public UserCreationConsumer(ConsumerConfig consumerConfig, IServiceScopeFactory serviceScopeFactory)
+    public ProductCreationConsumer(ConsumerConfig consumerConfig, IServiceScopeFactory serviceScopeFactory)
     {
         _consumerConfig = consumerConfig;
         _serviceScopeFactory = serviceScopeFactory;
@@ -28,17 +28,16 @@ internal class UserCreationConsumer : BackgroundService
 
     private async Task ConsumeMessages(CancellationToken cancellationToken)
     {
-        //Need this because UserCreationConsumer is a singletone service, while PaymentService and ProducerServiec are scoped
         using var scope = _serviceScopeFactory.CreateScope();
 
         var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
         var producerService = scope.ServiceProvider.GetRequiredService<IProducerService>();
 
-        using var consumer = new ConsumerBuilder<Ignore, ConsumedUser>(_consumerConfig)
-             .SetValueDeserializer(new ConsumedUserDeserializer())
+        using var consumer = new ConsumerBuilder<Ignore, ConsumedProduct>(_consumerConfig)
+             .SetValueDeserializer(new ConsumedProductDeserializer())
              .Build();
 
-        consumer.Subscribe("user-creation");
+        consumer.Subscribe("product-creation");
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -49,9 +48,9 @@ internal class UserCreationConsumer : BackgroundService
                 continue;
             }
 
-            var stipeId = await paymentService.CreateCustomerAsync(consumeResult.Value.Email, consumeResult.Value.Name);
+            var priceId = await paymentService.CreateProductAsync(consumeResult.Value.Name, consumeResult.Value.Price);
 
-            await producerService.ProduceUserStripeIdAsync(consumeResult.Value.Id, stipeId, cancellationToken);
+            await producerService.ProduceProductPriceIdAsync(consumeResult.Value.Id, priceId, cancellationToken);
         }
     }
 }

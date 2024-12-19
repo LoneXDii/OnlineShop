@@ -33,4 +33,23 @@ internal class ProducerService : IProducerService
 
         producer.Flush(cancellationToken);
     }
+
+    public async Task ProduceProductPriceIdAsync(int productId, string priceId, CancellationToken cancellationToken = default)
+    {
+        using var producer = new ProducerBuilder<Null, ProductPriceIdDTO>(_producerConfig)
+            .SetValueSerializer(new  ProductPriceIdDtoSerializer())
+            .Build();
+
+        var message = new ProductPriceIdDTO 
+        { 
+            Id = productId,
+            PriceId = priceId
+        };
+
+        await producer.ProduceAsync(topic: "product-price-id-creation",
+            new Message<Null, ProductPriceIdDTO> { Value = message },
+            cancellationToken);
+
+        producer.Flush(cancellationToken);
+    }
 }
