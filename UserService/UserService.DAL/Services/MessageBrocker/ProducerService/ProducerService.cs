@@ -1,33 +1,35 @@
 ﻿
+using AutoMapper;
 using Confluent.Kafka;
 using UserService.DAL.Entities;
+using UserService.DAL.Models;
+using UserService.DAL.Services.MessageBrocker.Serializers;
 
 namespace UserService.DAL.Services.MessageBrocker.ProducerService;
 
 internal class ProducerService : IProducerService
 {
     private readonly ProducerConfig _producerConfig;
+    private readonly IMapper _mapper;
 
-    public ProducerService(ProducerConfig producerConfig)
+    public ProducerService(ProducerConfig producerConfig, IMapper mapper)
     {
         _producerConfig = producerConfig;
+        _mapper = mapper;
     }
 
-    public async Task ProduceAsync(CancellationToken cancellationToken = default)
+    public async Task ProduceUserCreationAsync(AppUser user, CancellationToken cancellationToken = default)
     {
-        using var producer = new ProducerBuilder<Null, string>(_producerConfig).Build();
+        using var producer = new ProducerBuilder<Null, MqUserRequest>(_producerConfig)
+            .SetValueSerializer(new MqUserRequestSerializer())
+            .Build();
 
-        var deliveryResult = await producer.ProduceAsync(topic: "test-topic",
-            new Message<Null, string> { Value = $"Hello, Kafka! {DateTime.UtcNow}"}, 
+        var request = _mapper.Map<MqUserRequest>(user);
+
+        await producer.ProduceAsync(topic: "user-creation",
+            new Message<Null, MqUserRequest> { Value = request },
             cancellationToken);
 
-        Console.WriteLine($"Delivered message to {deliveryResult.Value}, Offset: {deliveryResult.Offset}");
-
         producer.Flush(cancellationToken);
-    }
-
-    public async Task ProduecUserCreationAsync(AppUser user, CancellationToken cancellationToken = default)
-    {
-
     }
 }

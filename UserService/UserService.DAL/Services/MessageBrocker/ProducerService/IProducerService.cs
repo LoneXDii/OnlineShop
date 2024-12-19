@@ -1,6 +1,8 @@
-﻿namespace UserService.DAL.Services.MessageBrocker.ProducerService;
+﻿using UserService.DAL.Entities;
+
+namespace UserService.DAL.Services.MessageBrocker.ProducerService;
 
 public interface IProducerService
 {
-    Task ProduceAsync(CancellationToken cancellationToken=default);
+    Task ProduceUserCreationAsync(AppUser user, CancellationToken cancellationToken = default);
 }

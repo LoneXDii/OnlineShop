@@ -13,6 +13,8 @@ using UserService.DAL.Services.TemporaryStorage;
 using UserService.DAL.Models;
 using Confluent.Kafka;
 using UserService.DAL.Services.MessageBrocker.ProducerService;
+using UserService.DAL.Mapping;
+using UserService.DAL.Services.MessageBrocker.Consumers;
 
 namespace UserService.DAL;
 
@@ -29,6 +31,8 @@ public static class DependencyInjection
         services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddAutoMapper(typeof(MqUserRequestMappingProfile));
 
         services.AddStackExchangeRedisCache(opt =>
         {
@@ -62,10 +66,12 @@ public static class DependencyInjection
             return new ConsumerConfig
             {
                 BootstrapServers = configuration["Kafka:Server"],
-                GroupId = "test-group",
+                GroupId = "products-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
         });
+
+        services.AddHostedService<StripeIdConsumer>();
 
         return services;
     }

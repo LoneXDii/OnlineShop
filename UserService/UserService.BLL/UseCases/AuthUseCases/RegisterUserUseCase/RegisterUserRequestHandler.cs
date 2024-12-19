@@ -8,11 +8,13 @@ using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 using Hangfire;
+using UserService.DAL.Services.MessageBrocker.ProducerService;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
 internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
-    IEmailService emailService, ICacheService cacheService) : IRequestHandler<RegisterUserRequest>
+    IEmailService emailService, ICacheService cacheService, IProducerService producerService) 
+    : IRequestHandler<RegisterUserRequest>
 {
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
@@ -31,6 +33,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         {
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
+            BackgroundJob.Enqueue(() => producerService.ProduceUserCreationAsync(user, default));
+
             BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
 
             BackgroundJob.Schedule(() => DeleteUnconfirmedUser(user.Email), TimeSpan.FromMinutes(15));
@@ -46,6 +50,11 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
     public async Task DeleteUnconfirmedUser(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
+
+        if (user is null)
+        {
+            return;
+        }
 
         if (!user.EmailConfirmed)
         {

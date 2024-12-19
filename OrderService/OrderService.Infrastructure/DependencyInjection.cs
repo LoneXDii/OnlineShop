@@ -15,6 +15,8 @@ using Microsoft.Extensions.Options;
 using OrderService.Infrastructure.Models;
 using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
+using OrderService.Infrastructure.Services.MessageBrocker.Consumers;
+using OrderService.Infrastructure.Services.MessageBrocker;
 
 
 namespace OrderService.Infrastructure;
@@ -33,7 +35,8 @@ public static class DependencyInjection
         services.AddSingleton<IOrderRepository, MongoOrderRepository>()
             .AddScoped<IProductService, GrpcProductService>()
             .AddScoped<IPaymentService, PaymentService>()
-            .AddScoped<ITemporaryStorageService, RedisStorageService>();
+            .AddScoped<ITemporaryStorageService, RedisStorageService>()
+            .AddScoped<IProducerService, ProducerService>();
 
         services.AddSingleton(serviceProvider =>
         {
@@ -82,7 +85,7 @@ public static class DependencyInjection
             };
         });
 
-        services.AddSingleton<IHostedService, ConsumerService>();
+        services.AddHostedService<UserCreationConsumer>();
 
         return services;
     }
