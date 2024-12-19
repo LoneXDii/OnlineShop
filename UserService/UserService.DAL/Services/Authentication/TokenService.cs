@@ -69,7 +69,8 @@ internal class TokenService : ITokenService
              new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
              new(ClaimTypes.Email, user.Email),
              new("Avatar", user.AvatarUrl ?? ""),
-             new("Id" , user.Id)
+             new("Id" , user.Id),
+             new("StripeId", user.StripeId ?? "")
         };
 
         var roles = await _userManager.GetRolesAsync(user);

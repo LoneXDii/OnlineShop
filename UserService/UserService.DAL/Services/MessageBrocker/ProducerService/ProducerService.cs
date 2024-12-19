@@ -1,5 +1,6 @@
 ﻿
 using Confluent.Kafka;
+using UserService.DAL.Entities;
 
 namespace UserService.DAL.Services.MessageBrocker.ProducerService;
 
@@ -23,5 +24,10 @@ internal class ProducerService : IProducerService
         Console.WriteLine($"Delivered message to {deliveryResult.Value}, Offset: {deliveryResult.Offset}");
 
         producer.Flush(cancellationToken);
+    }
+
+    public async Task ProduecUserCreationAsync(AppUser user, CancellationToken cancellationToken = default)
+    {
+
     }
 }

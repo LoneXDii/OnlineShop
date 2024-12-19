@@ -20,7 +20,8 @@ internal class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
                 NormalizedEmail = "ADMIN1@GMAIL.COM",
                 EmailConfirmed = true,
                 PasswordHash = "AQAAAAIAAYagAAAAEAdaQZqBRnnJALCoMVEBzKIfyQ9gwxoKZrXtupQ7I1xmhYJyXzxID8aI/wEC8xKWpA==",
-                SecurityStamp = "EKR7O7Q57LQH7N3LP3P7MW6NPMYMGMNF"
+                SecurityStamp = "EKR7O7Q57LQH7N3LP3P7MW6NPMYMGMNF",
+                StripeId = "cus_RQULukld15o0o1"
             },
             new AppUser
             {
@@ -33,7 +34,8 @@ internal class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
                 NormalizedEmail = "CLIENT1@GMAIL.COM",
                 EmailConfirmed = true,
                 PasswordHash = "AQAAAAIAAYagAAAAEKOnG0RxOt0J0HfVE3s644AzrV9RnvZqiaUy4AkiM7IgSP+zG5To41KpVwHM6oQzaQ==",
-                SecurityStamp = "EC54SKVGI5LI43ZIJR5HB3CZHDLII2S6"
+                SecurityStamp = "EC54SKVGI5LI43ZIJR5HB3CZHDLII2S6",
+                StripeId = "cus_RQULrwlbuvAi6L"
             }
         );
     }

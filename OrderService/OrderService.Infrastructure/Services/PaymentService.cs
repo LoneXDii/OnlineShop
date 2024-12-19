@@ -64,8 +64,7 @@ internal class PaymentService : IPaymentService
     {
         var customerOptions = new CustomerCreateOptions
         {
-            Email = email,
-            Name = name
+            Email = email
         };
 
         var customer = await _customerService.CreateAsync(customerOptions);
