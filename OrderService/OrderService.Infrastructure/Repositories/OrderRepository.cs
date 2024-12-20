@@ -1,20 +1,18 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
-using OrderService.Infrastructure.Configuration;
 using OrderService.Infrastructure.Models;
 using System.Linq.Expressions;
 
 namespace OrderService.Infrastructure.Repositories;
 
-internal class MongoOrderRepository : IOrderRepository
+internal class OrderRepository : IOrderRepository
 {
     private readonly IMongoCollection<Order> _ordersCollection;
     private readonly IMapper _mapper;
 
-    public MongoOrderRepository(IMongoCollection<Order> ordersCollection, IMapper mapper)
+    public OrderRepository(IMongoCollection<Order> ordersCollection, IMapper mapper)
     {
         _mapper = mapper;
         _ordersCollection = ordersCollection;
@@ -31,20 +29,9 @@ internal class MongoOrderRepository : IOrderRepository
         CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
-        var mongoFilters = new List<FilterDefinition<Order>>();
+        var filter = CreateFilter(filters);
 
-        foreach (var expression in filters)
-        {
-            var mongoExpression = _mapper.Map<Expression<Func<Order, bool>>>(expression);
-            var mongoFilter = Builders<Order>.Filter.Where(mongoExpression);
-            mongoFilters.Add(mongoFilter);
-        }
-
-        var combinedFilter = mongoFilters.Any()
-            ? Builders<Order>.Filter.And(mongoFilters)
-            : Builders<Order>.Filter.Empty;
-
-        var orders = await _ordersCollection.Find(combinedFilter)
+        var orders = await _ordersCollection.Find(filter)
             .SortByDescending(order => order.CreatedAt)
             .Skip((pageNo - 1) * pageSize)
             .Limit(pageSize)
@@ -78,6 +65,13 @@ internal class MongoOrderRepository : IOrderRepository
     public async Task<long> CountAsync(CancellationToken cancellationToken = default,
         params Expression<Func<OrderEntity, bool>>[] filters)
     {
+        var filter = CreateFilter(filters);
+
+        return await _ordersCollection.CountDocumentsAsync(filter, null, cancellationToken);
+    }
+
+    private FilterDefinition<Order> CreateFilter(Expression<Func<OrderEntity, bool>>[] filters)
+    {
         var mongoFilters = new List<FilterDefinition<Order>>();
 
         foreach (var expression in filters)
@@ -87,10 +81,8 @@ internal class MongoOrderRepository : IOrderRepository
             mongoFilters.Add(mongoFilter);
         }
 
-        var combinedFilter = mongoFilters.Any()
+        return mongoFilters.Any()
             ? Builders<Order>.Filter.And(mongoFilters)
             : Builders<Order>.Filter.Empty;
-
-        return await _ordersCollection.CountDocumentsAsync(combinedFilter, null, cancellationToken);
     }
 }
