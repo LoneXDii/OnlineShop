@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using OrderService.Infrastructure.Models;
-using OrderService.Infrastructure.Services.MessageBrocker.Deserializers;
+using OrderService.Infrastructure.Services.MessageBrocker.Serialization;
 
 namespace OrderService.Infrastructure.Services.MessageBrocker.Consumers;
 
@@ -34,7 +34,7 @@ internal class ProductCreationConsumer : BackgroundService
         var producerService = scope.ServiceProvider.GetRequiredService<IProducerService>();
 
         using var consumer = new ConsumerBuilder<Ignore, ConsumedProduct>(_consumerConfig)
-             .SetValueDeserializer(new ConsumedProductDeserializer())
+             .SetValueDeserializer(new KafkaDeserializer<ConsumedProduct>())
              .Build();
 
         consumer.Subscribe("product-creation");

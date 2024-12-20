@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Infrastructure.Models;
-using OrderService.Infrastructure.Services.MessageBrocker.Serializers;
+using OrderService.Infrastructure.Services.MessageBrocker.Serialization;
 
 namespace OrderService.Infrastructure.Services.MessageBrocker;
 
@@ -18,7 +18,7 @@ internal class ProducerService : IProducerService
         CancellationToken  cancellationToken = default)
     {
         using var producer = new ProducerBuilder<Null, UserStripeIdDTO>(_producerConfig)
-            .SetValueSerializer(new UserStripeIdDtoSerializer())
+            .SetValueSerializer(new KafkaSerializer<UserStripeIdDTO>())
             .Build();
 
         var message = new UserStripeIdDTO 
@@ -37,7 +37,7 @@ internal class ProducerService : IProducerService
     public async Task ProduceProductPriceIdAsync(int productId, string priceId, CancellationToken cancellationToken = default)
     {
         using var producer = new ProducerBuilder<Null, ProductPriceIdDTO>(_producerConfig)
-            .SetValueSerializer(new  ProductPriceIdDtoSerializer())
+            .SetValueSerializer(new KafkaSerializer<ProductPriceIdDTO>())
             .Build();
 
         var message = new ProductPriceIdDTO 

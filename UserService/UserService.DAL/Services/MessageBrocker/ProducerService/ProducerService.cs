@@ -1,9 +1,8 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Confluent.Kafka;
 using UserService.DAL.Entities;
 using UserService.DAL.Models;
-using UserService.DAL.Services.MessageBrocker.Serializers;
+using UserService.DAL.Services.MessageBrocker.Serialization;
 
 namespace UserService.DAL.Services.MessageBrocker.ProducerService;
 
@@ -21,7 +20,7 @@ internal class ProducerService : IProducerService
     public async Task ProduceUserCreationAsync(AppUser user, CancellationToken cancellationToken = default)
     {
         using var producer = new ProducerBuilder<Null, MqUserRequest>(_producerConfig)
-            .SetValueSerializer(new MqUserRequestSerializer())
+            .SetValueSerializer(new KafkaSerializer<MqUserRequest>())
             .Build();
 
         var request = _mapper.Map<MqUserRequest>(user);

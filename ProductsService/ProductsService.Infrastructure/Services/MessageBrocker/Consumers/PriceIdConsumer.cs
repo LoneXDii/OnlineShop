@@ -1,10 +1,9 @@
 ﻿using Confluent.Kafka;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Infrastructure.Models;
-using ProductsService.Infrastructure.Services.MessageBrocker.Deserializers;
+using ProductsService.Infrastructure.Services.MessageBrocker.Serialization;
 
 namespace ProductsService.Infrastructure.Services.MessageBrocker.Consumers;
 
@@ -34,7 +33,7 @@ internal class PriceIdConsumer : BackgroundService
         var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         using var consumer = new ConsumerBuilder<Ignore, ConsumedPriceId>(_consumerConfig)
-            .SetValueDeserializer(new ConsumedPriceIdDeserializer())
+            .SetValueDeserializer(new KafkaDeserializer<ConsumedPriceId>())
             .Build();
 
         consumer.Subscribe("product-price-id-creation");

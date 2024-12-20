@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UserService.DAL.Entities;
 using UserService.DAL.Models;
-using UserService.DAL.Services.MessageBrocker.Deserealizers;
+using UserService.DAL.Services.MessageBrocker.Serialization;
 
 namespace UserService.DAL.Services.MessageBrocker.Consumers;
 
@@ -34,7 +34,7 @@ internal class StripeIdConsumer : BackgroundService
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
         using var consumer = new ConsumerBuilder<Ignore, ConsumedStripeId>(_consumerConfig)
-             .SetValueDeserializer(new ConsumedStripeIdDeserealizer())
+             .SetValueDeserializer(new KafkaDeserializer<ConsumedStripeId>())
              .Build();
 
         consumer.Subscribe("user-stripe-id-creation");

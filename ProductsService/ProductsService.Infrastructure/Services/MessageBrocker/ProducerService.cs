@@ -3,7 +3,7 @@ using Confluent.Kafka;
 using ProductsService.Domain.Abstractions.MessageBrocker;
 using ProductsService.Domain.Entities;
 using ProductsService.Infrastructure.Models;
-using ProductsService.Infrastructure.Services.MessageBrocker.Serializers;
+using ProductsService.Infrastructure.Services.MessageBrocker.Serialization;
 
 namespace ProductsService.Infrastructure.Services.MessageBrocker;
 
@@ -21,7 +21,7 @@ internal class ProducerService : IProducerService
     public async Task ProduceProductCreationAsync(Product product, CancellationToken cancellationToken = default)
     {
         using var producer = new ProducerBuilder<Null, ProductCreationDTO>(_producerConfig)
-            .SetValueSerializer(new ProductCreationDtoSerializer())
+            .SetValueSerializer(new KafkaSerializer<ProductCreationDTO>())
             .Build();
 
         var message = _mapper.Map<ProductCreationDTO>(product);
