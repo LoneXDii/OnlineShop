@@ -29,8 +29,9 @@ public static class DependencyInjection
             .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
 
         services.AddScoped<CustomerService>()
-            .AddScoped<Stripe.ProductService>()
-            .AddScoped<PriceService>();
+            .AddScoped<ProductService>()
+            .AddScoped<PriceService>()
+            .AddScoped<CouponService>();
 
         services.AddSingleton<IOrderRepository, MongoOrderRepository>()
             .AddScoped<IProductService, GrpcProductService>()

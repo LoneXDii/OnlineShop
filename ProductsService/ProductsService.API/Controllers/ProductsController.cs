@@ -47,7 +47,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> CreateProduct([FromForm] AddProductDTO product, CancellationToken cancellationToken)
     {
         var request = _mapper.Map<AddProductRequest>(product);
@@ -71,7 +71,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{ProductId:min(1)}")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> DeleteProduct([FromRoute] DeleteProductRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
@@ -90,7 +90,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{ProductId:min(1)}/attributes/{AttributeId:min(1)}")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProductAttribute([FromRoute] RequestAttributeValueDTO productAttrubute, 
         [FromBody] UpdateAttributeDTO newAttribute, CancellationToken cancellationToken)
     {

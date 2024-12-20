@@ -33,4 +33,5 @@ message ProductResponse{
 	int32 quantity = 4;
 	string imageUrl = 5;
 	string priceId = 6;
+	int32 dicsount = 7;
 }

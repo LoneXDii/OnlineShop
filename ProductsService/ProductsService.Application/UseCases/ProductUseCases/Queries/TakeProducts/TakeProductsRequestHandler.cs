@@ -43,11 +43,6 @@ internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork)
         foreach (var product in products)
         {
             product.Quantity = request.Products[product.Id];
-
-            if (product.Discount is not null)
-            {
-                product.Price *= (1 - (double)product.Discount.Percent / 100);
-            }
         }
 
         return products;
