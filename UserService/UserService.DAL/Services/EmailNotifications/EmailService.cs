@@ -127,7 +127,7 @@ internal class EmailService : IEmailService
         htmlBuilder.Append($"<p>Общая сумма: {order.TotalPrice}</p>");
         htmlBuilder.Append("<h2>Список товаров:</h2>");
         htmlBuilder.Append("<table border='1' cellpadding='5' cellspacing='0'>");
-        htmlBuilder.Append("<tr><th>Название</th><th>Количество</th><th>Цена</th><th>Скидка</th></tr>");
+        htmlBuilder.Append("<tr><th>Название</th><th>Количество</th><th>Цена</th><th>Скидка</th><th>Цена со скидкой</th><th>Итого</th></tr>");
 
         foreach (var product in order.Products)
         {
@@ -138,6 +138,8 @@ internal class EmailService : IEmailService
             htmlBuilder.Append($"<td>{product.Quantity}</td>");
             htmlBuilder.Append($"<td>{product.Price}</td>");
             htmlBuilder.Append($"<td>{product.Discount}%</td>");
+            htmlBuilder.Append($"<td>{product.Price * (1 - (double)product.Discount / 100)}</td>");
+            htmlBuilder.Append($"<td>{product.Price * product.Quantity * (1 - product.Discount / 100)}</td>");
             htmlBuilder.Append("</tr>");
         }
 

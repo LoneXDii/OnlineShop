@@ -30,10 +30,10 @@ internal class CancelOrderRequestHandler(IOrderRepository orderRepository, IProd
             throw new BadRequestException("Cannot cancel completed order");
         }
 
-        //if (order.OrderStatus == OrderStatuses.Cancelled)
-        //{
-        //    throw new BadRequestException("This order is already cancelled");
-        //}
+        if (order.OrderStatus == OrderStatuses.Cancelled)
+        {
+            throw new BadRequestException("This order is already cancelled");
+        }
 
         order.OrderStatus = OrderStatuses.Cancelled;
 

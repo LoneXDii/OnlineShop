@@ -14,7 +14,6 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using OrderService.Infrastructure.Models;
 using Confluent.Kafka;
-using Microsoft.Extensions.Hosting;
 using OrderService.Infrastructure.Services.MessageBrocker.Consumers;
 using OrderService.Infrastructure.Services.MessageBrocker;
 
