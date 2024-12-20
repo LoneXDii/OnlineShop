@@ -5,12 +5,12 @@ namespace OrderService.Application.UseCases.CartUseCases.ClearCartUseCase;
 
 internal class ClearCartRequestHandler(ITemporaryStorageService temporaryStorage) : IRequestHandler<ClearCartRequest>
 {
-    public Task Handle(ClearCartRequest request, CancellationToken cancellationToken)
+    public async Task Handle(ClearCartRequest request, CancellationToken cancellationToken)
     {
-        var cart = temporaryStorage.GetCart();
-        cart.Clear();
-        temporaryStorage.SaveCart(cart);
+        var cart = await temporaryStorage.GetCartAsync(cancellationToken);
 
-        return Task.CompletedTask;
+        cart.Clear();
+
+        await temporaryStorage.SaveCartAsync(cart, cancellationToken);
     }
 }
