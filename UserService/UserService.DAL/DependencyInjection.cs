@@ -72,6 +72,7 @@ public static class DependencyInjection
         });
 
         services.AddHostedService<StripeIdConsumer>();
+        services.AddHostedService<OrderActionConsumer>();
 
         return services;
     }

@@ -5,7 +5,7 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CancelOrderUseCase;
 
-internal class CancelOrderRequestHandler(IOrderRepository orderRepository, IProductService productService)
+internal class CancelOrderRequestHandler(IOrderRepository orderRepository, IProductService productService, IProducerService producerService)
     : IRequestHandler<CancelOrderRequest>
 {
     public async Task Handle(CancelOrderRequest request, CancellationToken cancellationToken)
@@ -30,10 +30,17 @@ internal class CancelOrderRequestHandler(IOrderRepository orderRepository, IProd
             throw new BadRequestException("Cannot cancel completed order");
         }
 
+        //if (order.OrderStatus == OrderStatuses.Cancelled)
+        //{
+        //    throw new BadRequestException("This order is already cancelled");
+        //}
+
         order.OrderStatus = OrderStatuses.Cancelled;
 
         await orderRepository.UpdateAsync(order, cancellationToken);
 
         await productService.ReturnProductsAsync(order.Products, cancellationToken);
+
+        await producerService.ProduceOrderActionsAsync(order, cancellationToken);
     }
 }

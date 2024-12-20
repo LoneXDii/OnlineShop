@@ -1,5 +1,7 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.Text;
+using UserService.DAL.Models;
 
 namespace UserService.DAL.Services.EmailNotifications;
 
@@ -88,5 +90,66 @@ internal class EmailService : IEmailService
         await _sendGridClient.SendEmailAsync(messageOld);
 
         await _sendGridClient.SendEmailAsync(messageNew);
+    }
+
+    public async Task SendOrderStatusNotificationAsync(ConsumedOrder order)
+    {
+        var subject = "";
+
+        switch (order.OrderStatus) 
+        {
+            case 0:
+                subject = "Your order was created!";
+                break;
+            case 1:
+                subject = "Your order was confirmed!";
+                break;
+            case 2:
+                subject = "Your order was completed!";
+                break;
+            case 3:
+                subject = "Your order was cancelled!";
+                break;
+        }
+
+        var plainTextBuilder = new StringBuilder();
+        var htmlBuilder = new StringBuilder();
+
+        plainTextBuilder.AppendLine($"Заказ #{order.Id}.");
+        plainTextBuilder.AppendLine($"Статус заказа: {order.OrderStatus}");
+        plainTextBuilder.AppendLine($"Общая сумма: {order.TotalPrice}");
+        plainTextBuilder.AppendLine("\nСписок товаров:");
+
+        htmlBuilder.Append("<html><body>");
+        htmlBuilder.Append("<h1>Информация о заказе</h1>");
+        htmlBuilder.Append($"<p>Заказ #{order.Id}.</p>");
+        htmlBuilder.Append($"<p>Статус заказа: {order.OrderStatus}</p>");
+        htmlBuilder.Append($"<p>Общая сумма: {order.TotalPrice}</p>");
+        htmlBuilder.Append("<h2>Список товаров:</h2>");
+        htmlBuilder.Append("<table border='1' cellpadding='5' cellspacing='0'>");
+        htmlBuilder.Append("<tr><th>Название</th><th>Количество</th><th>Цена</th><th>Скидка</th></tr>");
+
+        foreach (var product in order.Products)
+        {
+            plainTextBuilder.AppendLine($"{product.Name} - Количество: {product.Quantity}, Цена: {product.Price}, Скидка: {product.Discount}%");
+
+            htmlBuilder.Append("<tr>");
+            htmlBuilder.Append($"<td>{product.Name}</td>");
+            htmlBuilder.Append($"<td>{product.Quantity}</td>");
+            htmlBuilder.Append($"<td>{product.Price}</td>");
+            htmlBuilder.Append($"<td>{product.Discount}%</td>");
+            htmlBuilder.Append("</tr>");
+        }
+
+        htmlBuilder.Append("</table>");
+        htmlBuilder.Append("</body></html>");
+
+        var plainTextContent = plainTextBuilder.ToString();
+        var htmlContent = htmlBuilder.ToString();
+        var to = new EmailAddress(order.UserEmail);
+
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+
+        await _sendGridClient.SendEmailAsync(msg);
     }
 }

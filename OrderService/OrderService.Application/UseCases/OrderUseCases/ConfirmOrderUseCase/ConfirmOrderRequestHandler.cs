@@ -5,7 +5,7 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.OrderUseCases.ConfirmOrderUseCase;
 
-internal class ConfirmOrderRequestHandler(IOrderRepository orderRepository)
+internal class ConfirmOrderRequestHandler(IOrderRepository orderRepository, IProducerService producerService)
     : IRequestHandler<ConfirmOrderRequest>
 {
     public async Task Handle(ConfirmOrderRequest request, CancellationToken cancellationToken)
@@ -25,5 +25,7 @@ internal class ConfirmOrderRequestHandler(IOrderRepository orderRepository)
         order.OrderStatus = OrderStatuses.Confirmed;
 
         await orderRepository.UpdateAsync(order, cancellationToken);
+
+        await producerService.ProduceOrderActionsAsync(order, cancellationToken);
     }
 }

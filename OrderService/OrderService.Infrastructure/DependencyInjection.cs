@@ -28,6 +28,8 @@ public static class DependencyInjection
         services.Configure<MongoDBSettings>(options => configuration.GetSection("MongoDB").Bind(options))
             .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
 
+        services.AddHttpContextAccessor();
+
         services.AddScoped<CustomerService>()
             .AddScoped<ProductService>()
             .AddScoped<PriceService>()

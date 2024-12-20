@@ -5,7 +5,7 @@ using OrderService.Domain.Common.Statuses;
 
 namespace OrderService.Application.UseCases.OrderUseCases.CompleteOrderUseCase;
 
-internal class CompleteOrderRequestHandler(IOrderRepository orderRepository)
+internal class CompleteOrderRequestHandler(IOrderRepository orderRepository, IProducerService producerService)
     : IRequestHandler<CompleteOrderRequest>
 {
     public async Task Handle(CompleteOrderRequest request, CancellationToken cancellationToken)
@@ -30,5 +30,7 @@ internal class CompleteOrderRequestHandler(IOrderRepository orderRepository)
         order.OrderStatus = OrderStatuses.Completed;
 
         await orderRepository.UpdateAsync(order, cancellationToken);
+
+        await producerService.ProduceOrderActionsAsync(order, cancellationToken);
     }
 }
