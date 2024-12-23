@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.Exceptions;
 
@@ -40,6 +41,7 @@ public class ExceptionMiddleware
                 NotFoundException => StatusCodes.Status404NotFound,
                 AccessDeniedException => StatusCodes.Status403Forbidden,
                 BadRequestException => StatusCodes.Status400BadRequest,
+                RpcException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             },
             Detail = ex.Message,

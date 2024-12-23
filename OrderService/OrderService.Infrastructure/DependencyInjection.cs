@@ -8,9 +8,12 @@ using Stripe;
 using OrderService.Infrastructure.Repositories;
 using OrderService.Infrastructure.Mapping;
 using AutoMapper.Extensions.ExpressionMapping;
+using OrderService.Infrastructure.Protos;
+using OrderService.Infrastructure.Interceptors;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using OrderService.Infrastructure.Models;
+
 
 namespace OrderService.Infrastructure;
 
@@ -26,7 +29,7 @@ public static class DependencyInjection
             .AddScoped<PriceService>();
 
         services.AddSingleton<IOrderRepository, OrderRepository>()
-            .AddSingleton<IProductService, FakeProductService>()
+            .AddScoped<IProductService, GrpcProductService>()
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<ITemporaryStorageService, RedisStorageService>();
 
@@ -49,6 +52,13 @@ public static class DependencyInjection
         {
             cfg.AddExpressionMapping();
         },typeof(OrderMappingProfile));
+
+        services.AddScoped<AuthInterceptor>()
+            .AddGrpcClient<Products.ProductsClient>(opt =>
+            {
+                opt.Address = new Uri(configuration["gRPC:ServerUrl"]);
+            })
+            .AddInterceptor<AuthInterceptor>();
 
         return services;
     }
