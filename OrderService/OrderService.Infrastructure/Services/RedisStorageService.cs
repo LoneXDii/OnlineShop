@@ -23,26 +23,7 @@ internal class RedisStorageService : ITemporaryStorageService
 
         if (userId is not null)
         {
-            var oldCartId = _httpContext.Request.Cookies["CartId"];
-
-            if (oldCartId is not null)
-            {
-                var oldCart = await _cache.GetStringAsync(oldCartId, cancellationToken);
-
-                _httpContext.Response.Cookies.Delete("CartId");
-
-                if (oldCart is not null)
-                {
-                    await _cache.RemoveAsync(oldCartId, cancellationToken);
-
-                    var options = new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
-                    };
-
-                    await _cache.SetStringAsync(userId, oldCart, options, cancellationToken);
-                }
-            }
+            await AssignCartToUserIdAsync(userId, cancellationToken);
         }
 
         var cartJson = await _cache.GetStringAsync(GetCartId(userId), cancellationToken);
@@ -84,5 +65,29 @@ internal class RedisStorageService : ITemporaryStorageService
         }
 
         return cartId;
+    }
+
+    private async Task AssignCartToUserIdAsync(string userId, CancellationToken cancellationToken)
+    {
+        var oldCartId = _httpContext.Request.Cookies["CartId"];
+
+        if (oldCartId is not null)
+        {
+            var oldCart = await _cache.GetStringAsync(oldCartId, cancellationToken);
+
+            _httpContext.Response.Cookies.Delete("CartId");
+
+            if (oldCart is not null)
+            {
+                await _cache.RemoveAsync(oldCartId, cancellationToken);
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+                };
+
+                await _cache.SetStringAsync(userId, oldCart, options, cancellationToken);
+            }
+        }
     }
 }
