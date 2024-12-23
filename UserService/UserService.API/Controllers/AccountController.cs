@@ -30,7 +30,6 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-
     [HttpPost("login")]
     public async Task<ActionResult<TokensDTO>> Login([FromBody] LoginDTO loginModel)
     {
@@ -39,7 +38,6 @@ public class AccountController : ControllerBase
         return Ok(tokens);
     }
 
-
     [HttpGet("confirmation")]
     public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string code)
     {
@@ -47,7 +45,6 @@ public class AccountController : ControllerBase
 
         return Ok("Email confirmed");
     }
-
 
     [HttpGet("confirmation/resend")]
     public async Task<IActionResult> ResendEmailConfirmation([FromQuery] ResendEmailConfirmationCodeRequest request)

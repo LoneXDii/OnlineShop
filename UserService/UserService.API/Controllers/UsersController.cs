@@ -77,7 +77,6 @@ public class UsersController : ControllerBase
         return user;
     }
 
-
     [HttpGet("{userId:regex(^[[a-fA-F0-9]]{{24}}$)}/info")]
     [Authorize(Policy = "admin")]
     public async Task<ActionResult<UserInfoDTO>> GetUserInfo([FromRoute] string userId)
