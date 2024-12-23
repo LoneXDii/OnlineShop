@@ -16,13 +16,26 @@ internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork)
 
         var products = await unitOfWork.ProductQueryRepository.ListAsync(specification, cancellationToken, p => p.Discount);
 
+        await UpdateProductsQuantityAsync(products, request.Products, cancellationToken);
+
+        foreach (var product in products)
+        {
+            product.Quantity = request.Products[product.Id];
+        }
+
+        return products;
+    }
+
+    private async Task UpdateProductsQuantityAsync(IEnumerable<Product> products, IDictionary<int, int> requestedProducts,
+        CancellationToken cancellationToken)
+    {
         var errors = new StringBuilder();
 
         foreach (var product in products)
         {
-            var quantity = request.Products[product.Id];
+            var quantity = requestedProducts[product.Id];
 
-            if(product.Quantity < quantity)
+            if (product.Quantity < quantity)
             {
                 errors.AppendLine($"Quantity of product with id={product.Id} is too low");
                 continue;
@@ -39,12 +52,5 @@ internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork)
         }
 
         await unitOfWork.SaveAllAsync(cancellationToken);
-
-        foreach (var product in products)
-        {
-            product.Quantity = request.Products[product.Id];
-        }
-
-        return products;
     }
 }

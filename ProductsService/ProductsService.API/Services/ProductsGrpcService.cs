@@ -36,9 +36,7 @@ public class ProductsGrpcService : Products.ProductsBase
         var data = await _mediator.Send(new TakeProductsRequest(dict));
 
         var products = _mapper.Map<List<ProductResponse>>(data);
-
-        var response = new ProductsListResponse();
-        response.Products.AddRange(products);
+        var response = _mapper.Map<ProductsListResponse>(products);
 
         return response;
     }
