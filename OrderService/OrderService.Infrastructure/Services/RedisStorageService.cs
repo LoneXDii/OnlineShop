@@ -20,7 +20,6 @@ internal class RedisStorageService : ITemporaryStorageService
     public async Task<Dictionary<int, ProductEntity>> GetCartAsync(CancellationToken cancellationToken = default)
     {
         var userId = _httpContext.User.FindFirst("Id")?.Value;
-        var cartId = GetCartId();
 
         if (userId is not null)
         {
@@ -46,7 +45,7 @@ internal class RedisStorageService : ITemporaryStorageService
             }
         }
 
-        var cartJson = await _cache.GetStringAsync(cartId, cancellationToken);
+        var cartJson = await _cache.GetStringAsync(GetCartId(userId), cancellationToken);
 
         var cart = cartJson is null 
             ? new Dictionary<int, ProductEntity>()
@@ -58,26 +57,22 @@ internal class RedisStorageService : ITemporaryStorageService
     public async Task SaveCartAsync(Dictionary<int, ProductEntity> cart, CancellationToken cancellationToken = default)
     {
         var userId = _httpContext.User.FindFirst("Id")?.Value;
-        var cartId = GetCartId();
 
         var cartJson = JsonSerializer.Serialize(cart);
 
         var options = new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+            AbsoluteExpirationRelativeToNow = userId is null 
+            ? TimeSpan.FromMinutes(30) 
+            : TimeSpan.FromDays(1)
         };
 
-        if (userId is not null)
-        {
-            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
-        }
-
-        await _cache.SetStringAsync(cartId, cartJson, options, cancellationToken);
+        await _cache.SetStringAsync(GetCartId(userId), cartJson, options, cancellationToken);
     }
 
-    private string GetCartId()
+    private string GetCartId(string? userId)
     {
-        var cartId = _httpContext.User.FindFirst("Id")?.Value ?? _httpContext.Request.Cookies["CartId"];
+        var cartId = userId ?? _httpContext.Request.Cookies["CartId"];
 
         if (cartId is null)
         {
