@@ -16,7 +16,7 @@ internal class RedisStorageService : ITemporaryStorageService
         _cache = cache;
         _httpContext = httpContextAccessor.HttpContext;
     }
- 
+
     public async Task<Dictionary<int, ProductEntity>> GetCartAsync(CancellationToken cancellationToken = default)
     {
         var userId = _httpContext.User.FindFirst("Id")?.Value;
@@ -28,7 +28,7 @@ internal class RedisStorageService : ITemporaryStorageService
 
         var cartJson = await _cache.GetStringAsync(GetCartId(userId), cancellationToken);
 
-        var cart = cartJson is null 
+        var cart = cartJson is null
             ? new Dictionary<int, ProductEntity>()
             : JsonSerializer.Deserialize<Dictionary<int, ProductEntity>>(cartJson);
 
