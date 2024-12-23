@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProductsService.Application.UseCases.CategoryUseCases.Commands.DeleteCategory;
 using ProductsService.Application.UseCases.DiscountUseCases.Commands.AddDiscount;
 using ProductsService.Application.UseCases.DiscountUseCases.Commands.DeleteDiscount;
 
@@ -27,11 +28,11 @@ public class DiscountsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{discountId:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> DeleteDiscount([FromQuery] DeleteDiscountRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteDiscount([FromRoute] int discountId, CancellationToken cancellationToken)
     {
-        await _mediator.Send(request, cancellationToken);
+        await _mediator.Send(new DeleteCategoryRequest(discountId), cancellationToken);
 
         return NoContent();
     }
