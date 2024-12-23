@@ -1,6 +1,6 @@
 ﻿namespace UserService.BLL.DTO;
 
-public class UpdateEmailDTO
+public class EmailDTO
 {
     public string Email { get; set; }
 }

@@ -37,4 +37,28 @@ internal class EmailService : IEmailService
 
         await _sendGridClient.SendEmailAsync(msg);
     }
+
+    public async Task SendPasswordResetCodeAsync(string email, string code)
+    {
+        var subject = "Password reset";
+        var plainTextContent = $"Your password reset code is: {code}";
+        var htmlContent = $"<span>{plainTextContent}</span>";
+        var to = new EmailAddress(email);
+
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+
+        await _sendGridClient.SendEmailAsync(msg);
+    }
+
+    public async Task SendPasswordResetSucceededNotificationAsync(string email)
+    {
+        var subject = "Password successfully changed!";
+        var plainTextContent = $"Your password has been changed!";
+        var htmlContent = $"<span>{plainTextContent}</span>";
+        var to = new EmailAddress(email);
+
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+
+        await _sendGridClient.SendEmailAsync(msg);
+    }
 }

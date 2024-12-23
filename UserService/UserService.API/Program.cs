@@ -37,11 +37,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//Comment this because it causes conflicts with new db schema from feature/add-kafka 
+//(stripeId field were added to AppUser)
 
-    await dbContext.Database.MigrateAsync();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+//    await dbContext.Database.MigrateAsync();
+//}
 
 app.Run();

@@ -10,7 +10,6 @@ using OrderService.Infrastructure.Mapping;
 using AutoMapper.Extensions.ExpressionMapping;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
-using Stripe.Tax;
 using OrderService.Infrastructure.Models;
 
 namespace OrderService.Infrastructure;
@@ -29,7 +28,7 @@ public static class DependencyInjection
         services.AddSingleton<IOrderRepository, OrderRepository>()
             .AddSingleton<IProductService, FakeProductService>()
             .AddScoped<IPaymentService, PaymentService>()
-            .AddScoped<ITemporaryStorageService, SessionStorageService>();
+            .AddScoped<ITemporaryStorageService, RedisStorageService>();
 
         services.AddSingleton(serviceProvider =>
         {
@@ -40,13 +39,11 @@ public static class DependencyInjection
             return database.GetCollection<Order>(settings.CollectionName);
         });
 
-        services.AddDistributedMemoryCache()
-            .AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+        services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.Configuration = configuration["Redis:Configuration"];
+            opt.InstanceName = configuration["Redis:InstanceName"];
+        });
 
         services.AddAutoMapper(cfg =>
         {

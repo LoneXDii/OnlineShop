@@ -16,8 +16,10 @@ internal class SetItemQuantityInCartRequestHandler(ITemporaryStorageService temp
             throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }
 
-        var cart = temporaryStorage.GetCart();
+        var cart = await temporaryStorage.GetCartAsync();
+
         cart[product.Id] = product;
-        temporaryStorage.SaveCart(cart);
+
+        await temporaryStorage.SaveCartAsync(cart);
     }
 }

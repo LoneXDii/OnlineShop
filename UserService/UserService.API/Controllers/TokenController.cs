@@ -4,7 +4,7 @@ using UserService.BLL.UseCases.AuthUseCases.RefreshAccessTokenUseCase;
 
 namespace UserService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/tokens")]
 [ApiController]
 public class TokenController : ControllerBase
 {
@@ -16,8 +16,8 @@ public class TokenController : ControllerBase
     }
 
     [HttpGet]
-    [Route("refresh/token={refreshToken}")]
-    public async Task<ActionResult<string>> RefreshAccessToken(string refreshToken)
+    [Route("refresh")]
+    public async Task<ActionResult<string>> RefreshAccessToken([FromQuery] string refreshToken)
     {
         var token = await _mediator.Send(new RefreshAccessTokenRequest(refreshToken));
 
