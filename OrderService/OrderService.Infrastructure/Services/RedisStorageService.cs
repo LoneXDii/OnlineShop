@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 using System.Text.Json;
@@ -20,20 +19,8 @@ internal class RedisStorageService : ITemporaryStorageService
  
     public async Task<Dictionary<int, ProductEntity>> GetCartAsync(CancellationToken cancellationToken = default)
     {
-        var cartId = _httpContext.User.FindFirst("Id")?.Value ?? _httpContext.Request.Cookies["CartId"];
-
-        if(cartId is null)
-        {
-            cartId = Guid.NewGuid().ToString();
-            _httpContext.Response.Cookies.Append("CartId", cartId, new CookieOptions
-            {
-                Expires = DateTimeOffset.UtcNow.AddDays(30), 
-                HttpOnly = true, 
-                Secure = true, 
-            });
-        }
-
         var userId = _httpContext.User.FindFirst("Id")?.Value;
+        var cartId = GetCartId();
 
         if (userId is not null)
         {
@@ -70,6 +57,26 @@ internal class RedisStorageService : ITemporaryStorageService
 
     public async Task SaveCartAsync(Dictionary<int, ProductEntity> cart, CancellationToken cancellationToken = default)
     {
+        var userId = _httpContext.User.FindFirst("Id")?.Value;
+        var cartId = GetCartId();
+
+        var cartJson = JsonSerializer.Serialize(cart);
+
+        var options = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+        };
+
+        if (userId is not null)
+        {
+            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
+        }
+
+        await _cache.SetStringAsync(cartId, cartJson, options, cancellationToken);
+    }
+
+    private string GetCartId()
+    {
         var cartId = _httpContext.User.FindFirst("Id")?.Value ?? _httpContext.Request.Cookies["CartId"];
 
         if (cartId is null)
@@ -83,18 +90,6 @@ internal class RedisStorageService : ITemporaryStorageService
             });
         }
 
-        var cartJson = JsonSerializer.Serialize(cart);
-
-        var options = new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
-        };
-
-        if (_httpContext.User.FindFirst("Id")?.Value is not null)
-        {
-            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
-        }
-
-        await _cache.SetStringAsync(cartId, cartJson, options, cancellationToken);
+        return cartId;
     }
 }
