@@ -19,7 +19,7 @@ public class DiscountsController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> AddDiscount([FromBody] AddDiscountRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
@@ -27,9 +27,10 @@ public class DiscountsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete]
-    //[Authorize(Policy = "admin")]
-    public async Task<IActionResult> DeleteDiscount([FromQuery] DeleteDiscountRequest request, CancellationToken cancellationToken)
+
+    [HttpDelete("{DiscountId:min(1)}")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteDiscount([FromRoute] DeleteDiscountRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
