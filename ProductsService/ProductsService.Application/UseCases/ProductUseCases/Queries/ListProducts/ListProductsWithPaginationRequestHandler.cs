@@ -16,9 +16,7 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
 {
     public async Task<PaginatedListModel<ResponseProductDTO>> Handle(ListProductsWithPaginationRequest request, CancellationToken cancellationToken)
     {
-        var categorySpecification = new ProductCategorySpecification(request.CategoryId);
-
-        var specification = categorySpecification
+        var specification = (new ProductCategorySpecification(request.CategoryId))
             .And(new ProductMinPriceSpecification(request.MinPrice))
             .And(new ProductMaxPriceSpecification(request.MaxPrice))
             .And(new ProductAttributesSpecification(request.ValuesIds));
