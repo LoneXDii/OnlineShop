@@ -4,9 +4,9 @@
   },
   "Routes": [
     {
-      "UpstreamPathTemplate": "/account/{everything}",
+      "UpstreamPathTemplate": "/accounts/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
-      "DownstreamPathTemplate": "/api/account/{everything}",
+      "DownstreamPathTemplate": "/api/accounts/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -17,9 +17,9 @@
       "SwaggerKey": "users"
     },
     {
-      "UpstreamPathTemplate": "/token/{everything}",
+      "UpstreamPathTemplate": "/tokens/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
-      "DownstreamPathTemplate": "/api/token/{everything}",
+      "DownstreamPathTemplate": "/api/tokens/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -30,7 +30,7 @@
       "SwaggerKey": "users"
     },
     {
-      "UpstreamPathTemplate": "/user/{everything}",
+      "UpstreamPathTemplate": "/users/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/users/{everything}",
       "DownstreamScheme": "https",
@@ -149,9 +149,9 @@
       "SwaggerKey": "orders"
     },
     {
-      "UpstreamPathTemplate": "/users/{everything}",
-      "UpstreamHttpMethod": [ "GET"],
-      "DownstreamPathTemplate": "/api/users/{everything}",
+      "UpstreamPathTemplate": "/users/{userId}/{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/{userId}/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -165,9 +165,9 @@
       "SwaggerKey": "orders"
     },
     {
-      "UpstreamPathTemplate": "/webhook/{everything}",
+      "UpstreamPathTemplate": "/webhooks/{everything}",
       "UpstreamHttpMethod": [ "POST" ],
-      "DownstreamPathTemplate": "/api/webhook/{everything}",
+      "DownstreamPathTemplate": "/api/webhooks/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

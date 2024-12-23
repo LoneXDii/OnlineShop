@@ -38,6 +38,7 @@ internal class CacheService : ICacheService
 
         return email;
     }
+
     public async Task<string> SetResetPasswordCodeAsync(string email)
     {
         var random = new Random();
