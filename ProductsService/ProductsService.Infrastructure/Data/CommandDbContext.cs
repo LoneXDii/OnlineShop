@@ -15,7 +15,9 @@ internal class CommandDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryDataConfiguration());
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
-        modelBuilder.ApplyConfiguration(new DiscountConfiguration());
+        modelBuilder.ApplyConfiguration(new ProductDataConfiguration());
+        modelBuilder.ApplyConfiguration(new DiscountDataConfiguration());
     }
 }
