@@ -37,11 +37,13 @@ app.MapControllers();
 
 app.UseHangfireDashboard("/dashboard");
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//Comment this because it causes conflicts with new db schema from feature/add-kafka 
+//(stripeId field were added to AppUser)
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    await dbContext.Database.MigrateAsync();
-}
+//    await dbContext.Database.MigrateAsync();
+//}
 
 app.Run();
