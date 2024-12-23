@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProductsService.Domain.Entities;
-using System.Reflection.Emit;
 
 namespace ProductsService.Infrastructure.Data.Configuration;
 
-internal class DiscountConfiguration : IEntityTypeConfiguration<Discount>
+internal class DiscountDataConfiguration : IEntityTypeConfiguration<Discount>
 {
     public void Configure(EntityTypeBuilder<Discount> builder)
     {
