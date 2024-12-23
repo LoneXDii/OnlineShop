@@ -62,9 +62,7 @@ internal class RedisStorageService : ITemporaryStorageService
 
         var options = new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = userId is null 
-            ? TimeSpan.FromMinutes(30) 
-            : TimeSpan.FromDays(1)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
         };
 
         await _cache.SetStringAsync(GetCartId(userId), cartJson, options, cancellationToken);

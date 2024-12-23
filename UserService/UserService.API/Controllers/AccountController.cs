@@ -11,7 +11,7 @@ using UserService.DAL.Models;
 
 namespace UserService.API.Controllers;
 
-[Route("api/account/")]
+[Route("api/accounts/")]
 [ApiController]
 public class AccountController : ControllerBase
 {
