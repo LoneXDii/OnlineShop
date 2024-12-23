@@ -6,4 +6,6 @@ public interface IEmailService
     Task SendEmailConfirmationSucceededNotificationAsync(string email);
     Task SendPasswordResetCodeAsync(string email, string code);
     Task SendPasswordResetSucceededNotificationAsync(string email);
+    Task SendUnconfirmedAccountDeletedNotificationAsync(string email);
+    Task SendEmailNotChangedNotificationAsync(string oldEmail, string newEmail);
 }

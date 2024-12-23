@@ -12,7 +12,7 @@ using UserService.DAL.Database;
 namespace UserService.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241115200638_DataSeeder")]
+    [Migration("20241213151819_DataSeeder")]
     partial class DataSeeder
     {
         /// <inheritdoc />
@@ -257,7 +257,7 @@ namespace UserService.DAL.Migrations
                         {
                             Id = "67a62042-fd32-44c2-a4f0-258031063013",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fe36f84a-4a61-4171-abf6-9e141d12c4f5",
+                            ConcurrencyStamp = "5343564c-b4e3-42e6-a69c-b595dedb9710",
                             Email = "admin1@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -275,7 +275,7 @@ namespace UserService.DAL.Migrations
                         {
                             Id = "e925574a-ad03-4546-a23f-e0a16b1b1ecc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d86970e-b4f6-4564-aace-ea6e77fa2c80",
+                            ConcurrencyStamp = "c9ad2f78-5c34-4899-b0fe-794b2f8e4a19",
                             Email = "client1@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Customer",

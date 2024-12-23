@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Hangfire;
 using ProductsService.API;
 using ProductsService.API.Middleware;
 using ProductsService.Application;
+using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Infrastructure;
-using System.Text;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,5 +37,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard("/dashboard");
+
+using (var scope = app.Services.CreateScope())
+{
+    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+    await unitOfWork.EnableMigrationsAsync();
+}
 
 app.Run();

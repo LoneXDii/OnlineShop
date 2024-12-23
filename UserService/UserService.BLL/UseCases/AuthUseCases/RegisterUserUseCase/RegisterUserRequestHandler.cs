@@ -7,6 +7,7 @@ using UserService.BLL.Exceptions;
 using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
+using Hangfire;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
@@ -30,7 +31,9 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         {
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
-            await emailService.SendEmailConfirmationCodeAsync(user.Email, code);
+            BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
+
+            BackgroundJob.Schedule(() => DeleteUnconfirmedUser(user.Email), TimeSpan.FromMinutes(15));
         }
         else
         {
@@ -38,5 +41,24 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 
             throw new BadRequestException($"Cannot register user: {errors}");
         }
+    }
+
+    public async Task DeleteUnconfirmedUser(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+
+        if (user.EmailConfirmed)
+        {
+            return;
+        }
+
+        if (user.AvatarUrl is not null)
+        {
+            await blobService.DeleteAsync(user.AvatarUrl);
+        }
+
+        await userManager.DeleteAsync(user);
+
+        await emailService.SendUnconfirmedAccountDeletedNotificationAsync(email);
     }
 }

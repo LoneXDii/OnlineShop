@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Hangfire;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Entities;
@@ -26,6 +27,6 @@ internal class ResendEmailConfirmationRequestHandler(UserManager<AppUser> userMa
 
         var code = await cache.SetEmailConfirmationCodeAsync(request.Email);
 
-        await emailService.SendEmailConfirmationCodeAsync(request.Email, code);
+        BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(request.Email, code));
     }
 }

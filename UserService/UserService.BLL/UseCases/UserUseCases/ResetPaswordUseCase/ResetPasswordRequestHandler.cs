@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Hangfire;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Entities;
@@ -32,7 +33,7 @@ internal class ResetPasswordRequestHandler(UserManager<AppUser> userManager, ICa
 
         await userManager.AddPasswordAsync(user, request.Password);
 
-        await emailService.SendPasswordResetSucceededNotificationAsync(email);
+        BackgroundJob.Enqueue(() => emailService.SendPasswordResetSucceededNotificationAsync(email));
 
         await tokenService.InvalidateRefreshTokenAsync(user);
     }
