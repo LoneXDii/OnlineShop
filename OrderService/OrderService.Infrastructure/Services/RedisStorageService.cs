@@ -71,23 +71,27 @@ internal class RedisStorageService : ITemporaryStorageService
     {
         var oldCartId = _httpContext.Request.Cookies["CartId"];
 
-        if (oldCartId is not null)
+        if (oldCartId is null)
         {
-            var oldCart = await _cache.GetStringAsync(oldCartId, cancellationToken);
-
-            _httpContext.Response.Cookies.Delete("CartId");
-
-            if (oldCart is not null)
-            {
-                await _cache.RemoveAsync(oldCartId, cancellationToken);
-
-                var options = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
-                };
-
-                await _cache.SetStringAsync(userId, oldCart, options, cancellationToken);
-            }
+            return;
         }
+
+        var oldCart = await _cache.GetStringAsync(oldCartId, cancellationToken);
+
+        _httpContext.Response.Cookies.Delete("CartId");
+
+        if (oldCart is null)
+        {
+            return;
+        }
+
+        await _cache.RemoveAsync(oldCartId, cancellationToken);
+
+        var options = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+        };
+
+        await _cache.SetStringAsync(userId, oldCart, options, cancellationToken);
     }
 }
