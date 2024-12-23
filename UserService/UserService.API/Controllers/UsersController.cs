@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.BLL.DTO;
 using UserService.BLL.Models;
+using UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
+using UserService.BLL.UseCases.UserUseCases.AskForResetPasswordUseCase;
 using UserService.BLL.UseCases.UserUseCases.GetUserInfoUseCase;
 using UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 using UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
@@ -11,7 +13,7 @@ using UserService.BLL.UseCases.UserUseCases.UpdateUserUseCase;
 
 namespace UserService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/users")]
 [ApiController]
 public class UsersController : ControllerBase
 {
@@ -23,7 +25,6 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    [Route("update")]
     [Authorize]
     public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDTO userDTO)
     {
@@ -34,8 +35,7 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
-    [HttpPost]
-    [Route("update/email")]
+    [HttpPut("email")]
     [Authorize]
     public async Task<IActionResult> UpdateEmail([FromBody] EmailDTO newEmail)
     {
@@ -46,8 +46,7 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
-    [HttpPost]
-    [Route("update/password")]
+    [HttpPut("password")]
     [Authorize]
     public async Task<ActionResult<string>> UpdatePassword([FromBody] UpdatePasswordDTO updatePasswordDTO)
     {
@@ -67,8 +66,7 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    [HttpGet]
-    [Route("info")]
+    [HttpGet("info")]
     [Authorize]
     public async Task<ActionResult<UserInfoDTO>> GetUserInfo()
     {
@@ -79,13 +77,31 @@ public class UsersController : ControllerBase
         return user;
     }
 
-    [HttpGet]
-    [Route("info/id")]
+
+    [HttpGet("{userId:regex(^[[a-fA-F0-9]]{{24}}$)}/info")]
     [Authorize(Policy = "admin")]
-    public async Task<ActionResult<UserInfoDTO>> GetUserInfo([FromQuery] string userId)
+    public async Task<ActionResult<UserInfoDTO>> GetUserInfo([FromRoute] string userId)
     {
         var user = await _mediator.Send(new GetUserInfoRequest(userId));
 
         return user;
+    }
+
+    [HttpGet]
+    [Route("password/resetting")]
+    public async Task<IActionResult> AskForResetPassword([FromQuery] AskForResetPasswordRequest request)
+    {
+        await _mediator.Send(request);
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("password/resetting")]
+    public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        await _mediator.Send(request);
+
+        return Ok();
     }
 }

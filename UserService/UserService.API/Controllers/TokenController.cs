@@ -4,7 +4,7 @@ using UserService.BLL.UseCases.AuthUseCases.RefreshAccessTokenUseCase;
 
 namespace UserService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/tokens")]
 [ApiController]
 public class TokenController : ControllerBase
 {

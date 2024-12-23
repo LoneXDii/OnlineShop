@@ -10,7 +10,6 @@ using OrderService.Infrastructure.Mapping;
 using AutoMapper.Extensions.ExpressionMapping;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
-using Stripe.Tax;
 using OrderService.Infrastructure.Models;
 
 namespace OrderService.Infrastructure;
