@@ -11,7 +11,7 @@ using UserService.DAL.Models;
 
 namespace UserService.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/account/")]
 [ApiController]
 public class AccountController : ControllerBase
 {
@@ -22,8 +22,7 @@ public class AccountController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
-    [Route("register")]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromForm] RegisterDTO registerModel)
     {
         await _mediator.Send(new RegisterUserRequest(registerModel));
@@ -31,8 +30,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [HttpPost]
-    [Route("login")]
+    [HttpPost("login")]
     public async Task<ActionResult<TokensDTO>> Login([FromBody] LoginDTO loginModel)
     {
         var tokens = await _mediator.Send(new LoginUserRequest(loginModel));
@@ -40,8 +38,7 @@ public class AccountController : ControllerBase
         return Ok(tokens);
     }
 
-    [HttpGet]
-    [Route("confirm")]
+    [HttpGet("confirmation")]
     public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string code)
     {
         await _mediator.Send(new EmailConfirmationRequest(email, code));
@@ -49,8 +46,7 @@ public class AccountController : ControllerBase
         return Ok("Email confirmed");
     }
 
-    [HttpGet]
-    [Route("confirm/resend")]
+    [HttpGet("confirmation/resend")]
     public async Task<IActionResult> ResendEmailConfirmation([FromQuery] ResendEmailConfirmationCodeRequest request)
     {
         await _mediator.Send(request);
@@ -58,8 +54,7 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
-    [Route("logout")]
+    [HttpGet("logout")]
     [Authorize]
     public async Task<IActionResult> Logout()
     {
