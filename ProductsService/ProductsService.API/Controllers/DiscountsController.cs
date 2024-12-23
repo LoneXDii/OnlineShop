@@ -27,9 +27,9 @@ public class DiscountsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{DiscountId:min(1)}")]
     [Authorize(Policy = "admin")]
-    public async Task<IActionResult> DeleteDiscount([FromQuery] DeleteDiscountRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteDiscount([FromRoute] DeleteDiscountRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
 
