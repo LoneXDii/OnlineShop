@@ -47,16 +47,18 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
     {
         var user = await userManager.FindByEmailAsync(email);
 
-        if (!user.EmailConfirmed)
+        if (user.EmailConfirmed)
         {
-            if (user.AvatarUrl is not null)
-            {
-                await blobService.DeleteAsync(user.AvatarUrl);
-            }
-
-            await userManager.DeleteAsync(user);
-
-            await emailService.SendUnconfirmedAccountDeletedNotificationAsync(email);
+            return;
         }
+
+        if (user.AvatarUrl is not null)
+        {
+            await blobService.DeleteAsync(user.AvatarUrl);
+        }
+
+        await userManager.DeleteAsync(user);
+
+        await emailService.SendUnconfirmedAccountDeletedNotificationAsync(email);
     }
 }
