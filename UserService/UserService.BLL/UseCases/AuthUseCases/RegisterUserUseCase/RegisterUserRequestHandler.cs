@@ -12,15 +12,15 @@ using UserService.DAL.Services.MessageBrocker.ProducerService;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
-internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
-    IEmailService emailService, ICacheService cacheService, IProducerService producerService) 
+internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService,
+    IEmailService emailService, ICacheService cacheService, IProducerService producerService)
     : IRequestHandler<RegisterUserRequest>
 {
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         var user = mapper.Map<AppUser>(request.RegisterModel);
 
-        if(request.RegisterModel.Avatar is not null)
+        if (request.RegisterModel.Avatar is not null)
         {
             using Stream stream = request.RegisterModel.Avatar.OpenReadStream();
 
@@ -51,21 +51,18 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
     {
         var user = await userManager.FindByEmailAsync(email);
 
-        if (user is null)
+        if (user is null || user.EmailConfirmed)
         {
             return;
         }
 
-        if (!user.EmailConfirmed)
+        if (user.AvatarUrl is not null)
         {
-            if (user.AvatarUrl is not null)
-            {
-                await blobService.DeleteAsync(user.AvatarUrl);
-            }
-
-            await userManager.DeleteAsync(user);
-
-            await emailService.SendUnconfirmedAccountDeletedNotificationAsync(email);
+            await blobService.DeleteAsync(user.AvatarUrl);
         }
+
+        await userManager.DeleteAsync(user);
+
+        await emailService.SendUnconfirmedAccountDeletedNotificationAsync(email);
     }
 }

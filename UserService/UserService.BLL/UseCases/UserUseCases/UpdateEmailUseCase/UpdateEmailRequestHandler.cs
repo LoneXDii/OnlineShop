@@ -45,14 +45,16 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
     {
         var user = await userManager.FindByEmailAsync(newEmail);
 
-        if (!user.EmailConfirmed)
+        if (user.EmailConfirmed)
         {
-            user.Email = oldEmail;
-            user.EmailConfirmed = true;
-
-            await userManager.UpdateAsync(user);
-
-            await emailService.SendEmailNotChangedNotificationAsync(oldEmail, newEmail);
+            return;
         }
+
+        user.Email = oldEmail;
+        user.EmailConfirmed = true;
+
+        await userManager.UpdateAsync(user);
+
+        await emailService.SendEmailNotChangedNotificationAsync(oldEmail, newEmail);
     }
 }
