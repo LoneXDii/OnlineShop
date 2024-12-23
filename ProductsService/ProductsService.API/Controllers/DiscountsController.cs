@@ -19,7 +19,7 @@ public class DiscountsController : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> AddDiscount([FromBody] AddDiscountRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
