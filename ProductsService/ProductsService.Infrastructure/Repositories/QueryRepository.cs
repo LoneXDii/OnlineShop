@@ -3,6 +3,7 @@ using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Abstractions.Specifications;
 using ProductsService.Domain.Entities.Abstractions;
 using ProductsService.Infrastructure.Data;
+using ProductsService.Infrastructure.Extensions;
 using System.Linq.Expressions;
 
 namespace ProductsService.Infrastructure.Repositories;
@@ -22,11 +23,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         params Expression<Func<T, object>>[] includedProperties)
     {
         var query = _entities.AsQueryable();
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
+        query = query.Include(includedProperties);
 
         return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
@@ -35,11 +32,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
         params Expression<Func<T, object>>[] includedProperties)
     {
         var query = _entities.AsQueryable();
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
+        query = query.Include(includedProperties);
 
         return await query.ToListAsync(cancellationToken);
     }
@@ -49,11 +42,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     {
         var query = _entities.AsQueryable();
         query = query.Where(specification.ToExpression());
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
+        query = query.Include(includedProperties);
 
         return await query.ToListAsync(cancellationToken);
     }
@@ -64,11 +53,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     {
         var query = _entities.AsQueryable();
         query = query.Where(specification.ToExpression());
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
+        query = query.Include(includedProperties);
 
         return await query.OrderBy(e => e.Id)
             .Skip((pageNo - 1) * pageSize)
@@ -81,11 +66,7 @@ internal class QueryRepository<T> : IQueryRepository<T> where T : class, IEntity
     {
         var query = _entities.AsQueryable();
         query = query.Where(specification.ToExpression());
-
-        foreach (var property in includedProperties)
-        {
-            query = query.Include(property);
-        }
+        query = query.Include(includedProperties);
 
         return await query.FirstOrDefaultAsync(cancellationToken); ;
     }
