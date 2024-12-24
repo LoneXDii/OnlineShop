@@ -12,6 +12,9 @@
     <PackageReference Include="Microsoft.OpenApi" Version="1.6.22" />
     <PackageReference Include="MMLib.SwaggerForOcelot" Version="8.3.2" />
     <PackageReference Include="Ocelot" Version="23.4.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
   </ItemGroup>
 

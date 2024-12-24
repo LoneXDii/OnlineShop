@@ -15,6 +15,8 @@ builder.Services.ConfigureAuthentication(builder.Configuration);
 
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
 
+builder.Host.UseLogging();
+
 var app = builder.Build();
 
 app.UseSwaggerForOcelotUI(options =>
