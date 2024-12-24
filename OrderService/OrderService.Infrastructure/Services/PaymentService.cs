@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OrderService.Domain.Abstractions.Payments;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;
@@ -14,14 +15,16 @@ internal class PaymentService : IPaymentService
     private readonly ProductService _productService;
     private readonly PriceService _priceService;
     private readonly CouponService _couponService;
+    private readonly ILogger<PaymentService> _logger;
 
-    public PaymentService(IOptions<StripeSettings> stripeSettings,
+    public PaymentService(IOptions<StripeSettings> stripeSettings, ILogger<PaymentService> logger,
         CustomerService customerService,
         ProductService productService,
         PriceService priceService,
         CouponService couponService)
     {
         _stripeSettings = stripeSettings.Value;
+        _logger = logger;
         _customerService = customerService;
         _productService = productService;
         _priceService = priceService;
@@ -32,6 +35,8 @@ internal class PaymentService : IPaymentService
 
     public async Task<string> PayAsync(OrderEntity order, string customerId)
     {
+        _logger.LogInformation($"Trying to create payment session for order with id: {order.Id} for customer: {customerId}");
+
         var items = new List<SessionLineItemOptions>();
         double discount = 0;
 
@@ -82,6 +87,8 @@ internal class PaymentService : IPaymentService
 
         var session = await sessionService.CreateAsync(options);
 
+        _logger.LogInformation($"Payment session for order with id: {order.Id} for customer: {customerId} successfully created");
+
         return session.Url;
     }
 
@@ -120,14 +127,20 @@ internal class PaymentService : IPaymentService
 
     public string? GetSuccessPaymentOrderId(string eventJson, string signature)
     {
+        _logger.LogInformation($"Checking is payment successfull");
+
         var stripeEvent = EventUtility.ConstructEvent(eventJson, signature, _stripeSettings.Secret);
         
         if(stripeEvent.Type is not EventTypes.CheckoutSessionCompleted)
         {
+            _logger.LogError($"Wrong payment session parameters");
+
             return null;
         }
 
         var session = stripeEvent.Data.Object as Session;
+
+        _logger.LogInformation($"Order with id: {session?.Metadata["order_id"]} payed successfully");
 
         return session?.Metadata["order_id"];
     }

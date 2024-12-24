@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using OrderService.Application.DTO;
 using OrderService.Application.Exceptions;
 using OrderService.Domain.Abstractions.Data;
@@ -8,11 +9,14 @@ using OrderService.Domain.Entities;
 namespace OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 
 internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStorage, IProductService productService, 
-    IOrderRepository orderRepository, IMapper mapper, IProducerService producerService)
+    IOrderRepository orderRepository, IMapper mapper, IProducerService producerService,
+    ILogger<CreateOrderRequestHandler> logger)
     : IRequestHandler<CreateOrderRequest>
 {
     public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
     {
+        logger.LogInformation($"User with id: {request.userId} trying to create an order");
+
         var cart = await temporaryStorage.GetCartAsync(cancellationToken);
 
         var cartDto = mapper.Map<CartDTO>(cart);
@@ -21,6 +25,8 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
 
         if (!products.Any()) 
         {
+            logger.LogError($"Cart of user with id: {request.userId} is empty");
+
             throw new BadRequestException("Your cart is empty");
         }
 
@@ -45,5 +51,7 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
         await temporaryStorage.SaveCartAsync(cart, cancellationToken);
 
         await producerService.ProduceOrderActionsAsync(order, cancellationToken);
+
+        logger.LogInformation($"User with id: {request.userId} successfully created an order");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using OrderService.Infrastructure.Models;
@@ -12,15 +13,20 @@ internal class ProductCreationConsumer : BackgroundService
 {
     private readonly ConsumerConfig _consumerConfig;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly ILogger<ProductCreationConsumer> _logger;
 
-    public ProductCreationConsumer(ConsumerConfig consumerConfig, IServiceScopeFactory serviceScopeFactory)
+    public ProductCreationConsumer(ConsumerConfig consumerConfig, IServiceScopeFactory serviceScopeFactory,
+        ILogger<ProductCreationConsumer> logger)
     {
         _consumerConfig = consumerConfig;
         _serviceScopeFactory = serviceScopeFactory;
+        _logger = logger;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Poduct creation consumer started");
+
         Task.Run(() => ConsumeMessages(stoppingToken));
 
         return Task.CompletedTask;
@@ -48,9 +54,13 @@ internal class ProductCreationConsumer : BackgroundService
                 continue;
             }
 
-            var priceId = await paymentService.CreateProductAsync(consumeResult.Value.Name, consumeResult.Value.Price);
+            var priceId = await paymentService.CreateProductAsync(consumeResult.Message.Value.Name, consumeResult.Message.Value.Price);
 
-            await producerService.ProduceProductPriceIdAsync(consumeResult.Value.Id, priceId, cancellationToken);
+            _logger.LogInformation($"Consumed product: {consumeResult.Message.Value.Name}, generated priceId: {priceId}");
+
+            await producerService.ProduceProductPriceIdAsync(consumeResult.Message.Value.Id, priceId, cancellationToken);
         }
+
+        _logger.LogInformation("Poduct creation consumer stopped");
     }
 }
