@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="UseCases\DiscountUseCases\Commands\AddDiscount\AddDiscountRequestHandler.cs~RF1ac06e3e.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProductsService.Domain\ProductsService.Domain.csproj" />
   </ItemGroup>
 
