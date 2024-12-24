@@ -19,7 +19,7 @@ internal class AddProductToCartRequestHandler(ITemporaryStorageService temporary
 
         if (product is null)
         {
-            logger.LogError($"Product with id: {request.product.Id} not exists or it's quantity is to low for {request.product.Quantity}");
+            logger.LogError($"Product with id: {request.product.Id} not exists or it's quantity is to low for {GetProductQuaintity(request, cart)}");
 
             throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }

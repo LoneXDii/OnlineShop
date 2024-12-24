@@ -16,10 +16,12 @@ namespace SupportService.API.Hubs;
 public class ChatHub : Hub
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<ChatHub> _logger;
 
-    public ChatHub(IMediator mediator)
+    public ChatHub(IMediator mediator, ILogger<ChatHub> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
     
     public override async Task OnConnectedAsync()
@@ -27,12 +29,18 @@ public class ChatHub : Hub
         var role = Context.User.FindFirst(ClaimTypes.Role)?.Value;
         var userId = Context.User.FindFirst("Id")?.Value;
 
+        _logger.LogInformation($"User with id: {userId} connected to hub");
+
         if (role == "admin")
         {
+            _logger.LogInformation($"User with id: {userId} added to group admin");
+
             await Groups.AddToGroupAsync(Context.ConnectionId, "admin");
         }
         else
         {
+            _logger.LogInformation($"User with id: {userId} added to group {userId}");
+
             await Groups.AddToGroupAsync(Context.ConnectionId, userId);
         }
 
