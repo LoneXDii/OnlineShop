@@ -1,5 +1,5 @@
 using Hangfire;
-using ProductsService.API;
+using ProductsService.API.Configuration;
 using ProductsService.API.Interceptors;
 using ProductsService.API.Middleware;
 using ProductsService.API.Services;
@@ -7,11 +7,9 @@ using ProductsService.Application;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Infrastructure;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,8 +25,11 @@ builder.Services.AddInfrastructure(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddAuthentication(builder.Configuration);
 
+builder.Host.UseLogging();
+
 var app = builder.Build();
 
+app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.

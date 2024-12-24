@@ -2,7 +2,7 @@
 using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
 
-namespace ProductsService.Application.UseCases.ProductUseCases.Queries.ReturnProducts;
+namespace ProductsService.Application.UseCases.ProductUseCases.Commands.ReturnProducts;
 
 internal class ReturnProductsRequestHandler(IUnitOfWork unitOfWork)
     : IRequestHandler<ReturnProductsRequest>

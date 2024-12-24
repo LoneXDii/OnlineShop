@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using ProductsService.Application.Exceptions;
 using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace ProductsService.Application.UseCases.ProductUseCases.Queries.TakeProducts;
 
-internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork)
+internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork, ILogger<TakeProductsRequestHandler> logger)
     : IRequestHandler<TakeProductsRequest, IEnumerable<Product>>
 {
     public async Task<IEnumerable<Product>> Handle(TakeProductsRequest request, CancellationToken cancellationToken)
@@ -48,6 +49,8 @@ internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork)
 
         if (errors.Length > 0)
         {
+            logger.LogError($"Cannot take products, errors: {errors.ToString()}");
+
             throw new BadRequestException(errors.ToString());
         }
 

@@ -58,6 +58,6 @@ internal class OrderActionConsumer : BackgroundService
             await emailService.SendOrderStatusNotificationAsync(consumeResult.Message.Value);
         }
 
-        _logger.LogInformation("Order action consumer finished");
+        _logger.LogInformation("Order action consumer stopped");
     }
 }

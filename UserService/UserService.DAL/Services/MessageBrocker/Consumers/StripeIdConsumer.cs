@@ -69,6 +69,6 @@ internal class StripeIdConsumer : BackgroundService
             await userManager.UpdateAsync(user);
         }
 
-        _logger.LogInformation("Stripe id consumer finished");
+        _logger.LogInformation("Stripe id consumer stopped");
     }
 }
