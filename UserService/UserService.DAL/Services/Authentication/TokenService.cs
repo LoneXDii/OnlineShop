@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,11 +14,13 @@ internal class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
     private readonly UserManager<AppUser> _userManager;
+    private readonly ILogger<TokenService> _logger;
 
-    public TokenService(IConfiguration configuration, UserManager<AppUser> userManager)
+    public TokenService(IConfiguration configuration, UserManager<AppUser> userManager, ILogger<TokenService> logger)
     {
         _configuration = configuration;
         _userManager = userManager;
+        _logger = logger;
     }
 
     public async Task<TokensDTO> GetTokensAsync(AppUser user)
@@ -35,10 +38,14 @@ internal class TokenService : ITokenService
     {
         var user = _userManager.Users.FirstOrDefault(u => u.RefreshTokenValue == refreshToken);
 
-        if(user is null || user?.RefreshTokenExpiresAt < DateTime.Now)
+        if(user is null || user.RefreshTokenExpiresAt < DateTime.Now)
         {
+            _logger.LogError($"Cannot refresh access token, user does not exists or refresh token is expired");
+
             return null;
         }
+
+        _logger.LogInformation($"Refresing access token for user: {user.Id}");
 
         var token = await GetAccessTokenAsync(user);
 
@@ -47,6 +54,8 @@ internal class TokenService : ITokenService
 
     public async Task InvalidateRefreshTokenAsync(AppUser user)
     {
+        _logger.LogInformation($"Invalidating refresh token for user: {user.Id}");
+
         user.RefreshTokenValue = null;
 
         await _userManager.UpdateAsync(user);
@@ -54,6 +63,8 @@ internal class TokenService : ITokenService
 
     public async Task<string> GetRefreshTokenAsync(AppUser user)
     {
+        _logger.LogInformation($"Creating refresh token for user: {user.Id}");
+
         user.RefreshTokenValue = Guid.NewGuid().ToString();
         user.RefreshTokenExpiresAt = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JWT:RefreshExpireDays"]));
 
@@ -64,6 +75,8 @@ internal class TokenService : ITokenService
 
     private async Task<string> GetAccessTokenAsync(AppUser user)
     {
+        _logger.LogInformation($"Creating access token for user: {user.Id}");
+
         var claims = new List<Claim>
         {
              new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

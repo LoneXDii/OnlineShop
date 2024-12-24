@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs;
 using UserService.DAL.Models;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.DAL.Services.BlobStorage;
 
@@ -9,11 +10,13 @@ internal class BlobService : IBlobService
 {
     private readonly BlobServiceClient _blobServiceClient;
     private readonly BlobServiceOptions _containerOptions;
+    private readonly ILogger<BlobService> _logger;
 
-    public BlobService(BlobServiceClient blobServiceClient, IOptions<BlobServiceOptions> containerOptions)
+    public BlobService(BlobServiceClient blobServiceClient, IOptions<BlobServiceOptions> containerOptions, ILogger<BlobService> logger)
     {
         _blobServiceClient = blobServiceClient;
         _containerOptions = containerOptions.Value;
+        _logger = logger;
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerOptions.Container);
         containerClient.CreateIfNotExists(PublicAccessType.Blob);
     }
@@ -30,11 +33,15 @@ internal class BlobService : IBlobService
 
         var fileUrl = $"{_containerOptions.BaseUrl}/{_containerOptions.Container}/{fileId}";
 
+        _logger.LogInformation($"Uploading image: {fileUrl} to blob storage");
+
         return fileUrl;
     }
 
     public async Task DeleteAsync(string fileUrl)
     {
+        _logger.LogInformation($"Deleting image: {fileUrl} from blob storage");
+
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerOptions.Container);
 
         var fileId = fileUrl.Split("/").Last();

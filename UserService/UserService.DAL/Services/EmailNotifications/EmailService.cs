@@ -1,4 +1,5 @@
-﻿using SendGrid;
+﻿using Microsoft.Extensions.Logging;
+using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Text;
 using UserService.DAL.Models;
@@ -9,15 +10,19 @@ internal class EmailService : IEmailService
 {
     private readonly ISendGridClient _sendGridClient;
     private readonly EmailAddress mailSender;
+    private readonly ILogger<EmailService> _logger;
 
-    public EmailService(ISendGridClient sendGridClient)
+    public EmailService(ISendGridClient sendGridClient, ILogger<EmailService> logger)
     {
         _sendGridClient = sendGridClient;
+        _logger = logger;
         mailSender = new EmailAddress("myshopemailsender@gmail.com", "Notification");
     }
 
     public async Task SendEmailConfirmationCodeAsync(string email, string code)
     {
+        _logger.LogInformation($"Sending confirmation code to email: {email}");
+
         var subject = "Email verification";
         var plainTextContent = $"Your email confirmation code is: {code}";
         var htmlContent = $"<span>{plainTextContent}</span>";
@@ -30,6 +35,8 @@ internal class EmailService : IEmailService
 
     public async Task SendEmailConfirmationSucceededNotificationAsync(string email)
     {
+        _logger.LogInformation($"Sending successfull email verification notification to email: {email}");
+
         var subject = "Email succesfully verified!";
         var plainTextContent = $"Thank you for registration in our shop!";
         var htmlContent = $"<span>{plainTextContent}</span>";
@@ -42,6 +49,8 @@ internal class EmailService : IEmailService
 
     public async Task SendPasswordResetCodeAsync(string email, string code)
     {
+        _logger.LogInformation($"Sending password reset code to email: {email}");
+
         var subject = "Password reset";
         var plainTextContent = $"Your password reset code is: {code}";
         var htmlContent = $"<span>{plainTextContent}</span>";
@@ -54,6 +63,8 @@ internal class EmailService : IEmailService
 
     public async Task SendPasswordResetSucceededNotificationAsync(string email)
     {
+        _logger.LogInformation($"Sending successfull password resetting notification to email: {email}");
+
         var subject = "Password successfully changed!";
         var plainTextContent = $"Your password has been changed!";
         var htmlContent = $"<span>{plainTextContent}</span>";
@@ -66,6 +77,8 @@ internal class EmailService : IEmailService
 
     public async Task SendUnconfirmedAccountDeletedNotificationAsync(string email)
     {
+        _logger.LogInformation($"Sending unsuccessfull email verification notification to email: {email}");
+
         var subject = "Your account wasn't created";
         var plainTextContent = $"Your account was deleted because you didn't confirm your email";
         var htmlContent = $"<span>{plainTextContent}</span>";
@@ -78,6 +91,8 @@ internal class EmailService : IEmailService
 
     public async Task SendEmailNotChangedNotificationAsync(string oldEmail, string newEmail)
     {
+        _logger.LogInformation($"Sending unsuccessfull email change notification to oldEmail: {oldEmail} and newEmail: {newEmail}");
+
         var subject = "Your email wasn't changed";
         var plainTextContent = $"Your email wasn't changed because you didn't confirm your new email\nYour actual email is {oldEmail}";
         var htmlContent = $"<span>{plainTextContent}</span>";
@@ -94,6 +109,8 @@ internal class EmailService : IEmailService
 
     public async Task SendOrderStatusNotificationAsync(ConsumedOrder order)
     {
+        _logger.LogInformation($"Sending order status changing notification to email: {order.UserEmail} for orderId: {order.Id}");
+
         var subject = "";
 
         switch (order.OrderStatus) 

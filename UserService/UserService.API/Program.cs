@@ -1,6 +1,6 @@
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
-using UserService.API;
+using UserService.API.Configuration;
 using UserService.API.Middleware;
 using UserService.BLL;
 using UserService.DAL;
@@ -16,6 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration)
     .AddAuth(builder.Configuration);
+
+builder.Host.UseLogging();
 
 var app = builder.Build();
 
