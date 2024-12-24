@@ -29,8 +29,6 @@ internal class OrderActionConsumer : BackgroundService
 
         Task.Run(() => ConsumeMessages(stoppingToken));
 
-        _logger.LogInformation("Order action consumer finished");
-
         return Task.CompletedTask;
     }
 
@@ -59,5 +57,7 @@ internal class OrderActionConsumer : BackgroundService
 
             await emailService.SendOrderStatusNotificationAsync(consumeResult.Message.Value);
         }
+
+        _logger.LogInformation("Order action consumer finished");
     }
 }

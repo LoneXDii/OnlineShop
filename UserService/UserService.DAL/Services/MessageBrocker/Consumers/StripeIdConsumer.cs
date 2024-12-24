@@ -29,8 +29,6 @@ internal class StripeIdConsumer : BackgroundService
 
         Task.Run(() => ConsumeMessages(stoppingToken));
 
-        _logger.LogInformation("Stripe id consumer finished");
-
         return Task.CompletedTask;
     }
 
@@ -70,5 +68,7 @@ internal class StripeIdConsumer : BackgroundService
 
             await userManager.UpdateAsync(user);
         }
+
+        _logger.LogInformation("Stripe id consumer finished");
     }
 }

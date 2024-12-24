@@ -9,15 +9,19 @@ using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 using Hangfire;
 using UserService.DAL.Services.MessageBrocker.ProducerService;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
 internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService,
-    IEmailService emailService, ICacheService cacheService, IProducerService producerService)
+    IEmailService emailService, ICacheService cacheService, IProducerService producerService,
+    ILogger<RegisterUserRequestHandler> logger)
     : IRequestHandler<RegisterUserRequest>
 {
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
+        logger.LogInformation($"Trying to register new user");
+
         var user = mapper.Map<AppUser>(request.RegisterModel);
 
         if (request.RegisterModel.Avatar is not null)
@@ -31,6 +35,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 
         if (result.Succeeded)
         {
+            logger.LogInformation($"User with id: {user.Id} and email: {user.Email} successfully registred");
+
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
             BackgroundJob.Enqueue(() => producerService.ProduceUserCreationAsync(user, default));
@@ -42,6 +48,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         else
         {
             var errors = JsonSerializer.Serialize(result.Errors);
+
+            logger.LogError($"Cannot register user for email: {request.RegisterModel.Email}, errors: {errors}");
 
             throw new BadRequestException($"Cannot register user: {errors}");
         }

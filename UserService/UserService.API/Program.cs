@@ -21,6 +21,7 @@ builder.Host.UseLogging();
 
 var app = builder.Build();
 
+app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
