@@ -134,12 +134,11 @@ services:
     image: mysql:8.0.36
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
     ports:
       - "3309:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./DockerConfig/Mysql/mysql-init:/docker-entrypoint-initdb.d
     networks:
       - backend
 
