@@ -231,6 +231,9 @@ namespace UserService.DAL.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("StripeId")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -254,7 +257,7 @@ namespace UserService.DAL.Migrations
                         {
                             Id = "67a62042-fd32-44c2-a4f0-258031063013",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5343564c-b4e3-42e6-a69c-b595dedb9710",
+                            ConcurrencyStamp = "572209c6-4c8c-4a11-8c11-53754841c1b0",
                             Email = "admin1@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -265,6 +268,7 @@ namespace UserService.DAL.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAEAdaQZqBRnnJALCoMVEBzKIfyQ9gwxoKZrXtupQ7I1xmhYJyXzxID8aI/wEC8xKWpA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "EKR7O7Q57LQH7N3LP3P7MW6NPMYMGMNF",
+                            StripeId = "cus_RQULukld15o0o1",
                             TwoFactorEnabled = false,
                             UserName = "admin1@gmail.com"
                         },
@@ -272,7 +276,7 @@ namespace UserService.DAL.Migrations
                         {
                             Id = "e925574a-ad03-4546-a23f-e0a16b1b1ecc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c9ad2f78-5c34-4899-b0fe-794b2f8e4a19",
+                            ConcurrencyStamp = "33e9a341-0a1f-465b-a959-fc6231799989",
                             Email = "client1@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Customer",
@@ -283,6 +287,7 @@ namespace UserService.DAL.Migrations
                             PasswordHash = "AQAAAAIAAYagAAAAEKOnG0RxOt0J0HfVE3s644AzrV9RnvZqiaUy4AkiM7IgSP+zG5To41KpVwHM6oQzaQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "EC54SKVGI5LI43ZIJR5HB3CZHDLII2S6",
+                            StripeId = "cus_RQULrwlbuvAi6L",
                             TwoFactorEnabled = false,
                             UserName = "client1@gmail.com"
                         });

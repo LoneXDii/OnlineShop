@@ -6,6 +6,6 @@ public interface IPaymentService
 {
     Task<string> PayAsync(OrderEntity order, string customerId);
     Task<string> CreateCustomerAsync(string email, string name);
-    Task<string> CreateProductAsync(ProductEntity product);
+    Task<string> CreateProductAsync(string name, double price);
     string? GetSuccessPaymentOrderId(string eventJson, string signature);
 }

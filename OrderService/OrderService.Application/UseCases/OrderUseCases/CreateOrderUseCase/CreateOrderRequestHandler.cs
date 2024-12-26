@@ -8,7 +8,7 @@ using OrderService.Domain.Entities;
 namespace OrderService.Application.UseCases.OrderUseCases.CreateOrderUseCase;
 
 internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStorage, IProductService productService, 
-    IOrderRepository orderRepository, IMapper mapper)
+    IOrderRepository orderRepository, IMapper mapper, IProducerService producerService)
     : IRequestHandler<CreateOrderRequest>
 {
     public async Task Handle(CreateOrderRequest request, CancellationToken cancellationToken)
@@ -43,5 +43,7 @@ internal class CreateOrderRequestHandler(ITemporaryStorageService temporaryStora
         cart.Clear();
 
         await temporaryStorage.SaveCartAsync(cart, cancellationToken);
+
+        await producerService.ProduceOrderActionsAsync(order, cancellationToken);
     }
 }

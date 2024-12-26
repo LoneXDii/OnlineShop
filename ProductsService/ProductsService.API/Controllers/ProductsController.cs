@@ -90,7 +90,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{ProductId:min(1)}/attributes/{AttributeId:min(1)}")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProductAttribute([FromRoute] RequestAttributeValueDTO productAttrubute, 
         [FromBody] UpdateAttributeDTO newAttribute, CancellationToken cancellationToken)
     {

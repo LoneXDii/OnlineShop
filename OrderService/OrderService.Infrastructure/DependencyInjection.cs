@@ -13,6 +13,9 @@ using OrderService.Infrastructure.Interceptors;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using OrderService.Infrastructure.Models;
+using Confluent.Kafka;
+using OrderService.Infrastructure.Services.MessageBrocker.Consumers;
+using OrderService.Infrastructure.Services.MessageBrocker;
 
 
 namespace OrderService.Infrastructure;
@@ -24,14 +27,18 @@ public static class DependencyInjection
         services.Configure<MongoDBSettings>(options => configuration.GetSection("MongoDB").Bind(options))
             .Configure<StripeSettings>(options => configuration.GetSection("Stripe").Bind(options));
 
+        services.AddHttpContextAccessor();
+
         services.AddScoped<CustomerService>()
-            .AddScoped<Stripe.ProductService>()
-            .AddScoped<PriceService>();
+            .AddScoped<ProductService>()
+            .AddScoped<PriceService>()
+            .AddScoped<CouponService>();
 
         services.AddSingleton<IOrderRepository, OrderRepository>()
             .AddScoped<IProductService, GrpcProductService>()
             .AddScoped<IPaymentService, PaymentService>()
-            .AddScoped<ITemporaryStorageService, RedisStorageService>();
+            .AddScoped<ITemporaryStorageService, RedisStorageService>()
+            .AddScoped<IProducerService, ProducerService>();
 
         services.AddSingleton(serviceProvider =>
         {
@@ -59,6 +66,29 @@ public static class DependencyInjection
                 opt.Address = new Uri(configuration["gRPC:ServerUrl"]);
             })
             .AddInterceptor<AuthInterceptor>();
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ProducerConfig
+            {
+                BootstrapServers = configuration["Kafka:Server"],
+                AllowAutoCreateTopics = true,
+                Acks = Acks.All
+            };
+        });
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ConsumerConfig
+            {
+                BootstrapServers = configuration["Kafka:Server"],
+                GroupId = "test-group",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+        });
+
+        services.AddHostedService<UserCreationConsumer>();
+        services.AddHostedService<ProductCreationConsumer>();
 
         return services;
     }

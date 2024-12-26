@@ -1,92 +1,94 @@
 ﻿using SendGrid;
 using SendGrid.Helpers.Mail;
+using UserService.DAL.Models;
+using UserService.DAL.Services.EmailNotifications.MessageFactory;
 
 namespace UserService.DAL.Services.EmailNotifications;
 
 internal class EmailService : IEmailService
 {
     private readonly ISendGridClient _sendGridClient;
+    private readonly IMessageFactory _messageFactory;
     private readonly EmailAddress mailSender;
 
-    public EmailService(ISendGridClient sendGridClient)
+    public EmailService(ISendGridClient sendGridClient, IMessageFactory messageFactory)
     {
         _sendGridClient = sendGridClient;
+        _messageFactory = messageFactory;
         mailSender = new EmailAddress("myshopemailsender@gmail.com", "Notification");
     }
 
     public async Task SendEmailConfirmationCodeAsync(string email, string code)
     {
-        var subject = "Email verification";
-        var plainTextContent = $"Your email confirmation code is: {code}";
-        var htmlContent = $"<span>{plainTextContent}</span>";
+        var messageModel = _messageFactory.CreateEmailConfirmationMessage(code);
         var to = new EmailAddress(email);
 
-        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
 
         await _sendGridClient.SendEmailAsync(msg);
     }
 
     public async Task SendEmailConfirmationSucceededNotificationAsync(string email)
     {
-        var subject = "Email succesfully verified!";
-        var plainTextContent = $"Thank you for registration in our shop!";
-        var htmlContent = $"<span>{plainTextContent}</span>";
+        var messageModel = _messageFactory.CreateEmailConfirmationSucceedMessage();
         var to = new EmailAddress(email);
 
-        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
 
         await _sendGridClient.SendEmailAsync(msg);
     }
 
     public async Task SendPasswordResetCodeAsync(string email, string code)
     {
-        var subject = "Password reset";
-        var plainTextContent = $"Your password reset code is: {code}";
-        var htmlContent = $"<span>{plainTextContent}</span>";
+        var messageModel = _messageFactory.CreatePasswordResetMessage(code);
         var to = new EmailAddress(email);
 
-        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
 
         await _sendGridClient.SendEmailAsync(msg);
     }
 
     public async Task SendPasswordResetSucceededNotificationAsync(string email)
     {
-        var subject = "Password successfully changed!";
-        var plainTextContent = $"Your password has been changed!";
-        var htmlContent = $"<span>{plainTextContent}</span>";
+        var messageModel = _messageFactory.CreatePasswordResetSucceedMessage();
         var to = new EmailAddress(email);
 
-        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
 
         await _sendGridClient.SendEmailAsync(msg);
     }
 
     public async Task SendUnconfirmedAccountDeletedNotificationAsync(string email)
     {
-        var subject = "Your account wasn't created";
-        var plainTextContent = $"Your account was deleted because you didn't confirm your email";
-        var htmlContent = $"<span>{plainTextContent}</span>";
+        var messageModel = _messageFactory.CreateEmailConfirmationFailedMessage();
         var to = new EmailAddress(email);
 
-        var msg = MailHelper.CreateSingleEmail(mailSender, to, subject, plainTextContent, htmlContent);
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
 
         await _sendGridClient.SendEmailAsync(msg);
     }
 
     public async Task SendEmailNotChangedNotificationAsync(string oldEmail, string newEmail)
     {
-        var subject = "Your email wasn't changed";
-        var plainTextContent = $"Your email wasn't changed because you didn't confirm your new email\nYour actual email is {oldEmail}";
-        var htmlContent = $"<span>{plainTextContent}</span>";
+        var messageModel = _messageFactory.CreateEmailChangeFailedMessage(oldEmail);
         var toOld = new EmailAddress(oldEmail);
         var toNew = new EmailAddress(newEmail);
 
-        var messageOld = MailHelper.CreateSingleEmail(mailSender, toOld, subject, plainTextContent, htmlContent);
-        var messageNew = MailHelper.CreateSingleEmail(mailSender, toNew, subject, plainTextContent, htmlContent);
+        var messageOld = MailHelper.CreateSingleEmail(mailSender, toOld, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
+        var messageNew = MailHelper.CreateSingleEmail(mailSender, toNew, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
 
         await _sendGridClient.SendEmailAsync(messageOld);
 
         await _sendGridClient.SendEmailAsync(messageNew);
+    }
+
+    public async Task SendOrderStatusNotificationAsync(ConsumedOrder order)
+    {
+        var messageModel = _messageFactory.CreateOrderStatusChangedMessage(order);
+        var to = new EmailAddress(order.UserEmail);
+
+        var msg = MailHelper.CreateSingleEmail(mailSender, to, messageModel.Subject, messageModel.PlaintTextContext, messageModel.HtmlContent);
+
+        await _sendGridClient.SendEmailAsync(msg);
     }
 }

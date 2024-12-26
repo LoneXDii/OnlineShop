@@ -422,6 +422,7 @@ namespace ProductsService.Infrastructure.Migrations
                             Id = 1,
                             Name = "Samsung Galaxy S24 Ultra",
                             Price = 1119.99,
+                            PriceId = "price_1QXj0lCLnke0wpITkP8oVXC8",
                             Quantity = 14
                         },
                         new
@@ -429,6 +430,7 @@ namespace ProductsService.Infrastructure.Migrations
                             Id = 2,
                             Name = "IPhone 15 Pro",
                             Price = 999.0,
+                            PriceId = "price_1QXj0mCLnke0wpITCVnosAnV",
                             Quantity = 10
                         },
                         new
@@ -436,6 +438,7 @@ namespace ProductsService.Infrastructure.Migrations
                             Id = 3,
                             Name = "MacBook Pro 16'",
                             Price = 2499.0,
+                            PriceId = "price_1QXj0mCLnke0wpIT4M2mjScB",
                             Quantity = 2
                         },
                         new
@@ -443,6 +446,7 @@ namespace ProductsService.Infrastructure.Migrations
                             Id = 4,
                             Name = "MacBook Air 13'",
                             Price = 1099.0,
+                            PriceId = "price_1QXj0nCLnke0wpITR1ZpsFfC",
                             Quantity = 12
                         });
                 });

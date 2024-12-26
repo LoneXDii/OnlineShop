@@ -14,7 +14,7 @@ internal class TakeProductsRequestHandler(IUnitOfWork unitOfWork)
     {
         var specification = new ProductsListBuIdsSpecification(request.Products.Keys);
 
-        var products = await unitOfWork.ProductQueryRepository.ListAsync(specification, cancellationToken);
+        var products = await unitOfWork.ProductQueryRepository.ListAsync(specification, cancellationToken, p => p.Discount);
 
         await UpdateProductsQuantityAsync(products, request.Products, cancellationToken);
 

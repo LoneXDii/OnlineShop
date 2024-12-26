@@ -8,17 +8,19 @@ using UserService.DAL.Services.BlobStorage;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 using Hangfire;
+using UserService.DAL.Services.MessageBrocker.ProducerService;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
-internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
-    IEmailService emailService, ICacheService cacheService) : IRequestHandler<RegisterUserRequest>
+internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService,
+    IEmailService emailService, ICacheService cacheService, IProducerService producerService)
+    : IRequestHandler<RegisterUserRequest>
 {
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         var user = mapper.Map<AppUser>(request.RegisterModel);
 
-        if(request.RegisterModel.Avatar is not null)
+        if (request.RegisterModel.Avatar is not null)
         {
             using Stream stream = request.RegisterModel.Avatar.OpenReadStream();
 
@@ -30,6 +32,8 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
         if (result.Succeeded)
         {
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
+
+            BackgroundJob.Enqueue(() => producerService.ProduceUserCreationAsync(user, default));
 
             BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
 
@@ -47,7 +51,7 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
     {
         var user = await userManager.FindByEmailAsync(email);
 
-        if (user.EmailConfirmed)
+        if (user is null || user.EmailConfirmed)
         {
             return;
         }

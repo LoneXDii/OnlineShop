@@ -1,4 +1,6 @@
-﻿namespace UserService.DAL.Services.EmailNotifications;
+﻿using UserService.DAL.Models;
+
+namespace UserService.DAL.Services.EmailNotifications;
 
 public interface IEmailService
 {
@@ -8,4 +10,5 @@ public interface IEmailService
     Task SendPasswordResetSucceededNotificationAsync(string email);
     Task SendUnconfirmedAccountDeletedNotificationAsync(string email);
     Task SendEmailNotChangedNotificationAsync(string oldEmail, string newEmail);
+    Task SendOrderStatusNotificationAsync(ConsumedOrder order);
 }

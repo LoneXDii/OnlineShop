@@ -9,7 +9,7 @@ internal class SetItemQuantityInCartRequestHandler(ITemporaryStorageService temp
 {
     public async Task Handle(SetItemQuantityInCartRequest request, CancellationToken cancellationToken)
     {
-        var product = await productService.GetByIdIfSufficientQuantityAsync(request.ProductId, request.Quantity, cancellationToken);
+        var product = await productService.GetByIdIfSufficientQuantityAsync(request.ProductId, request.Quantity);
 
         if (product is null)
         {

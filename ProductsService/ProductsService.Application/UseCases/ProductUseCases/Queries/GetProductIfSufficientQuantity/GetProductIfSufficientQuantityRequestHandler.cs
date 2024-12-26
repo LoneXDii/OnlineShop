@@ -10,7 +10,7 @@ internal class GetProductIfSufficientQuantityRequestHandler(IUnitOfWork unitOfWo
 {
     public async Task<Product> Handle(GetProductIfSufficientQuantityRequest request, CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.Id, cancellationToken);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.Id, cancellationToken, p => p.Discount);
 
         if (product is null)
         {
