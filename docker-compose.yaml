@@ -166,6 +166,16 @@ services:
     networks:
       - backend
 
+  support-service:
+    build: ./src/Backend/supportService
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "5004:8080"
+    networks:
+      - backend
+
 volumes: 
   mongodb_data:
   shop_data:
