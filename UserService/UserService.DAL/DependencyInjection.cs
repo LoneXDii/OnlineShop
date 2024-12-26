@@ -15,6 +15,7 @@ using Confluent.Kafka;
 using UserService.DAL.Services.MessageBrocker.ProducerService;
 using UserService.DAL.Mapping;
 using UserService.DAL.Services.MessageBrocker.Consumers;
+using UserService.DAL.Services.EmailNotifications.MessageFactory;
 
 namespace UserService.DAL;
 
@@ -47,7 +48,8 @@ public static class DependencyInjection
             .AddScoped<ISendGridClient>(sp => new SendGridClient(configuration["EmailAccount:ApiKey"]))
             .AddScoped<IEmailService, EmailService>()
             .AddScoped<ICacheService, CacheService>()
-            .AddScoped<IProducerService, ProducerService>();
+            .AddScoped<IProducerService, ProducerService>()
+            .AddScoped<IMessageFactory, MessageFactory>();
 
         services.Configure<BlobServiceOptions>(options => configuration.GetSection("Blobs").Bind(options));
 
