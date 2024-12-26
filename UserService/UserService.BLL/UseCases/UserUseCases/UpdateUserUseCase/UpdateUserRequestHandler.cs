@@ -4,18 +4,24 @@ using Microsoft.AspNetCore.Identity;
 using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.BlobStorage;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.BLL.UseCases.UserUseCases.UpdateUserUseCase;
 
-internal class UpdateUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService)
+internal class UpdateUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService, 
+    ILogger<UpdateUserRequestHandler> logger)
     : IRequestHandler<UpdateUserRequest>
 {
     public async Task Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
+        logger.LogInformation($"Trying to update user with id: {request.userId}");
+
         var user = await userManager.FindByIdAsync(request.userId);
 
         if (user is null)
         {
+            logger.LogError($"User with id: {request.userId} not found");
+
             throw new NotFoundException("No such user");
         }
 
@@ -34,5 +40,7 @@ internal class UpdateUserRequestHandler(UserManager<AppUser> userManager, IMappe
         }
 
         await userManager.UpdateAsync(user);
+
+        logger.LogInformation($"User with id: {request.userId} successfully updated");
     }
 }

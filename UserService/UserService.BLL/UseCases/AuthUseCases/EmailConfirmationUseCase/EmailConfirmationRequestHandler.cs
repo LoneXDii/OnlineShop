@@ -3,22 +3,26 @@ using Microsoft.AspNetCore.Identity;
 using UserService.DAL.Entities;
 using UserService.BLL.Exceptions;
 using UserService.DAL.Services.EmailNotifications;
-using System.Text.Json;
 using UserService.DAL.Services.TemporaryStorage;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Hangfire;
+using Microsoft.Extensions.Logging;
 
 namespace UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 
-internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager, IEmailService emailService, ICacheService cacheService)
+internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager, IEmailService emailService, 
+    ICacheService cacheService, ILogger<EmailConfirmationRequestHandler> logger)
     : IRequestHandler<EmailConfirmationRequest>
 {
     public async Task Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
     {
+        logger.LogInformation($"User with email: {request.email} trying to confirm email");
+
         var user = await userManager.FindByEmailAsync(request.email);
 
         if (user is null)
         {
+            logger.LogError($"No user with email: {request.email} found");
+
             throw new NotFoundException("No user with such email");
         }
 
@@ -29,9 +33,13 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
             user.EmailConfirmed = true;
 
             await userManager.UpdateAsync(user);
+
+            logger.LogInformation($"Email: {email} succesfully confirmed");
         }
         else
         {
+            logger.LogError($"Wrong confirmation code for emial: {request.email}");
+
             throw new BadRequestException($"Wrong code");
         }
 

@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace OrderService.API;
+namespace OrderService.API.Configuration;
 
 public static class DependencyInjection
 {

@@ -1,6 +1,6 @@
 using Hangfire;
 using Microsoft.AspNetCore.SignalR;
-using SupportService.API;
+using SupportService.API.Configuration;
 using SupportService.API.Filters;
 using SupportService.API.Hubs;
 using SupportService.Application;
@@ -26,6 +26,8 @@ builder.Services.AddSingleton<HubExceptionsFilter>();
 builder.Services.AddInfrastructure(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddAuth(builder.Configuration);
+
+builder.Host.UseLogging();
 
 var app = builder.Build();
 

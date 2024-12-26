@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 using System.Text.Json;
@@ -10,15 +11,20 @@ internal class RedisStorageService : ITemporaryStorageService
 {
     private readonly IDistributedCache _cache;
     private readonly HttpContext _httpContext;
+    private readonly ILogger<RedisStorageService> _logger;
 
-    public RedisStorageService(IDistributedCache cache, IHttpContextAccessor httpContextAccessor)
+    public RedisStorageService(IDistributedCache cache, IHttpContextAccessor httpContextAccessor, 
+        ILogger<RedisStorageService> logger)
     {
         _cache = cache;
         _httpContext = httpContextAccessor.HttpContext;
+        _logger = logger;
     }
 
     public async Task<Dictionary<int, ProductEntity>> GetCartAsync(CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation($"Getting cart from redis");
+
         var userId = _httpContext.User.FindFirst("Id")?.Value;
 
         if (userId is not null)
@@ -37,6 +43,8 @@ internal class RedisStorageService : ITemporaryStorageService
 
     public async Task SaveCartAsync(Dictionary<int, ProductEntity> cart, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation($"Saving cart in redis");
+
         var userId = _httpContext.User.FindFirst("Id")?.Value;
 
         var cartJson = JsonSerializer.Serialize(cart);
@@ -91,6 +99,8 @@ internal class RedisStorageService : ITemporaryStorageService
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
         };
+
+        _logger.LogInformation($"Cart with id: {oldCartId} assigned to userId: {userId}");
 
         await _cache.SetStringAsync(userId, oldCart, options, cancellationToken);
     }

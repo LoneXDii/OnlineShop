@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hangfire;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using ProductsService.Application.Exceptions;
 using ProductsService.Application.Specifications.Discounts;
 using ProductsService.Domain.Abstractions.Database;
@@ -8,17 +9,21 @@ using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.DiscountUseCases.Commands.AddDiscount;
 
-internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
+internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<AddDiscountRequestHandler> logger)
     : IRequestHandler<AddDiscountRequest>
 {
     public async Task Handle(AddDiscountRequest request, CancellationToken cancellationToken)
     {
+        logger.LogInformation($"Trying to create discount for product with id: {request.ProductId}");
+
         var specification = new DiscountProductSpecification(request.ProductId);
 
         var discount = await unitOfWork.DiscountQueryRepository.FirstOrDefaultAsync(specification, cancellationToken);
 
         if (discount is not null)
         {
+            logger.LogError($"Product with id: {request.ProductId} already has a discount with id: {discount.Id}");
+
             throw new BadRequestException("This product already have discount");
         }
 
@@ -29,5 +34,7 @@ internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper)
         await unitOfWork.SaveAllAsync(cancellationToken);
 
         BackgroundJob.Schedule(() => unitOfWork.DiscountCommandRepository.DeleteAsync(discount, default), discount.EndDate);
+
+        logger.LogInformation($"Discount with id: {discount.Id} succesfully created for product with id: {request.ProductId}");
     }
 }

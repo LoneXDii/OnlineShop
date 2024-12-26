@@ -1,11 +1,13 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using OrderService.Application.Exceptions;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 
 namespace OrderService.Application.UseCases.CartUseCases.AddProductToCartUseCase;
 
-internal class AddProductToCartRequestHandler(ITemporaryStorageService temporaryStorage, IProductService productService)
+internal class AddProductToCartRequestHandler(ITemporaryStorageService temporaryStorage, IProductService productService,
+    ILogger<AddProductToCartRequestHandler> logger)
     : IRequestHandler<AddProductToCartRequest>
 {
     public async Task Handle(AddProductToCartRequest request, CancellationToken cancellationToken)
@@ -17,6 +19,8 @@ internal class AddProductToCartRequestHandler(ITemporaryStorageService temporary
 
         if (product is null)
         {
+            logger.LogError($"Product with id: {request.product.Id} not exists or it's quantity is to low for {GetProductQuaintity(request, cart)}");
+
             throw new NotFoundException("Cannot add to cart, this product not exist or its quantity to low");
         }
 

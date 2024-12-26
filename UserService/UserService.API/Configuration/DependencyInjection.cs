@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace UserService.API;
+namespace UserService.API.Configuration;
 
 public static class DependencyInjection
 {

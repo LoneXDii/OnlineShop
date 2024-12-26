@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ProductsService.API.Configuration;
 using System.Reflection;
 using System.Text;
 
-namespace ProductsService.API;
+namespace ProductsService.API.Configuration;
 
 public static class DependencyInjection
 {

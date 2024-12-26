@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Grpc.Net.Client;
-using Grpc.Net.ClientFactory;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Protos;
@@ -12,16 +10,20 @@ internal class GrpcProductService : IProductService
 {
     private readonly Products.ProductsClient _gprcClient;
     private readonly IMapper _mapper;
+    private readonly ILogger<GrpcProductService> _logger;
 
-    public GrpcProductService(Products.ProductsClient grpcClient, IMapper mapper)
+    public GrpcProductService(Products.ProductsClient grpcClient, IMapper mapper, ILogger<GrpcProductService> logger)
     {
         _gprcClient = grpcClient;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<ProductEntity?> GetByIdIfSufficientQuantityAsync(int id, int quantity, 
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation($"Trying to get product with id: {id} and quantity: {quantity} using gRPC");
+
         var request = new ProductRequest 
         { 
             Id = id, 
@@ -36,6 +38,8 @@ internal class GrpcProductService : IProductService
     public async Task<IEnumerable<ProductEntity>?> TakeProductsIfSufficientQuantityAsync(IEnumerable<ProductEntity> products, 
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Trying to take products using gRPC");
+
         var request = new ProductsListRequest();
         request.Products.AddRange(_mapper.Map<List<ProductRequest>>(products));
 
@@ -46,6 +50,8 @@ internal class GrpcProductService : IProductService
 
     public async Task ReturnProductsAsync(IEnumerable<ProductEntity> products, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Trying to return products using gRPC");
+
         var request = new ProductsListRequest();
         request.Products.AddRange(_mapper.Map<List<ProductRequest>>(products));
 

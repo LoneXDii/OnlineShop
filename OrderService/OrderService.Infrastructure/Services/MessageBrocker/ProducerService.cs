@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Confluent.Kafka;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Models;
@@ -14,17 +15,22 @@ internal class ProducerService : IProducerService
     private readonly ProducerConfig _producerConfig;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ILogger<ProducerService> _logger; 
 
-    public ProducerService(ProducerConfig producerConfig, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public ProducerService(ProducerConfig producerConfig, IMapper mapper, IHttpContextAccessor httpContextAccessor,
+        ILogger<ProducerService> logger)
     {
         _producerConfig = producerConfig;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
+        _logger = logger;
     }
 
     public async Task ProduceUserStripeIdAsync(string userId, string stripeId, 
         CancellationToken  cancellationToken = default)
     {
+        _logger.LogInformation($"Producing creation of stripeId: {stripeId} for user with id: {userId}");
+
         using var producer = new ProducerBuilder<Null, UserStripeIdDTO>(_producerConfig)
             .SetValueSerializer(new KafkaSerializer<UserStripeIdDTO>())
             .Build();
@@ -44,6 +50,8 @@ internal class ProducerService : IProducerService
 
     public async Task ProduceProductPriceIdAsync(int productId, string priceId, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation($"Producing creation of priceId: {priceId} for product with id: {productId}");
+
         using var producer = new ProducerBuilder<Null, ProductPriceIdDTO>(_producerConfig)
             .SetValueSerializer(new KafkaSerializer<ProductPriceIdDTO>())
             .Build();
@@ -63,6 +71,8 @@ internal class ProducerService : IProducerService
 
     public async Task ProduceOrderActionsAsync(OrderEntity order, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation($"Producing changing status of order with id: {order.Id}");
+
         using var producer = new ProducerBuilder<Null, ProducedOrderDTO>(_producerConfig)
             .SetValueSerializer(new KafkaSerializer<ProducedOrderDTO>())
             .Build();

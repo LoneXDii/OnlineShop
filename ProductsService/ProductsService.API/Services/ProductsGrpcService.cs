@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using ProductsService.API.Protos;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.GetProductIfSufficientQuantity;
-using ProductsService.Application.UseCases.ProductUseCases.Queries.ReturnProducts;
+using ProductsService.Application.UseCases.ProductUseCases.Commands.ReturnProducts;
 using ProductsService.Application.UseCases.ProductUseCases.Queries.TakeProducts;
 
 namespace ProductsService.API.Services;
