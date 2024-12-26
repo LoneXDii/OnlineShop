@@ -130,8 +130,22 @@ services:
     networks:
       - backend
 
+  mysql:
+    image: mysql:8.0.36
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
 volumes: 
   shop_data:
+  mysql_data:
   master_data:
   slave_data:
 
