@@ -1,0 +1,139 @@
+version: "3.8"
+
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    volumes:
+      - shop_data:/azurite/data
+    ports:
+      - "10000:10000"
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - shop_data:/redis/data
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=my-password
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+    networks:
+      - backend
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    networks:
+      - backend
+
+  kafka:
+    image: confluentinc/cp-kafka
+    container_name: kafka
+    ports:
+      - 9093:9093
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_BROKER_ID=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9093,INTERNAL://kafka:9092
+    depends_on:
+      - zookeeper
+    restart: always
+    networks:
+      - backend
+
+  init-kafka:
+    image: confluentinc/cp-kafka
+    depends_on:
+      kafka:
+        condition: service_started
+    volumes:
+      - ./DockerConfig/Kafka/init-kafka.sh:/usr/local/bin/init-kafka.sh
+    entrypoint: [ '/bin/sh', '-c', '/usr/local/bin/init-kafka.sh' ]
+    networks:
+      - backend
+
+  elasticsearch:
+    image: elasticsearch:8.17.0
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - shop_data:/usr/share/elasticsearch/data/
+      - ./DockerConfig/Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      - discovery.type=single-node
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - xpack.security.enabled=false
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true
+    networks:
+      - backend
+
+  kibana:
+    image: kibana:8.17.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./DockerConfig/Kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - shop_data:/usr/share/kibana/data
+    networks:
+      - backend
+    depends_on:
+      - elasticsearch
+
+  products-master:
+    image: mysql:8.0.36
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: products 
+      MYSQL_USER: master
+      MYSQL_PASSWORD: master
+    command: --server-id=1 --log-bin=mysql-bin --binlog-format=row
+    ports:
+      - "3307:3306"
+    volumes:
+      - master_data:/var/lib/mysql
+      - ./DockerConfig/MysqlReplication/master-init:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+  products-slave:
+    image: mysql:8.0.36
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: products
+      MYSQL_USER: slave
+      MYSQL_PASSWORD: slave
+    command: --server-id=2 --log-bin=mysql-bin --binlog-format=row
+    ports:
+      - "3308:3306"
+    volumes:
+      - slave_data:/var/lib/mysql
+      - ./DockerConfig/MysqlReplication/slave-init:/docker-entrypoint-initdb.d
+    depends_on:
+      - products-master
+    networks:
+      - backend
+
+volumes: 
+  shop_data:
+  master_data:
+  slave_data:
+
+networks:
+  backend:
