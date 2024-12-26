@@ -142,7 +142,15 @@ services:
     networks:
       - backend
 
+  mongo:
+    image: mongo
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongodb_data:/data/mongodb
+
 volumes: 
+  mongodb_data:
   shop_data:
   mysql_data:
   master_data:
