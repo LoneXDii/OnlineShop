@@ -141,6 +141,11 @@ services:
       - ./DockerConfig/Mysql/mysql-init:/docker-entrypoint-initdb.d
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 15s
+      timeout: 15s
+      retries: 5
 
   mongo:
     image: mongo
@@ -148,6 +153,18 @@ services:
       - '27018:27017'
     volumes:
       - mongodb_data:/data/mongodb
+
+  user-service:
+    build: ./src/Backend/UserService
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - C:/Users/User/AppData/Roaming/Microsoft/UserSecrets:/root/.microsoft/usersecrets
+    ports:
+      - "5001:8080"
+    networks:
+      - backend
 
 volumes: 
   mongodb_data:

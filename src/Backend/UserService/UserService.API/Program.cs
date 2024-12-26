@@ -19,6 +19,8 @@ builder.Services.AddApplication(builder.Configuration)
 
 builder.Host.UseLogging();
 
+builder.Configuration.AddUserSecrets<Program>();
+
 var app = builder.Build();
 
 app.UseMiddleware<LoggingMiddleware>();
@@ -27,11 +29,11 @@ app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
