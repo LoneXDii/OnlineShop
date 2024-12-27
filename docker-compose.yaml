@@ -171,6 +171,8 @@ services:
       - '27018:27017'
     volumes:
       - mongodb_data:/data/mongodb
+    networks:
+      - backend
 
   user-service:
     container_name: user-service
@@ -207,6 +209,18 @@ services:
     ports:
       - "5002:5002"
       - "5005:5005"
+    networks:
+      - backend
+
+  order-service:
+    container_name: order-service
+    build: ./src/Backend/OrderService
+    depends_on: 
+      - mongo
+    volumes:
+      - C:/Users/User/AppData/Roaming/Microsoft/UserSecrets:/root/.microsoft/usersecrets
+    ports:
+      - "5003:8080"
     networks:
       - backend
 

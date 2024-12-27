@@ -54,14 +54,19 @@ internal class PaymentService : IPaymentService
             }
         }
 
-        var couponOptions = new CouponCreateOptions
-        {
-            Duration = "once", 
-            AmountOff = (long)(discount * 100), 
-            Currency = "usd"
-        };
+        Coupon? coupon = null;
 
-        var coupon = await _couponService.CreateAsync(couponOptions);
+        if (discount > 0)
+        {
+            var couponOptions = new CouponCreateOptions
+            {
+                Duration = "once",
+                AmountOff = (long)(discount * 100),
+                Currency = "usd"
+            };
+
+            coupon = await _couponService.CreateAsync(couponOptions);
+        }
 
         var options = new SessionCreateOptions
         {
@@ -73,15 +78,19 @@ internal class PaymentService : IPaymentService
             Metadata = new Dictionary<string, string>
             {
                 { "order_id", order.Id }
-            },
-            Discounts = new List<SessionDiscountOptions>
+            }
+        };
+
+        if (coupon is not null)
+        {
+            options.Discounts = new List<SessionDiscountOptions>
             {
                 new SessionDiscountOptions
                 {
                     Coupon = coupon.Id
                 }
-            }
-        };
+            };
+        }
 
         var sessionService = new SessionService();
 

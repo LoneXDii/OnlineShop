@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# blocks until kafka is reachable
 kafka-topics --bootstrap-server kafka:9092 --list
 
 echo -e 'Creating kafka topics'

@@ -11,17 +11,19 @@ builder.Services.AddAPI(builder.Configuration)
 
 builder.Host.UseLogging();
 
+builder.Configuration.AddUserSecrets<Program>();
+
 var app = builder.Build();
 
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 
