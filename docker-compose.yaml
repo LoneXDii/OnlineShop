@@ -183,19 +183,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    ports:
-      - "5001:8080"
-    networks:
-      - backend
-
-  support-service:
-    container_name: support-service
-    build: ./src/Backend/SupportService
-    depends_on:
-      mysql:
-        condition: service_healthy
-    ports:
-      - "5004:8080"
     networks:
       - backend
 
@@ -207,9 +194,6 @@ services:
         condition: service_healthy
       products-slave:
         condition: service_healthy
-    ports:
-      - "5002:5002"
-      - "5005:5005"
     networks:
       - backend
 
@@ -219,8 +203,23 @@ services:
     depends_on: 
       mysql:
         condition: service_healthy
+    networks:
+      - backend
+
+  support-service:
+    container_name: support-service
+    build: ./src/Backend/SupportService
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
+  api-gateway:
+    container_name: api-gateway
+    build: ./src/Backend/ApiGateway
     ports:
-      - "5003:8080"
+      - "5000:5000"
     networks:
       - backend
 
