@@ -160,7 +160,7 @@ internal class MessageFactory : IMessageFactory
             htmlBuilder.Append($"<td>{product.Price}</td>");
             htmlBuilder.Append($"<td>{product.Discount}%</td>");
             htmlBuilder.Append($"<td>{product.Price * (1 - (double)product.Discount / 100)}</td>");
-            htmlBuilder.Append($"<td>{product.Price * product.Quantity * (1 - product.Discount / 100)}</td>");
+            htmlBuilder.Append($"<td>{product.Price * product.Quantity * (1 - (double)product.Discount / 100)}</td>");
             htmlBuilder.Append("</tr>");
         }
 
