@@ -183,8 +183,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    volumes:
-      - C:/Users/User/AppData/Roaming/Microsoft/UserSecrets:/root/.microsoft/usersecrets
     ports:
       - "5001:8080"
     networks:
@@ -221,8 +219,6 @@ services:
     depends_on: 
       mysql:
         condition: service_healthy
-    volumes:
-      - C:/Users/User/AppData/Roaming/Microsoft/UserSecrets:/root/.microsoft/usersecrets
     ports:
       - "5003:8080"
     networks:

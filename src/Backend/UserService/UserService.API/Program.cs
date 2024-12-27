@@ -8,6 +8,8 @@ using UserService.DAL.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("secretconfig.json");
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -18,8 +20,6 @@ builder.Services.AddApplication(builder.Configuration)
     .AddAuth(builder.Configuration);
 
 builder.Host.UseLogging();
-
-builder.Configuration.AddUserSecrets<Program>();
 
 var app = builder.Build();
 

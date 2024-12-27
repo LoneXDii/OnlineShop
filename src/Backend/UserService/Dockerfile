@@ -12,7 +12,6 @@ COPY ["UserService.DAL/UserService.DAL.csproj", "UserService.DAL/"]
 RUN dotnet restore "UserService.API/UserService.API.csproj"
 COPY . .
 WORKDIR "/src/UserService/UserService.API"
-RUN dotnet user-secrets init
 RUN dotnet build "UserService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -22,5 +21,4 @@ RUN dotnet publish "./UserService.API.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENV DOTNET_USER_SECRETS=/root/.microsoft/usersecrets
 ENTRYPOINT ["dotnet", "UserService.API.dll"]

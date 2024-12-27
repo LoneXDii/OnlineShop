@@ -5,13 +5,13 @@ using OrderService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("secretconfig.json");
+
 builder.Services.AddAPI(builder.Configuration)
     .AddApplication(builder.Configuration)
     .AddInfrastructure(builder.Configuration);
 
 builder.Host.UseLogging();
-
-builder.Configuration.AddUserSecrets<Program>();
 
 var app = builder.Build();
 

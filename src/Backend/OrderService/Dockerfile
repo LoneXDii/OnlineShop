@@ -13,7 +13,6 @@ COPY ["OrderService.Domain/OrderService.Domain.csproj", "OrderService.Domain/"]
 RUN dotnet restore "OrderService.API/OrderService.API.csproj"
 COPY . .
 WORKDIR "/src/OrderService/OrderService.API"
-RUN dotnet user-secrets init
 RUN dotnet build "OrderService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -23,5 +22,4 @@ RUN dotnet publish "./OrderService.API.csproj" -c $BUILD_CONFIGURATION -o /app/p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENV DOTNET_USER_SECRETS=/root/.microsoft/usersecrets
 ENTRYPOINT ["dotnet", "OrderService.API.dll"]
