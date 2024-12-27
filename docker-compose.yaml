@@ -216,7 +216,8 @@ services:
     container_name: order-service
     build: ./src/Backend/OrderService
     depends_on: 
-      - mongo
+      mysql:
+        condition: service_healthy
     volumes:
       - C:/Users/User/AppData/Roaming/Microsoft/UserSecrets:/root/.microsoft/usersecrets
     ports:
@@ -233,3 +234,5 @@ volumes:
 
 networks:
   backend:
+
+  
