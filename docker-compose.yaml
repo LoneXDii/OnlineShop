@@ -3,6 +3,7 @@ version: "3.8"
 services:
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: azurite
     volumes:
       - shop_data:/azurite/data
     ports:
@@ -12,6 +13,7 @@ services:
 
   redis:
     image: redis:latest
+    container_name: redis
     restart: always
     ports:
       - "6379:6379"
@@ -55,6 +57,7 @@ services:
 
   init-kafka:
     image: confluentinc/cp-kafka
+    container_name: init-kafka
     depends_on:
       kafka:
         condition: service_started
@@ -98,6 +101,7 @@ services:
 
   products-master:
     image: mysql:8.0.36
+    container_name: products-master
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: products 
@@ -111,9 +115,15 @@ services:
       - ./DockerConfig/MysqlReplication/master-init:/docker-entrypoint-initdb.d
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 15s
+      timeout: 15s
+      retries: 5
 
   products-slave:
     image: mysql:8.0.36
+    container_name: products-slave
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: products
@@ -126,12 +136,19 @@ services:
       - slave_data:/var/lib/mysql
       - ./DockerConfig/MysqlReplication/slave-init:/docker-entrypoint-initdb.d
     depends_on:
-      - products-master
+      products-master:
+        condition: service_healthy
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 15s
+      timeout: 15s
+      retries: 5
 
   mysql:
     image: mysql:8.0.36
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
@@ -149,12 +166,14 @@ services:
 
   mongo:
     image: mongo
+    container_name: mongo
     ports:
       - '27018:27017'
     volumes:
       - mongodb_data:/data/mongodb
 
   user-service:
+    container_name: user-service
     build: ./src/Backend/UserService
     depends_on:
       mysql:
@@ -167,12 +186,27 @@ services:
       - backend
 
   support-service:
-    build: ./src/Backend/supportService
+    container_name: support-service
+    build: ./src/Backend/SupportService
     depends_on:
       mysql:
         condition: service_healthy
     ports:
       - "5004:8080"
+    networks:
+      - backend
+
+  products-service:
+    container_name: products-service
+    build: ./src/Backend/ProductsService
+    depends_on:
+      mysql:
+        condition: service_healthy
+      products-slave:
+        condition: service_healthy
+    ports:
+      - "5002:5002"
+      - "5005:5005"
     networks:
       - backend
 
