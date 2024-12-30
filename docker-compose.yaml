@@ -1,0 +1,236 @@
+version: "3.8"
+
+services:
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: azurite
+    volumes:
+      - shop_data:/azurite/data
+    ports:
+      - "10000:10000"
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - shop_data:/redis/data
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=my-password
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+    networks:
+      - backend
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    networks:
+      - backend
+
+  kafka:
+    image: confluentinc/cp-kafka
+    container_name: kafka
+    ports:
+      - 9093:9093
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_BROKER_ID=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9093,INTERNAL://kafka:9092
+    depends_on:
+      - zookeeper
+    restart: always
+    networks:
+      - backend
+
+  init-kafka:
+    image: confluentinc/cp-kafka
+    container_name: init-kafka
+    depends_on:
+      kafka:
+        condition: service_started
+    volumes:
+      - ./DockerConfig/Kafka/init-kafka.sh:/usr/local/bin/init-kafka.sh
+    entrypoint: [ '/bin/sh', '-c', '/usr/local/bin/init-kafka.sh' ]
+    networks:
+      - backend
+
+  elasticsearch:
+    image: elasticsearch:8.17.0
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - shop_data:/usr/share/elasticsearch/data/
+      - ./DockerConfig/Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      - discovery.type=single-node
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - xpack.security.enabled=false
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=true
+    networks:
+      - backend
+
+  kibana:
+    image: kibana:8.17.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./DockerConfig/Kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - shop_data:/usr/share/kibana/data
+    networks:
+      - backend
+    depends_on:
+      - elasticsearch
+
+  products-master:
+    image: mysql:8.0.36
+    container_name: products-master
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: products 
+      MYSQL_USER: master
+      MYSQL_PASSWORD: master
+    command: --server-id=1 --log-bin=mysql-bin --binlog-format=row
+    ports:
+      - "3307:3306"
+    volumes:
+      - master_data:/var/lib/mysql
+      - ./DockerConfig/MysqlReplication/master-init:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-p$$MYSQL_ROOT_PASSWORD' ]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+  products-slave:
+    image: mysql:8.0.36
+    container_name: products-slave
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: products
+      MYSQL_USER: slave
+      MYSQL_PASSWORD: slave
+    command: --server-id=2 --log-bin=mysql-bin --binlog-format=row
+    ports:
+      - "3308:3306"
+    volumes:
+      - slave_data:/var/lib/mysql
+      - ./DockerConfig/MysqlReplication/slave-init:/docker-entrypoint-initdb.d
+    depends_on:
+      products-master:
+        condition: service_healthy
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-p$$MYSQL_ROOT_PASSWORD' ]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+  mysql:
+    image: mysql:8.0.36
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./DockerConfig/Mysql/mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-p$$MYSQL_ROOT_PASSWORD' ]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongodb_data:/data/mongodb
+    networks:
+      - backend
+
+  user-service:
+    container_name: user-service
+    build: ./src/Backend/UserService
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
+  products-service:
+    container_name: products-service
+    build: ./src/Backend/ProductsService
+    depends_on:
+      mysql:
+        condition: service_healthy
+      products-slave:
+        condition: service_healthy
+    networks:
+      - backend
+
+  order-service:
+    container_name: order-service
+    build: ./src/Backend/OrderService
+    depends_on: 
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
+  support-service:
+    container_name: support-service
+    build: ./src/Backend/SupportService
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
+  api-gateway:
+    container_name: api-gateway
+    build: ./src/Backend/ApiGateway
+    ports:
+      - "5000:5000"
+    networks:
+      - backend
+
+volumes: 
+  mongodb_data:
+  shop_data:
+  mysql_data:
+  master_data:
+  slave_data:
+
+networks:
+  backend:
+
+  
