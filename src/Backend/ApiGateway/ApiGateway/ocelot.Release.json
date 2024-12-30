@@ -212,7 +212,7 @@
         {
           "Name": "Users service API",
           "Version": "v1",
-          "Url": "https://localhost:7001/swagger/v1/swagger.json"
+          "Url": "http://user-service:5001/swagger/v1/swagger.json"
         }
       ]
     },
@@ -222,7 +222,7 @@
         {
           "Name": "Products service API",
           "Version": "v1",
-          "Url": "https://localhost:7002/swagger/v1/swagger.json"
+          "Url": "http://products-service:5002/swagger/v1/swagger.json"
         }
       ]
     },
@@ -232,7 +232,7 @@
         {
           "Name": "Orders service API",
           "Version": "v1",
-          "Url": "https://localhost:7003/swagger/v1/swagger.json"
+          "Url": "http://order-service:5003/swagger/v1/swagger.json"
         }
       ]
     }
