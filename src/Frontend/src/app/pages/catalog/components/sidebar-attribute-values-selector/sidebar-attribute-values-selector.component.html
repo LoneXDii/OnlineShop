@@ -1,0 +1,14 @@
+<!--Add hidden input for all selected-->
+<h5>{{attributeValues.attribute.name}}</h5>
+@for(value of attributeValues.values; track value){
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="{{attributeValues.attribute.id}}"
+           id="{{value.id}}" value="{{value.id}}"
+           [checked]="selectedValue === value.id"
+           (click)="toggleRadio(value.id)" />
+    <label class="form-check-label" for="{{value.id}}">
+      {{value.name}}
+    </label>
+  </div>
+}
+

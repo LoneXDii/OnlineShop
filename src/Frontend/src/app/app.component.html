@@ -1,4 +1,7 @@
 <app-navigation/>
 <div class="container">
-  <app-product-cards-layout [products]="products.items"></app-product-cards-layout>
+  <div class="row">
+    <app-sidebar class="col-md-3" [category]="category"/>
+    <app-product-cards-layout [products]="products.items" class="col-md-9"></app-product-cards-layout>
+  </div>
 </div>
