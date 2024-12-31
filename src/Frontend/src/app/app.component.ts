@@ -4,10 +4,11 @@ import {PaginatedProducts} from './data/interfaces/paginatedProducts.interface';
 import {
   ProductCardsLayoutComponent
 } from './pages/catalog/components/product-cards-layout/product-cards-layout.component';
+import {NavigationComponent} from './pages/common/navigation/navigation.component';
 
 @Component({
   selector: 'app-root',
-  imports: [ProductCardsLayoutComponent],
+  imports: [ProductCardsLayoutComponent, NavigationComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
