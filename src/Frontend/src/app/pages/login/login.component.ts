@@ -28,7 +28,7 @@ export class LoginComponent {
       console.log(this.form.value);
       //@ts-ignore
       this.authService.login(this.form.value)
-        .subscribe(val => this.router.navigate(['/account']));
+        .subscribe(val => this.router.navigate(['/profile']));
     }
   }
 }
