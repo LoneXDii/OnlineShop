@@ -1,26 +1,25 @@
-<app-navigation/>
 <div class="container">
   <div class="row">
-    <app-sidebar class="col-md-3" [category]="category" (fetchProducts)="fetchProducts($event)"/>
-    <div class="col-md-9">
-      @if(products){
+    @if(products){
+      <app-sidebar class="col-md-3" [categoryId]="categoryId" (fetchProducts)="fetchProducts($event)"/>
+      <div class="col-md-9">
         <app-product-cards-layout [products]="products.items"></app-product-cards-layout>
         <div class="d-flex justify-content-center mt-3">
           <app-pagination [pageNo]="products.currentPage"
                           [totalPages]="products.totalPages"
                           (onPageChange)="handlePageChanged($event)"/>
         </div>
-      }
-      @else{
-        <div class="container text-center mt-5">
-          <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">No Products Found</h4>
-            <p>Unfortunately, there are no products available at this time.</p>
-            <hr>
-            <p class="mb-0">Please check back later or explore other categories.</p>
-          </div>
+      </div>
+    }
+    @else{
+      <div class="container text-center mt-5">
+        <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading">No Products Found</h4>
+          <p>Unfortunately, there are no products available at this time.</p>
+          <hr>
+          <p class="mb-0">Please check back later or explore other categories.</p>
         </div>
-      }
-    </div>
+      </div>
+    }
   </div>
 </div>

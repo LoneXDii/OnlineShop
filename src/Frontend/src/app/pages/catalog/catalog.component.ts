@@ -2,15 +2,14 @@ import {Component, inject, Input, OnInit} from '@angular/core';
 import {ProductsService} from '../../data/services/products.service';
 import {PaginatedProducts} from '../../data/interfaces/paginatedProducts.interface';
 import {Category} from '../../data/interfaces/category.interface';
-import {NavigationComponent} from '../common/navigation/navigation.component';
 import {PaginationComponent} from '../common/pagination/pagination.component';
 import {ProductCardsLayoutComponent} from './components/product-cards-layout/product-cards-layout.component';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-catalog',
   imports: [
-    NavigationComponent,
     PaginationComponent,
     ProductCardsLayoutComponent,
     SidebarComponent
@@ -19,7 +18,7 @@ import {SidebarComponent} from './components/sidebar/sidebar.component';
   styleUrl: './catalog.component.css'
 })
 export class CatalogComponent implements OnInit {
-  @Input() category!: Category;
+  categoryId!: number;
 
   productsService = inject(ProductsService);
   products?: PaginatedProducts;
@@ -28,9 +27,13 @@ export class CatalogComponent implements OnInit {
   maxPrice?: number;
   valuesIds?: number[];
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit() {
-    this.productsService.getProducts(this.category.id, undefined, undefined, undefined)
-      .subscribe(val => this.products = val);
+    this.route.params.subscribe(params => {
+      this.categoryId = +params['categoryId']; // Преобразуем в число, если нужно
+      this.fetchProducts({minPrice: this.minPrice, maxPrice: this.maxPrice, valuesIds: this.valuesIds});
+    });
   }
 
   fetchProducts(params: { minPrice?: number; maxPrice?: number; valuesIds?: number[] }){
@@ -38,12 +41,12 @@ export class CatalogComponent implements OnInit {
     this.maxPrice = params.maxPrice;
     this.valuesIds = params.valuesIds;
 
-    this.productsService.getProducts(this.category.id, this.minPrice, this.maxPrice, this.valuesIds)
+    this.productsService.getProducts(this.categoryId, this.minPrice, this.maxPrice, this.valuesIds)
       .subscribe(val => this.products = val);
   }
 
   handlePageChanged(pageNo: number) {
-    this.productsService.getProducts(this.category.id, this.minPrice, this.maxPrice, this.valuesIds, pageNo)
+    this.productsService.getProducts(this.categoryId, this.minPrice, this.maxPrice, this.valuesIds, pageNo)
       .subscribe(val => this.products = val);
   }
 }

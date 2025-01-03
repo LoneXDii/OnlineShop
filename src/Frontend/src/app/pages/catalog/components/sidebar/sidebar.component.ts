@@ -17,8 +17,10 @@ import {
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent implements OnInit{
-  @Input() category!: Category;
+  @Input() categoryId!: number;
   @Output() fetchProducts = new EventEmitter<{ minPrice?: number; maxPrice?: number; valuesIds?: number[] }>();
+
+  category!: Category;
   categoriesService = inject(CategoriesService);
   attributes: AttributeAllValues[] = [];
   minPrice: number | undefined = undefined;
@@ -26,10 +28,11 @@ export class SidebarComponent implements OnInit{
   selectedValues: { [key: number]: number } = {};
 
   ngOnInit() {
-    if (this.category) {
-      this.categoriesService.getCategoryAttributesValues(this.category.id)
-        .subscribe(val => this.attributes = val);
-    }
+    this.categoriesService.getCategoryById(this.categoryId)
+      .subscribe(val => this.category = val);
+
+    this.categoriesService.getCategoryAttributesValues(this.categoryId)
+      .subscribe(val => this.attributes = val);
   }
 
   onValueSelected(attributeId: number, value: number) {

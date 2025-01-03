@@ -1,12 +1,16 @@
 import {Component} from '@angular/core';
 import {Category} from './data/interfaces/category.interface';
 import {CatalogComponent} from './pages/catalog/catalog.component';
+import {NavigationComponent} from './pages/common/navigation/navigation.component';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   imports: [
-    CatalogComponent
+    CatalogComponent,
+    NavigationComponent,
+    RouterOutlet
   ],
   styleUrl: './app.component.css'
 })
