@@ -18,7 +18,7 @@ import {
 })
 export class SidebarComponent implements OnInit{
   @Input() category!: Category;
-  @Output() fetchProducts = new EventEmitter<{ minPrice?: number; maxPrice?: number; ValuesIds?: number[] }>();
+  @Output() fetchProducts = new EventEmitter<{ minPrice?: number; maxPrice?: number; valuesIds?: number[] }>();
   categoriesService = inject(CategoriesService);
   attributes: AttributeAllValues[] = [];
   minPrice: number | undefined = undefined;
@@ -42,10 +42,11 @@ export class SidebarComponent implements OnInit{
   }
 
   onFindClick(){
+    console.log(Object.values(this.selectedValues));
     this.fetchProducts.emit({
       minPrice: this.minPrice,
       maxPrice: this.maxPrice,
-      ValuesIds: Object.values(this.selectedValues)
+      valuesIds: Object.values(this.selectedValues)
     });
   }
 }
