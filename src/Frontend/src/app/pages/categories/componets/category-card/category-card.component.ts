@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Category} from '../../../../data/interfaces/category.interface';
+import {Category} from '../../../../data/interfaces/catalog/category.interface';
 import {RouterLink} from '@angular/router';
 
 @Component({

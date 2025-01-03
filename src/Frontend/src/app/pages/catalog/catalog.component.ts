@@ -1,7 +1,7 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {ProductsService} from '../../data/services/products.service';
-import {PaginatedProducts} from '../../data/interfaces/paginatedProducts.interface';
-import {Category} from '../../data/interfaces/category.interface';
+import {PaginatedProducts} from '../../data/interfaces/catalog/paginatedProducts.interface';
+import {Category} from '../../data/interfaces/catalog/category.interface';
 import {PaginationComponent} from '../common/pagination/pagination.component';
 import {ProductCardsLayoutComponent} from './components/product-cards-layout/product-cards-layout.component';
 import {SidebarComponent} from './components/sidebar/sidebar.component';

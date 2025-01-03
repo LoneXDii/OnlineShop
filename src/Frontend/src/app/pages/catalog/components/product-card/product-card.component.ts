@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Product} from '../../../../data/interfaces/product.interface';
+import {Product} from '../../../../data/interfaces/catalog/product.interface';
 
 @Component({
   selector: 'app-product-card',

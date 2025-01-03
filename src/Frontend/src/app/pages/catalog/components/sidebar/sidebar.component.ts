@@ -1,8 +1,8 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CategoriesService} from '../../../../data/services/categories.service';
-import {AttributeAllValues} from '../../../../data/interfaces/attributeAllValues.interface';
-import {Category} from '../../../../data/interfaces/category.interface';
+import {AttributeAllValues} from '../../../../data/interfaces/catalog/attributeAllValues.interface';
+import {Category} from '../../../../data/interfaces/catalog/category.interface';
 import {
   SidebarAttributeValuesSelectorComponent
 } from '../sidebar-attribute-values-selector/sidebar-attribute-values-selector.component';

@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {PaginatedProducts} from '../interfaces/paginatedProducts.interface';
+import {PaginatedProducts} from '../interfaces/catalog/paginatedProducts.interface';
 import {catchError, of} from 'rxjs';
 
 @Injectable({

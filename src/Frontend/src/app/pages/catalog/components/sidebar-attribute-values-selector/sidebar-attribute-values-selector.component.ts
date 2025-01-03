@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AttributeAllValues} from '../../../../data/interfaces/attributeAllValues.interface';
+import {AttributeAllValues} from '../../../../data/interfaces/catalog/attributeAllValues.interface';
 
 @Component({
   selector: 'app-sidebar-attribute-values-selector',

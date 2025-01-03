@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {CategoriesService} from '../../data/services/categories.service';
-import {Category} from '../../data/interfaces/category.interface';
+import {Category} from '../../data/interfaces/catalog/category.interface';
 import {CategoryCardComponent} from './componets/category-card/category-card.component';
 
 @Component({

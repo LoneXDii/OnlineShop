@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {AttributeAllValues} from '../interfaces/attributeAllValues.interface';
-import {Category} from '../interfaces/category.interface';
+import {AttributeAllValues} from '../interfaces/catalog/attributeAllValues.interface';
+import {Category} from '../interfaces/catalog/category.interface';
 
 @Injectable({
   providedIn: 'root'
