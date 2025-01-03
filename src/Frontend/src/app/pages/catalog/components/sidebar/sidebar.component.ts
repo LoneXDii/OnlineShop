@@ -42,7 +42,6 @@ export class SidebarComponent implements OnInit{
   }
 
   onFindClick(){
-    console.log(Object.values(this.selectedValues));
     this.fetchProducts.emit({
       minPrice: this.minPrice,
       maxPrice: this.maxPrice,

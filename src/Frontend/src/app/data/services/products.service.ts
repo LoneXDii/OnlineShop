@@ -1,6 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {PaginatedProducts} from '../interfaces/paginatedProducts.interface';
+import {catchError, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,14 @@ export class ProductsService {
       params.PageNo = PageNo;
     }
 
-    return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`, {params: params});
+    return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`, {params: params})
+      .pipe(
+        catchError(error => {
+          if (error.status === 404) {
+            return of(undefined);
+          }
+          throw error;
+        })
+      );
   }
 }
