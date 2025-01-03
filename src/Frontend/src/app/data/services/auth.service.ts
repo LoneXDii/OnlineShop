@@ -33,11 +33,14 @@ export class AuthService {
       );
   }
 
+  register(formData: FormData) {
+    return this.http.post(`${this.baseUrl}accounts/register`, formData);
+  }
+
   refreshAccessToken(){
     return this.http.get<string>(`${this.baseUrl}tokens/refresh?refreshToken=${this.refreshToken}`)
       .pipe(
         tap(val => {
-          console.log(val);
           this.updateAccessToken(val);
         }),
         catchError(err => {
