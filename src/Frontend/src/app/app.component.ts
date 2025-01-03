@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {Category} from './data/interfaces/category.interface';
-import {CatalogComponent} from './pages/catalog/catalog.component';
 import {NavigationComponent} from './pages/common/navigation/navigation.component';
 import {RouterOutlet} from '@angular/router';
 
@@ -8,7 +7,6 @@ import {RouterOutlet} from '@angular/router';
   selector: 'app-root',
   templateUrl: './app.component.html',
   imports: [
-    CatalogComponent,
     NavigationComponent,
     RouterOutlet
   ],

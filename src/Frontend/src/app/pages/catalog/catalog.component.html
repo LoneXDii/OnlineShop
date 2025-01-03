@@ -1,14 +1,12 @@
-<div class="container">
-  <div class="row">
+<div class="row">
+  <app-sidebar class="col-md-3" [categoryId]="categoryId" (fetchProducts)="fetchProducts($event)"/>
+  <div class="col-md-9">
     @if(products){
-      <app-sidebar class="col-md-3" [categoryId]="categoryId" (fetchProducts)="fetchProducts($event)"/>
-      <div class="col-md-9">
-        <app-product-cards-layout [products]="products.items"></app-product-cards-layout>
-        <div class="d-flex justify-content-center mt-3">
-          <app-pagination [pageNo]="products.currentPage"
-                          [totalPages]="products.totalPages"
-                          (onPageChange)="handlePageChanged($event)"/>
-        </div>
+      <app-product-cards-layout [products]="products.items"></app-product-cards-layout>
+      <div class="d-flex justify-content-center mt-3">
+        <app-pagination [pageNo]="products.currentPage"
+                        [totalPages]="products.totalPages"
+                        (onPageChange)="handlePageChanged($event)"/>
       </div>
     }
     @else{
@@ -23,3 +21,4 @@
     }
   </div>
 </div>
+

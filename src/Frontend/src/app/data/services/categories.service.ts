@@ -12,6 +12,10 @@ export class CategoriesService {
 
   constructor() { }
 
+  getCategories() {
+    return this.http.get<Category[]>(`${this.baseUrl}`);
+  }
+
   getCategoryById(categoryId: number){
     return this.http.get<Category>(`${this.baseUrl}/${categoryId}`);
   }

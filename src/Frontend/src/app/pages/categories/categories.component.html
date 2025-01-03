@@ -1,0 +1,5 @@
+<div class="row">
+  @for(category of categories; track category.id){
+    <app-category-card [category]="category" class="col-md-3 d-flex"/>
+  }
+</div>
