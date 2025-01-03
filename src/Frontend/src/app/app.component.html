@@ -6,4 +6,9 @@
       <app-product-cards-layout [products]="products.items" class="col-md-9"></app-product-cards-layout>
     }
   </div>
+  @if (products){
+    <app-pagination [pageNo]="products.currentPage"
+                    [totalPages]="products.totalPages"
+                    (onPageChange)="handlePageChanged($event)"/>
+  }
 </div>

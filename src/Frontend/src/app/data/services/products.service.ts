@@ -11,7 +11,7 @@ export class ProductsService {
 
   constructor() { }
 
-  getProducts(categoryId: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[]) {
+  getProducts(categoryId: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number) {
     const params: any = {
       CategoryId: categoryId,
     };
@@ -27,7 +27,11 @@ export class ProductsService {
     if (ValuesIds) {
       params.ValuesIds = ValuesIds;
     }
-    console.log({params});
+
+    if (PageNo) {
+      params.PageNo = PageNo;
+    }
+
     return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`, {params: params});
   }
 }

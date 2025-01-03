@@ -47,6 +47,5 @@ export class SidebarComponent implements OnInit{
       maxPrice: this.maxPrice,
       ValuesIds: Object.values(this.selectedValues)
     });
-    console.log("clicked")
   }
 }

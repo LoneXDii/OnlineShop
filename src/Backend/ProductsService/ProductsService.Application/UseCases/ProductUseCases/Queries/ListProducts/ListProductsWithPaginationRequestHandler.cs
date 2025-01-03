@@ -32,7 +32,9 @@ internal class ListProductsWithPaginationRequestHandler(IUnitOfWork unitOfWork, 
             product => product.Categories,
             product => product.Discount);
 
-        var totalPages = (int)Math.Ceiling(items.Count() / (double)pageSize);
+        var count = await unitOfWork.ProductQueryRepository.CountAsync(specification, cancellationToken); 
+
+        var totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
         if (request.PageNo > totalPages)
         {
