@@ -11,7 +11,23 @@ export class ProductsService {
 
   constructor() { }
 
-  getProducts(){
-    return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`);
+  getProducts(categoryId: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[]) {
+    const params: any = {
+      CategoryId: categoryId,
+    };
+
+    if (minPrice) {
+      params.MinPrice = minPrice;
+    }
+
+    if (maxPrice) {
+      params.MaxPrice = maxPrice;
+    }
+
+    if (ValuesIds) {
+      params.ValuesIds = ValuesIds;
+    }
+    console.log({params});
+    return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`, {params: params});
   }
 }

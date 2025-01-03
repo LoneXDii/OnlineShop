@@ -1,10 +1,11 @@
 <div class="sidebar border-right p-3">
   <h3>{{category.name}}</h3>
   <h5 class="mt-4">Price</h5>
+  <input type="hidden" value="{{category.id}}">
   <input type="number" [(ngModel)]="minPrice" placeholder="From" class="form-control mb-2">
   <input type="number" [(ngModel)]="maxPrice" placeholder="To" class="form-control mb-2">
   @for(attribute of attributes; track attribute.attribute.id){
-    <app-sidebar-attribute-values-selector [attributeValues] = attribute />
+    <app-sidebar-attribute-values-selector [attributeValues] = attribute (valueSelected)="onValueSelected(attribute.attribute.id, $event)" />
   }
-  <button class="btn btn-primary w-100 mt-3">Find</button>
+  <button class="btn btn-primary w-100 mt-3" (click)="onFindClick()">Find</button>
 </div>

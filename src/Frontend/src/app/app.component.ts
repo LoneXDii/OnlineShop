@@ -17,7 +17,7 @@ import {Category} from './data/interfaces/category.interface';
 export class AppComponent {
   title = 'Frontend';
   productsService = inject(ProductsService);
-  products!: PaginatedProducts;
+  products?: PaginatedProducts;
 
   category: Category = {
     id: 1,
@@ -26,7 +26,14 @@ export class AppComponent {
   };
 
   constructor() {
-    this.productsService.getProducts()
+    this.productsService.getProducts(this.category.id, undefined, undefined, undefined)
+      .subscribe(val => this.products = val);
+  }
+
+  fetchProducts(params: { minPrice?: number; maxPrice?: number; ValuesIds?: number[] }){
+    console.log("entered")
+    console.log(this)
+    this.productsService.getProducts(this.category.id, params.minPrice, params.maxPrice, params.ValuesIds)
       .subscribe(val => this.products = val);
   }
 }
