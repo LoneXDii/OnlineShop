@@ -14,7 +14,7 @@ export const routes: Routes = [
   {path: 'catalog', component: CategoriesComponent},
   {path: 'login', component: LoginComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'register', component: RegisterComponent, canActivate: [canActivateUnauthenticated]},
-  {path: 'confirm-email/:email', component: ConfirmEmailComponent, canActivate: [canActivateUnauthenticated]},
+  {path: 'confirm-email/:email', component: ConfirmEmailComponent},
   {path: 'refresh-password', component: RefreshPasswordComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'profile', component: ProfileComponent, canActivate: [canActivateAuth]},
 ];

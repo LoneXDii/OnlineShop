@@ -1,11 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Profile} from '../interfaces/auth/profile.interface';
+import {AuthService} from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
+  authService = inject(AuthService);
   http = inject(HttpClient);
   baseUrl = 'http://localhost:5000/users';
 
@@ -21,5 +23,13 @@ export class ProfileService {
 
   refreshPassword(params: {password: string, code: string}) {
     return this.http.post(`${this.baseUrl}/password/resetting`, params)
+  }
+
+  updateProfile(formData: FormData){
+    return this.http.post(`${this.baseUrl}`, formData);
+  }
+
+  updateEmail(params:{email: string}) {
+    return this.http.put(`${this.baseUrl}/email`, params);
   }
 }
