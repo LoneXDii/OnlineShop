@@ -1,0 +1,9 @@
+<div class="mt-3 d-flex align-items-center">
+  <h5>Email: {{ email }}</h5>
+  <button *ngIf="!editingEmail" (click)="editEmail()" class="btn btn-primary btn-sm ms-2">Edit</button>
+</div>
+<form *ngIf="editingEmail" [formGroup]="emailForm" (ngSubmit)="submitEmail()" class="mt-2">
+  <input formControlName="email" class="form-control mb-2" placeholder="Email" required>
+  <button type="submit" class="btn btn-success btn-sm">Submit</button>
+  <button type="button" class="btn btn-danger btn-sm ms-2" (click)="editEmail()">Cancel</button>
+</form>

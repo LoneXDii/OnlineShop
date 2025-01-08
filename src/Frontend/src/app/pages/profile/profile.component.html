@@ -3,43 +3,9 @@
     <h2 class="mb-4">Profile Information</h2>
     <div class="card">
       <div class="card-body">
-        <form [formGroup]="profileForm" (ngSubmit)="submitProfile()">
-          <div class="mb-3 d-flex justify-content-center">
-            <img
-              src="{{ profile.avatar || '/assets/noimg.png' }}"
-              alt="User Avatar"
-              class="img-fluid mb-3"
-              style="width: 150px; height: 150px;">
-          </div>
-          <h5 class="card-title text-left">
-            <span>Name: {{ profile.firstName }} {{ profile.lastName }}</span>
-            <button *ngIf="!editingProfile" (click)="editProfile()" type="button" class="btn btn-primary btn-sm ms-2">Edit</button>
-          </h5>
-          <div *ngIf="editingProfile">
-            <input formControlName="firstName" class="form-control mb-2" placeholder="First Name" required>
-            <input formControlName="lastName" class="form-control mb-2" placeholder="Last Name" required>
-            <input type="file" (change)="onFileChange($event)" class="form-control mb-2">
-            <button type="submit" class="btn btn-success btn-sm">Submit</button>
-            <button type="button" class="btn btn-danger btn-sm ms-2" (click)="editProfile()">Cancel</button>
-          </div>
-        </form>
-        <div class="mt-3 d-flex align-items-center">
-          <h5>Email: {{ profile.email }}</h5>
-          <button *ngIf="!editingEmail" (click)="editEmail()" class="btn btn-primary btn-sm ms-2">Edit</button>
-        </div>
-        <form *ngIf="editingEmail" [formGroup]="emailForm" (ngSubmit)="submitEmail()" class="mt-2">
-          <input formControlName="email" class="form-control mb-2" placeholder="Email" required>
-          <button type="submit" class="btn btn-success btn-sm">Submit</button>
-          <button type="button" class="btn btn-danger btn-sm ms-2" (click)="editEmail()">Cancel</button>
-        </form>
-        <form *ngIf="changingPassword" [formGroup]="passwordForm" (ngSubmit)="submitPassword()" class="mt-2">
-          <input formControlName="oldPassword" type="password" class="form-control mb-2" placeholder="Old Password" required>
-          <input formControlName="newPassword" type="password" class="form-control mb-2" placeholder="New Password" required>
-          <input formControlName="repeatPassword" type="password" class="form-control mb-2" placeholder="Repeat Password" required>
-          <div *ngIf="passwordForm.errors?.['mismatch']" class="text-danger">Passwords do not match!</div>
-          <button type="submit" class="btn btn-success btn-sm">Submit</button>
-          <button type="button" class="btn btn-danger btn-sm ms-2" (click)="changePassword()">Cancel</button>
-        </form>
+        <app-profile-user [profile]="profile" (profileUpdated)="loadProfile()"/>
+        <app-profile-email [email]="profile.email"/>
+        <app-profile-password *ngIf="changingPassword" (changePassword)="changePassword()"/>
         <div class="d-flex justify-content-center mt-4">
           <button (click)="logout()" class="btn btn-danger me-2">Logout</button>
           <a (click)="changePassword()" class="btn btn-link">Change Password</a>

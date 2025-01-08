@@ -1,47 +1,35 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {ProfileService} from '../../data/services/profile.service';
 import {Profile} from '../../data/interfaces/auth/profile.interface';
-import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators} from '@angular/forms';
+import {ReactiveFormsModule,} from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {AuthService} from '../../data/services/auth.service';
 import {Router} from '@angular/router';
+import {ProfileUserComponent} from './profile-user/profile-user.component';
+import {ProfileEmailComponent} from './profile-email/profile-email.component';
+import {ProfilePasswordComponent} from './profile-password/profile-password.component';
 
 @Component({
   selector: 'app-profile',
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    ProfileUserComponent,
+    ProfileEmailComponent,
+    ProfilePasswordComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   profileService = inject(ProfileService);
   authService = inject(AuthService);
   router = inject(Router);
   profile!: Profile;
 
-  editingProfile = false;
-  editingEmail = false;
   changingPassword = false;
 
-  profileForm = new FormGroup({
-    firstName: new FormControl<string | null>(null, Validators.required),
-    lastName: new FormControl<string | null>(null, Validators.required),
-    avatar: new FormControl<File | null>(null)
-  });
-
-  emailForm = new FormGroup({
-    email: new FormControl<string | null>(null, [Validators.required, Validators.email])
-  });
-
-  passwordForm = new FormGroup({
-    oldPassword: new FormControl<string | null>(null, Validators.required),
-    newPassword: new FormControl<string | null>(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}')]),
-    repeatPassword: new FormControl<string | null>(null, Validators.required)
-  }, { validators: this.passwordMatchValidator });
-
-  constructor() {
+  ngOnInit() {
     this.loadProfile();
   }
 
@@ -49,76 +37,7 @@ export class ProfileComponent {
     this.profileService.getUserInfo()
       .subscribe(val => {
         this.profile = val;
-        this.profileForm.patchValue({
-          firstName: this.profile.firstName,
-          lastName: this.profile.lastName
-        });
-        this.emailForm.patchValue({
-          email: this.profile.email
-        });
       });
-  }
-
-  passwordMatchValidator(): ValidatorFn {
-    return (form: AbstractControl): { [key: string]: any } | null => {
-      const password = form.get('password')?.value;
-      const confirmPassword = form.get('confirmPassword')?.value;
-      return password === confirmPassword ? null : { mismatch: true };
-    };
-  }
-
-  editProfile() {
-    this.editingProfile = !this.editingProfile;
-  }
-
-  submitProfile() {
-    if (this.profileForm.valid) {
-      const formData = new FormData();
-      //@ts-ignore
-      formData.append('firstName', this.profileForm.get('firstName')?.value);
-      //@ts-ignore
-      formData.append('lastName', this.profileForm.get('lastName')?.value);
-      //@ts-ignore
-      formData.append('avatar', this.profileForm.get('avatar')?.value);
-
-      this.profileService.updateProfile(formData)
-        .subscribe({
-          next: () =>{
-            this.loadProfile();
-            this.editingProfile = false;
-          },
-          error: (err) => {
-            console.error('Update error', err);
-          }});
-    }
-  }
-
-  editEmail() {
-    this.editingEmail = !this.editingEmail;
-  }
-
-  submitEmail() {
-    if (this.emailForm.valid) {
-      //@ts-ignore
-      this.profileService.updateEmail({email: this.emailForm.value.email})
-        .subscribe({
-          next: () =>{
-            //@ts-ignore
-            this.profile.email = this.emailForm.value.email;
-            this.editingEmail = false;
-            this.router.navigate([`/confirm-email/${this.emailForm.value.email}`]);
-          },
-          error: (err) => {
-            console.error('Update error', err);
-          }});
-    }
-  }
-
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    this.profileForm.patchValue({
-      avatar: file
-    });
   }
 
   logout() {
@@ -127,24 +46,5 @@ export class ProfileComponent {
 
   changePassword() {
     this.changingPassword = !this.changingPassword;
-  }
-
-  submitPassword() {
-    if (this.passwordForm.valid) {
-      const { oldPassword, newPassword } = this.passwordForm.value;
-      //@ts-ignore
-      this.profileService.updatePassword({ oldPassword, newPassword })
-        .subscribe({
-          next: (val) => {
-            this.changingPassword = false;
-            this.passwordForm.reset();
-            this.authService.refreshToken = val;
-            alert('Password changed successfully!');
-          },
-          error: () => {
-            console.error('Password change error');
-          }
-        });
-    }
   }
 }
