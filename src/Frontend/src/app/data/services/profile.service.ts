@@ -11,8 +11,6 @@ export class ProfileService {
   http = inject(HttpClient);
   baseUrl = 'http://localhost:5000/users';
 
-  constructor() { }
-
   getUserInfo(){
     return this.http.get<Profile>(`${this.baseUrl}/info`);
   }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {Profile} from '../../../../data/interfaces/auth/profile.interface';
 
 @Component({
   selector: 'app-user-list-item',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './user-list-item.component.css'
 })
 export class UserListItemComponent {
-
+  @Input() user!: Profile;
 }

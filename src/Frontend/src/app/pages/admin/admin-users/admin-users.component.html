@@ -1,1 +1,8 @@
-<p>admin-users works!</p>
+@for(user of users!.items; track user.id){
+  <app-user-list-item [user]="user"/>
+}
+<div class="d-flex justify-content-center mt-3">
+  <app-pagination [pageNo]="users!.currentPage"
+                  [totalPages]="users!.totalPages"
+                  (onPageChange)="handlePageChanged($event)"/>
+</div>

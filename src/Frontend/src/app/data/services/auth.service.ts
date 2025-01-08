@@ -24,8 +24,6 @@ export class AuthService {
   private isAdminRole = new BehaviorSubject<boolean>(this.isAdmin);
   isAdmin$ = this.isAdminRole.asObservable();
 
-  constructor() { }
-
   get isAuthenticated(){
     if (!this.accessToken){
       this.accessToken = this.cookieService.get('accessToken');

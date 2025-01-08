@@ -10,8 +10,6 @@ export class CategoriesService {
   http = inject(HttpClient);
   baseUrl = 'http://localhost:5000/categories';
 
-  constructor() { }
-
   getCategories() {
     return this.http.get<Category[]>(`${this.baseUrl}`);
   }

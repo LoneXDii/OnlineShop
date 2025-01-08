@@ -10,8 +10,6 @@ export class ProductsService {
   http = inject(HttpClient);
   baseUrl = 'http://localhost:5000';
 
-  constructor() { }
-
   getProducts(categoryId?: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number, PageSize: number = 10) {
     const params: any = {
       PageSize: PageSize,
