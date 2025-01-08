@@ -4,7 +4,6 @@ import {Profile} from '../../data/interfaces/auth/profile.interface';
 import {ReactiveFormsModule,} from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {AuthService} from '../../data/services/auth.service';
-import {Router} from '@angular/router';
 import {ProfileUserComponent} from './profile-user/profile-user.component';
 import {ProfileEmailComponent} from './profile-email/profile-email.component';
 import {ProfilePasswordComponent} from './profile-password/profile-password.component';
@@ -24,7 +23,6 @@ import {ProfilePasswordComponent} from './profile-password/profile-password.comp
 export class ProfileComponent implements OnInit {
   profileService = inject(ProfileService);
   authService = inject(AuthService);
-  router = inject(Router);
   profile!: Profile;
 
   changingPassword = false;

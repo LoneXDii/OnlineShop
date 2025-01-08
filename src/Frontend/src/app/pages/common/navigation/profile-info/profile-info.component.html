@@ -1,6 +1,6 @@
 <div class="nav-item dropdown">
   <div class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <img src="{{ avatarUrl }}" alt="Avatar" class="rounded-circle" width="35" height="35">
+    <img src="{{ avatarUrl || '/assets/noimg.png' }}" alt="Avatar" class="rounded-circle" width="35" height="35">
     <span class="ms-1">{{ email }}</span>
   </div>
   <div class="dropdown-menu" aria-labelledby="navbarDropdown">

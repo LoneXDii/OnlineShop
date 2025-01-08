@@ -4,6 +4,8 @@ import {BehaviorSubject, catchError, tap, throwError} from 'rxjs';
 import {Tokens} from '../interfaces/auth/tokens.interface';
 import {CookieService} from 'ngx-cookie-service';
 import {Router} from '@angular/router';
+import {DecodedToken} from '../interfaces/auth/decodedToken.interface';
+import {jwtDecode} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,9 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated);
   loggedIn$ = this.loggedIn.asObservable();
 
+  private isAdminRole = new BehaviorSubject<boolean>(this.isAdmin);
+  isAdmin$ = this.isAdminRole.asObservable();
+
   constructor() { }
 
   get isAuthenticated(){
@@ -26,7 +31,21 @@ export class AuthService {
       this.accessToken = this.cookieService.get('accessToken');
       this.refreshToken = this.cookieService.get('refreshToken');
     }
+
     return !!this.accessToken;
+  }
+
+  get isAdmin(){
+    if (!this.accessToken) {
+      if(!this.cookieService.get('accessToken')){
+        return false;
+      }
+      this.accessToken = this.cookieService.get('accessToken');
+    }
+
+    const role = jwtDecode<DecodedToken>(this.accessToken)["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+    return role === 'admin';
   }
 
   get getAccessToken(){
@@ -43,6 +62,9 @@ export class AuthService {
         tap(val => {
           this.saveTokens(val);
           this.loggedIn.next(true);
+          if (this.isAdmin){
+            this.isAdminRole.next(true);
+          }
         })
       );
   }
@@ -69,6 +91,7 @@ export class AuthService {
     this.http.get(`${this.baseUrl}accounts/logout`)
       .subscribe(() => {
         this.loggedIn.next(false);
+        this.isAdminRole.next(false);
 
         this.cookieService.delete('accessToken');
         this.cookieService.delete('refreshToken');
