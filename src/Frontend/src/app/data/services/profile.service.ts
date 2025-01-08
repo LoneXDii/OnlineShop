@@ -32,4 +32,8 @@ export class ProfileService {
   updateEmail(params:{email: string}) {
     return this.http.put(`${this.baseUrl}/email`, params);
   }
+
+  updatePassword(params: {oldPassword: string, newPassword: string}) {
+    return this.http.put(`${this.baseUrl}/password`, params, {responseType: 'text'});
+  }
 }

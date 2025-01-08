@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {ProfileService} from '../../data/services/profile.service';
 import {Profile} from '../../data/interfaces/auth/profile.interface';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators} from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {AuthService} from '../../data/services/auth.service';
 import {Router} from '@angular/router';
@@ -23,6 +23,7 @@ export class ProfileComponent {
 
   editingProfile = false;
   editingEmail = false;
+  changingPassword = false;
 
   profileForm = new FormGroup({
     firstName: new FormControl<string | null>(null, Validators.required),
@@ -33,6 +34,12 @@ export class ProfileComponent {
   emailForm = new FormGroup({
     email: new FormControl<string | null>(null, [Validators.required, Validators.email])
   });
+
+  passwordForm = new FormGroup({
+    oldPassword: new FormControl<string | null>(null, Validators.required),
+    newPassword: new FormControl<string | null>(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}')]),
+    repeatPassword: new FormControl<string | null>(null, Validators.required)
+  }, { validators: this.passwordMatchValidator });
 
   constructor() {
     this.loadProfile();
@@ -50,6 +57,14 @@ export class ProfileComponent {
           email: this.profile.email
         });
       });
+  }
+
+  passwordMatchValidator(): ValidatorFn {
+    return (form: AbstractControl): { [key: string]: any } | null => {
+      const password = form.get('password')?.value;
+      const confirmPassword = form.get('confirmPassword')?.value;
+      return password === confirmPassword ? null : { mismatch: true };
+    };
   }
 
   editProfile() {
@@ -111,6 +126,25 @@ export class ProfileComponent {
   }
 
   changePassword() {
-    // some logic
+    this.changingPassword = !this.changingPassword;
+  }
+
+  submitPassword() {
+    if (this.passwordForm.valid) {
+      const { oldPassword, newPassword } = this.passwordForm.value;
+      //@ts-ignore
+      this.profileService.updatePassword({ oldPassword, newPassword })
+        .subscribe({
+          next: (val) => {
+            this.changingPassword = false;
+            this.passwordForm.reset();
+            this.authService.refreshToken = val;
+            alert('Password changed successfully!');
+          },
+          error: () => {
+            console.error('Password change error');
+          }
+        });
+    }
   }
 }
