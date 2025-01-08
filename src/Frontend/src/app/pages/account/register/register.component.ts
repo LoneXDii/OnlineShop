@@ -23,7 +23,7 @@ export class RegisterComponent {
     firstName: new FormControl<string | null>(null, Validators.required),
     lastName: new FormControl<string | null>(null, Validators.required),
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-    password: new FormControl<string | null>(null, [Validators.required, Validators.minLength(6)]),
+    password: new FormControl<string | null>(null, [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}')]),
     avatar: new FormControl<File | null>(null)
   });
 
@@ -35,11 +35,7 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    console.log("Entered");
     if (this.form.valid) {
-      console.log("OK");
-      console.log(this.form.value);
-
       const formData = new FormData();
       //@ts-ignore
       formData.append('firstName', this.form.get('firstName')?.value);
@@ -55,8 +51,7 @@ export class RegisterComponent {
       this.authService.register(formData)
         .subscribe({
           next: () => {
-            console.log('User registered successfully');
-            this.router.navigate(['/login']);
+            this.router.navigate([`/confirm-email/${formData.get('email')}`]);
           },
           error: (err) => {
             console.error('Registration error', err);

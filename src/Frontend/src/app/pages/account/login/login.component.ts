@@ -28,7 +28,6 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
       //@ts-ignore
       this.authService.login(this.form.value)
         .subscribe({

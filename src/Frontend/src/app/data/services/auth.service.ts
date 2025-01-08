@@ -88,4 +88,14 @@ export class AuthService {
     this.accessToken = token;
     this.cookieService.set('accessToken', this.accessToken);
   }
+
+  confirmEmail(params: {email: string, code: string}) {
+    return this.http.get(`${this.baseUrl}accounts/confirmation`, {
+      params: {
+        email: params.email,
+        code: params.code
+      },
+      responseType: "text"
+    });
+  }
 }
