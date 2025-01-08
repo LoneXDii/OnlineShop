@@ -1,0 +1,16 @@
+<li class="list-group-item d-flex justify-content-between align-items-center border mb-2 p-2">
+  <div class="d-flex align-items-center">
+    <img src="{{ category.imageUrl || '/assets/noimg.png' }}" alt="Product Image" class="list-image me-3">
+    <div>
+      <h5 class="mb-1">{{category.name}}</h5>
+      <div class="d-flex flex-wrap">
+        <p class="mb-1 me-3">ID: {{category.id}}</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-success btn-sm me-2">Edit</button>
+    <button class="btn btn-info btn-sm me-2">Info</button>
+    <button class="btn btn-danger btn-sm">Delete</button>
+  </div>
+</li>
