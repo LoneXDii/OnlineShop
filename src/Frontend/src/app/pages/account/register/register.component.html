@@ -2,6 +2,10 @@
   <div class="col-md-6">
     <h2 class="text-center">Register</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="border rounded p-5">
+      <div class="d-flex justify-content-center mb-2">
+        <a [routerLink]="['/login']" class="btn btn-primary me-2">Login</a>
+        <a [routerLink]="['/register']" class="btn btn-secondary disabled">Register</a>
+      </div>
       <div class="form-group">
         <label for="firstName">First Name</label>
         <input type="text" id="firstName" class="form-control" formControlName="firstName" required>
@@ -27,7 +31,7 @@
         <label for="password">Password</label>
         <input type="password" id="password" class="form-control" formControlName="password" required>
         <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-danger">
-          Password is required (minimum 6 characters).
+          Password is required (minimum 8 characters, lowercase and uppercase letters and special characters are required).
         </div>
       </div>
       <div class="form-group mt-3">

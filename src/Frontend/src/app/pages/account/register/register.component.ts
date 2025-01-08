@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../data/services/auth.service';
 import {NgIf} from '@angular/common';
 import {tap} from 'rxjs';
@@ -9,7 +9,8 @@ import {tap} from 'rxjs';
   selector: 'app-register',
   imports: [
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    RouterLink
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'

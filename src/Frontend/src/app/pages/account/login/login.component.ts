@@ -2,14 +2,15 @@ import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../data/services/auth.service';
 import {NgIf} from '@angular/common';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-login',
   imports: [
     FormsModule,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -23,12 +24,19 @@ export class LoginComponent {
     password: new FormControl<string | null>(null, Validators.required)
   });
 
+  errorMessage: string | null = null;
+
   onSubmit() {
     if (this.form.valid) {
       console.log(this.form.value);
       //@ts-ignore
       this.authService.login(this.form.value)
-        .subscribe(val => this.router.navigate(['/profile']));
+        .subscribe({
+          next: () => this.router.navigate(['/profile']),
+          error: (error) => {
+            this.errorMessage = 'Login failed. Please check your credentials.';
+          }
+        });
     }
   }
 }

@@ -30,6 +30,19 @@
       "SwaggerKey": "users"
     },
     {
+      "UpstreamPathTemplate": "/users/password/resetting{everything}",
+      "UpstreamHttpMethod": [ "Post", "Get" ],
+      "DownstreamPathTemplate": "/api/users/password/resetting{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user-service",
+          "Port": 5001
+        }
+      ],
+      "SwaggerKey": "users"
+    },
+    {
       "UpstreamPathTemplate": "/users/{everything}",
       "UpstreamHttpMethod": [ "Post", "Get", "Put", "Delete" ],
       "DownstreamPathTemplate": "/api/users/{everything}",

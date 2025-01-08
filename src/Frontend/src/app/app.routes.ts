@@ -5,11 +5,14 @@ import {LoginComponent} from './pages/account/login/login.component';
 import {canActivateAuth} from './data/guards/auth.guard';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {RegisterComponent} from './pages/account/register/register.component';
+import {RefreshPasswordComponent} from './pages/account/refresh-password/refresh-password.component';
+import {canActivateUnauthenticated} from './data/guards/alreadyAuthenticated.guard';
 
 export const routes: Routes = [
   {path: 'catalog/:categoryId', component: CatalogComponent},
   {path: 'catalog', component: CategoriesComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent, canActivate: [canActivateUnauthenticated]},
+  {path: 'register', component: RegisterComponent, canActivate: [canActivateUnauthenticated]},
+  {path: 'refresh-password', component: RefreshPasswordComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'profile', component: ProfileComponent, canActivate: [canActivateAuth]},
 ];
