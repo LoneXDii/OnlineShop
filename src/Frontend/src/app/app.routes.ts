@@ -8,6 +8,8 @@ import {RegisterComponent} from './pages/account/register/register.component';
 import {RefreshPasswordComponent} from './pages/account/refresh-password/refresh-password.component';
 import {canActivateUnauthenticated} from './data/guards/alreadyAuthenticated.guard';
 import {ConfirmEmailComponent} from './pages/account/confirm-email/confirm-email.component';
+import {AdminComponent} from './pages/admin/admin.component';
+import {canActivateAdmin} from './data/guards/admin.guard';
 
 export const routes: Routes = [
   {path: 'catalog/:categoryId', component: CatalogComponent},
@@ -17,4 +19,5 @@ export const routes: Routes = [
   {path: 'confirm-email/:email', component: ConfirmEmailComponent},
   {path: 'refresh-password', component: RefreshPasswordComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'profile', component: ProfileComponent, canActivate: [canActivateAuth]},
+  {path: 'admin', component: AdminComponent, canActivate: [canActivateAdmin]},
 ];

@@ -12,10 +12,14 @@ export class ProductsService {
 
   constructor() { }
 
-  getProducts(categoryId: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number) {
+  getProducts(categoryId?: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number, PageSize: number = 10) {
     const params: any = {
-      CategoryId: categoryId,
+      PageSize: PageSize,
     };
+
+    if(categoryId) {
+      params.categoryId = categoryId;
+    }
 
     if (minPrice) {
       params.MinPrice = minPrice;

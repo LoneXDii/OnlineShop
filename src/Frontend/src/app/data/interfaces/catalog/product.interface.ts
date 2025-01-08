@@ -7,7 +7,10 @@ export interface Product {
   price: number;
   quantity: number;
   imageUrl: string | null;
-  discount: number | null;
+  discount: {
+    id: number;
+    percent: number;
+  } | null;
   category: Category;
   attributeValues: AttributeValue[];
 }

@@ -1,0 +1,8 @@
+@for(product of products!.items; track product.id){
+  <app-product-list-item [product]="product"/>
+}
+<div class="d-flex justify-content-center mt-3">
+  <app-pagination [pageNo]="products!.currentPage"
+                  [totalPages]="products!.totalPages"
+                  (onPageChange)="handlePageChanged($event)"/>
+</div>
