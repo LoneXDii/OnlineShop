@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {catchError, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, tap, throwError} from 'rxjs';
 import {Tokens} from '../interfaces/auth/tokens.interface';
 import {CookieService} from 'ngx-cookie-service';
 import {Router} from '@angular/router';
@@ -16,6 +16,9 @@ export class AuthService {
   accessToken: string | null = null;
   refreshToken: string | null = null;
 
+  private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated);
+  loggedIn$ = this.loggedIn.asObservable();
+
   constructor() { }
 
   get isAuthenticated(){
@@ -26,10 +29,21 @@ export class AuthService {
     return !!this.accessToken;
   }
 
+  get getAccessToken(){
+    if (!this.accessToken) {
+      this.accessToken = this.cookieService.get('accessToken');
+    }
+
+    return this.accessToken;
+  }
+
   login(payload: {email: string, password: string}) {
     return this.http.post<Tokens>(`${this.baseUrl}accounts/login`, payload)
       .pipe(
-        tap(val => this.saveTokens(val))
+        tap(val => {
+          this.saveTokens(val);
+          this.loggedIn.next(true);
+        })
       );
   }
 
@@ -38,7 +52,8 @@ export class AuthService {
   }
 
   refreshAccessToken(){
-    return this.http.get<string>(`${this.baseUrl}tokens/refresh?refreshToken=${this.refreshToken}`)
+    return this.http.get(`${this.baseUrl}tokens/refresh?refreshToken=${this.refreshToken}`,
+      {responseType: "text"})
       .pipe(
         tap(val => {
           this.updateAccessToken(val);
@@ -51,7 +66,8 @@ export class AuthService {
   }
 
   logout(){
-    this.http.get(`${this.baseUrl}accounts/logout`)
+    this.http.get(`${this.baseUrl}accounts/logout`);
+    this.loggedIn.next(false);
 
     this.cookieService.delete('accessToken');
     this.cookieService.delete('refreshToken');
