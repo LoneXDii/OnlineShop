@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {CategoriesService} from '../../../../../data/services/categories.service';
 import {Category} from '../../../../../data/interfaces/catalog/category.interface';
 
@@ -9,6 +9,7 @@ import {Category} from '../../../../../data/interfaces/catalog/category.interfac
   styleUrl: './product-form-category-selector.component.css'
 })
 export class ProductFormCategorySelectorComponent implements OnInit {
+  @Input() selectedCategoryId?: number;
   @Output() categorySelected = new EventEmitter<number>();
   categoriesService = inject(CategoriesService);
   categories: Category[] = []

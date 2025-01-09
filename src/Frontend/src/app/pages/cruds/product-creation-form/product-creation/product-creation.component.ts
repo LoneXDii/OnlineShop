@@ -1,26 +1,18 @@
 import {Component, inject} from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from '@angular/forms';
-import {ProductsService} from '../../../data/services/products.service';
+import {ProductsService} from '../../../../data/services/products.service';
 import {Router} from '@angular/router';
-import {ProductFormComponent} from './components/product-form/product-form.component';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {ProductFormComponent} from '../components/product-form/product-form.component';
 
 @Component({
-  selector: 'app-product-creation-form',
+  selector: 'app-product-creation',
   imports: [
-    ReactiveFormsModule,
     ProductFormComponent
   ],
-  templateUrl: './product-creation-form.component.html',
-  styleUrl: './product-creation-form.component.css'
+  templateUrl: './product-creation.component.html',
+  styleUrl: './product-creation.component.css'
 })
-export class ProductCreationFormComponent {
+export class ProductCreationComponent {
   productsService = inject(ProductsService);
   router = inject(Router);
 

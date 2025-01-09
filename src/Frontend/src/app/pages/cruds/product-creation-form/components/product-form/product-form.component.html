@@ -1,5 +1,3 @@
-<h2 class="text-center">Add Product</h2>
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="border rounded p-5" >
   <div>
     <label for="name">Name</label>
@@ -36,14 +34,21 @@
   </div>
 
   <app-product-form-category-selector
+    [selectedCategoryId]="selectedCategoryId"
     (categorySelected)="onCategorySelected($event)"
   ></app-product-form-category-selector>
 
-  <app-product-form-attributes-selector
-    *ngIf="categoryId"
-    [categoryId]="categoryId"
-    (attributesSelected)="onAttributesSelected($event)"
-  ></app-product-form-attributes-selector>
-
+   @if(selectedCategoryId){
+    <app-product-form-attributes-selector
+      [categoryId]="selectedCategoryId"
+      [selectedAttributeValues]="selectedAttributeValues"
+      (attributesSelected)="onAttributesSelected($event)"
+    ></app-product-form-attributes-selector>
+  } @else if(categoryId){
+    <app-product-form-attributes-selector
+      [categoryId]="categoryId"
+      (attributesSelected)="onAttributesSelected($event)"
+    ></app-product-form-attributes-selector>
+  }
   <button type="submit" [disabled]="form.invalid" class="btn btn-primary">Submit</button>
 </form>

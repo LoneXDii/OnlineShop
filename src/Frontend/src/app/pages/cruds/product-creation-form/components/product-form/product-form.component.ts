@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {
   ProductFormAttributesSelectorComponent
@@ -7,6 +7,7 @@ import {NgIf} from '@angular/common';
 import {
   ProductFormCategorySelectorComponent
 } from '../product-form-category-selector/product-form-category-selector.component';
+import {AttributeValue} from '../../../../../data/interfaces/catalog/attributeValue.interface';
 
 @Component({
   selector: 'app-product-form',
@@ -19,14 +20,23 @@ import {
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css'
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnInit {
+  @Input() selectedCategoryId?: number;
   @Input() form!: FormGroup;
+  @Input() selectedAttributeValues?: AttributeValue[];
   @Output() submitForm = new EventEmitter<FormData>();
 
   categoryId: number | null = null;
 
+  ngOnInit(){
+    if(this.selectedCategoryId) {
+      this.categoryId = this.selectedCategoryId;
+    }
+  }
+
   onCategorySelected(newCategoryId: number) {
     this.categoryId = newCategoryId;
+    this.selectedCategoryId = undefined;
   }
 
   onAttributesSelected(selectedAttributes: number[]) {

@@ -22,12 +22,11 @@ export class CatalogComponent implements OnInit {
 
   productsService = inject(ProductsService);
   products?: PaginatedProducts;
+  route = inject(ActivatedRoute);
 
   minPrice?: number;
   maxPrice?: number;
   valuesIds?: number[];
-
-  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {

@@ -1,9 +1,9 @@
 <div class="mb-3">
   <h5 class="form-label">Select category:</h5>
   <select id="categorySelect" class="form-select" (change)="onCategoryChange($event)">
-    <option value="0" disabled selected>Select a category</option>
+    <option value="0" disabled [selected]="!selectedCategoryId">Select a category</option>
     @for(category of categories; track category.id){
-      <option [value]="category.id">
+      <option [value]="category.id" [selected]="category.id === selectedCategoryId">
         {{ category.name }}
       </option>
     }

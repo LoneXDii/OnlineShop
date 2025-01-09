@@ -10,7 +10,10 @@ import {canActivateUnauthenticated} from './data/guards/alreadyAuthenticated.gua
 import {ConfirmEmailComponent} from './pages/account/confirm-email/confirm-email.component';
 import {AdminComponent} from './pages/admin/admin.component';
 import {canActivateAdmin} from './data/guards/admin.guard';
-import {ProductCreationFormComponent} from './pages/cruds/product-creation-form/product-creation-form.component';
+import {
+  ProductCreationComponent
+} from './pages/cruds/product-creation-form/product-creation/product-creation.component';
+import {ProductEditingComponent} from './pages/cruds/product-creation-form/product-editing/product-editing.component';
 
 export const routes: Routes = [
   {path: 'catalog/:categoryId', component: CatalogComponent},
@@ -21,5 +24,6 @@ export const routes: Routes = [
   {path: 'refresh-password', component: RefreshPasswordComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'profile', component: ProfileComponent, canActivate: [canActivateAuth]},
   {path: 'admin', component: AdminComponent, canActivate: [canActivateAdmin]},
-  {path: 'products/create', component: ProductCreationFormComponent, canActivate: [canActivateAdmin]},
+  {path: 'products/create', component: ProductCreationComponent, canActivate: [canActivateAdmin]},
+  {path: 'products/:id/edit', component: ProductEditingComponent, canActivate: [canActivateAdmin]},
 ];
