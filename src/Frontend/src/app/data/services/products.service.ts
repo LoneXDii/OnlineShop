@@ -8,7 +8,11 @@ import {catchError, of} from 'rxjs';
 })
 export class ProductsService {
   http = inject(HttpClient);
-  baseUrl = 'http://localhost:5000';
+  baseUrl = 'http://localhost:5000/products';
+
+  createProduct(formData: FormData){
+    return this.http.post(`${this.baseUrl}`, formData);
+  }
 
   getProducts(categoryId?: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number, PageSize: number = 10) {
     const params: any = {
@@ -35,7 +39,7 @@ export class ProductsService {
       params.PageNo = PageNo;
     }
 
-    return this.http.get<PaginatedProducts>(`${this.baseUrl}/products`, {params: params})
+    return this.http.get<PaginatedProducts>(`${this.baseUrl}`, {params: params})
       .pipe(
         catchError(error => {
           if (error.status === 404) {

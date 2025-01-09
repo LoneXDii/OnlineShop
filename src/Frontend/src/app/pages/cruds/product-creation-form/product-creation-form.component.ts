@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
 import {
@@ -15,6 +14,8 @@ import {NgIf} from '@angular/common';
 import {
   ProductFormCategorySelectorComponent
 } from './components/product-form-category-selector/product-form-category-selector.component';
+import {ProductsService} from '../../../data/services/products.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-product-creation-form',
@@ -28,6 +29,8 @@ import {
   styleUrl: './product-creation-form.component.css'
 })
 export class ProductCreationFormComponent {
+  productsService = inject(ProductsService);
+  router = inject(Router);
   categoryId: number | null = null;
 
   form = new FormGroup({
@@ -69,6 +72,21 @@ export class ProductCreationFormComponent {
   }
 
   onSubmit() {
-    console.log('Form:', this.form.value);
+    if(this.form.valid) {
+      const formData = new FormData();
+
+      formData.append('name', this.form.get('name')?.value || '');
+      formData.append('price', this.form.get('price')?.value?.toString() || '');
+      formData.append('quantity', this.form.get('quantity')?.value?.toString() || '');
+      formData.append('image', this.form.get('image')?.value || '');
+
+      const attributes = this.form.get('attributes')?.value || [];
+      attributes.forEach((attr: number) => {
+        formData.append('attributes[]', attr.toString());
+      });
+
+      this.productsService.createProduct(formData)
+        .subscribe(() => this.router.navigate(['/admin']));
+    }
   }
 }
