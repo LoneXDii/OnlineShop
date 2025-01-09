@@ -12,8 +12,9 @@ import {AdminComponent} from './pages/admin/admin.component';
 import {canActivateAdmin} from './data/guards/admin.guard';
 import {
   ProductCreationComponent
-} from './pages/cruds/product-creation-form/product-creation/product-creation.component';
-import {ProductEditingComponent} from './pages/cruds/product-creation-form/product-editing/product-editing.component';
+} from './pages/cruds/product/product-creation/product-creation.component';
+import {ProductEditingComponent} from './pages/cruds/product/product-editing/product-editing.component';
+import {ProductInfoComponent} from './pages/cruds/product/product-info/product-info.component';
 
 export const routes: Routes = [
   {path: 'catalog/:categoryId', component: CatalogComponent},
@@ -24,6 +25,7 @@ export const routes: Routes = [
   {path: 'refresh-password', component: RefreshPasswordComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'profile', component: ProfileComponent, canActivate: [canActivateAuth]},
   {path: 'admin', component: AdminComponent, canActivate: [canActivateAdmin]},
+  {path: 'products/:id', component: ProductInfoComponent},
   {path: 'products/create', component: ProductCreationComponent, canActivate: [canActivateAdmin]},
   {path: 'products/:id/edit', component: ProductEditingComponent, canActivate: [canActivateAdmin]},
 ];

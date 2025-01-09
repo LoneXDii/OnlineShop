@@ -1,0 +1,47 @@
+@if(product){
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="d-flex justify-content-center">
+          <img
+            src="{{ product.imageUrl || '/assets/noimg.png' }}"
+            class="card-img-top"
+            alt="{{ product.name }}"
+            style="max-width: 50%; height: auto;"
+          />
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">
+            <span class="text-muted" *ngIf="product.discount">{{ product.price }}</span>
+            <span *ngIf="product.discount" class="text-danger">
+                {{ product.price * (1 - product.discount.percent / 100) }}
+              </span>
+            <span *ngIf="!product.discount" class="text-success">
+                {{ product.price }}
+              </span>
+          </p>
+          <p class="card-text">
+            Quantity: <strong>{{ product.quantity }}</strong>
+          </p>
+          <div *ngIf="product.discount" class="alert alert-warning" role="alert">
+            Discount: {{ product.discount.percent }}%
+          </div>
+          <div class="mb-3">
+            <h6>Attributes:</h6>
+            <ul class="list-group">
+              <li *ngFor="let attribute of product.attributeValues" class="list-group-item">
+                {{ attribute.name }}: {{ attribute.value }}
+              </li>
+            </ul>
+          </div>
+          <button class="btn btn-primary me-2">Add to Cart</button>
+          @if(authService.isAdmin){
+            <button class="btn btn-success me-2" [routerLink]="['/products', product.id, 'edit']">Edit</button>
+            <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
