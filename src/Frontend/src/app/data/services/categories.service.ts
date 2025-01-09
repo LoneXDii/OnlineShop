@@ -21,4 +21,8 @@ export class CategoriesService {
   getCategoryAttributesValues(categoryId:number) {
     return this.http.get<AttributeAllValues[]>(`${this.baseUrl}/${categoryId}/attributes/values`);
   }
+
+  createChildCategory(category: {parentId: number, name: string}) {
+    return this.http.post(`${this.baseUrl}/${category.parentId}/attributes`, {name: category.name});
+  }
 }

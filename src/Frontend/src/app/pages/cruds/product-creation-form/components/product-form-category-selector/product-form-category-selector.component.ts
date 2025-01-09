@@ -1,4 +1,6 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {CategoriesService} from '../../../../../data/services/categories.service';
+import {Category} from '../../../../../data/interfaces/catalog/category.interface';
 
 @Component({
   selector: 'app-product-form-category-selector',
@@ -6,13 +8,15 @@ import {Component, EventEmitter, Output} from '@angular/core';
   templateUrl: './product-form-category-selector.component.html',
   styleUrl: './product-form-category-selector.component.css'
 })
-export class ProductFormCategorySelectorComponent {
+export class ProductFormCategorySelectorComponent implements OnInit {
   @Output() categorySelected = new EventEmitter<number>();
+  categoriesService = inject(CategoriesService);
+  categories: Category[] = []
 
-  categories = [
-    { id: 1, name: 'Категория 1' },
-    { id: 2, name: 'Категория 2' }
-  ];
+  ngOnInit(){
+    this.categoriesService.getCategories()
+      .subscribe(val => this.categories = val);
+  }
 
   onCategoryChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;

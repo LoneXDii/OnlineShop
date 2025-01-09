@@ -36,6 +36,7 @@
       </app-product-form-category-selector>
 
       <app-product-form-attributes-selector
+        *ngIf="categoryId"
         [categoryId]="categoryId"
         (attributesSelected)="onAttributesSelected($event)">
       </app-product-form-attributes-selector>

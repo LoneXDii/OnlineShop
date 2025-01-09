@@ -1,0 +1,29 @@
+<div class="modal fade show" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add value for {{attribute.name}}</h5>
+        <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+      </div>
+      <form (ngSubmit)="onSubmit()" #attributeForm="ngForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="attributeValue" class="form-label">Attribute Value</label>
+            <input
+              type="text"
+              id="attributeValue"
+              class="form-control"
+              required
+              [(ngModel)]="attributeValue"
+              name="attributeValue"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="onClose()">Close</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!attributeForm.form.valid">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

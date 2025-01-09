@@ -1,5 +1,13 @@
 import { Component } from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import {
   ProductFormAttributesSelectorComponent
 } from './components/product-form-attributes-selector/product-form-attributes-selector.component';
@@ -20,15 +28,25 @@ import {
   styleUrl: './product-creation-form.component.css'
 })
 export class ProductCreationFormComponent {
-  categoryId: number = 1;
+  categoryId: number | null = null;
 
   form = new FormGroup({
     name: new FormControl<string | null>(null, Validators.required),
     price: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
     quantity: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
     image: new FormControl<File | null>(null),
-    attributes: new FormControl<string[]>([])
+    attributes: new FormControl<number[]>([], this.attributesValidator)
   });
+
+  attributesValidator(control: AbstractControl): ValidationErrors | null {
+    const attributes: number[] = control.value;
+
+    if (attributes.length > 0 && attributes.every(attr => attr !== 0)) {
+      return null;
+    }
+
+    return { invalidAttributes: true };
+  }
 
   onFileChange(event: any) {
     const file = event.target.files[0];
@@ -39,13 +57,15 @@ export class ProductCreationFormComponent {
 
   onCategorySelected(newCategoryId: number) {
     this.categoryId = newCategoryId;
-    console.log(this.categoryId);
   }
 
-  onAttributesSelected(selectedAttributes: string[]) {
-    this.form.patchValue({
-      attributes: selectedAttributes
-    });
+  onAttributesSelected(selectedAttributes: number[]) {
+    if(this.categoryId) {
+      selectedAttributes.push(this.categoryId);
+      this.form.patchValue({
+        attributes: selectedAttributes
+      });
+    }
   }
 
   onSubmit() {
