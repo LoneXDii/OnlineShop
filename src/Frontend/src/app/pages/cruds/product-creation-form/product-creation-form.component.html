@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h2 class="text-center">Add Product</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="border rounded p-5">
+<!--      <div *ngIf="errorMessage" class="alert alert-danger">-->
+<!--        {{ errorMessage }}-->
+<!--      </div>-->
+      <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name" class="form-control" required>
+        <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-danger">
+          Name is required.
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        <label for="price">Price</label>
+        <input type="number" id="price" formControlName="price" class="form-control" required>
+        <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched" class="text-danger">
+          Price is required.
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" formControlName="quantity" class="form-control" required>
+        <div *ngIf="form.get('quantity')?.invalid && form.get('quantity')?.touched" class="text-danger">
+          Quantity is required.
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        <label for="image">Image</label>
+        <input type="file" id="image" class="form-control" (change)="onFileChange($event)">
+      </div>
+
+      <app-product-form-category-selector
+        (categorySelected)="onCategorySelected($event)">
+      </app-product-form-category-selector>
+
+      <app-product-form-attributes-selector
+        [categoryId]="categoryId"
+        (attributesSelected)="onAttributesSelected($event)">
+      </app-product-form-attributes-selector>
+
+      <div class="d-flex align-items-center mt-3">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="form.invalid">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

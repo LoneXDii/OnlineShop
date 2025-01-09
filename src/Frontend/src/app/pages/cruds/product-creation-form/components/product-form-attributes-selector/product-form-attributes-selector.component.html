@@ -1,0 +1,14 @@
+<div class="mb-3">
+  <label class="form-label">Attributes</label>
+  @for(attribute of attributeValues; track attribute.attribute.id){
+    <div>
+      <h5>{{ attribute.attribute.name }}</h5>
+      <select class="form-select" (change)="onSelectAttribute(attribute.attribute.id, getSelectedValue($event))">
+        <option value="">Select value</option>
+        @for(value of attribute.values; track value.id){
+          <option [value]="value.id">{{ value.name }}</option>
+        }
+      </select>
+    </div>
+  }
+</div>
