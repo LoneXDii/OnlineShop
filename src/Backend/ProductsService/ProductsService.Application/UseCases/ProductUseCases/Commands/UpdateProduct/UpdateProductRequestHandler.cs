@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Specifications.Categories;
 using ProductsService.Domain.Abstractions.BlobStorage;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Abstractions.MessageBrocker;
@@ -16,7 +17,7 @@ internal class UpdateProductRequestHandler(IUnitOfWork unitOfWork, IMapper mappe
     {
         logger.LogInformation($"Trying to update product with id: {request.Id}");
 
-        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.Id);
+        var product = await unitOfWork.ProductQueryRepository.GetByIdAsync(request.Id, cancellationToken, p => p.Categories);
 
         if (product is null)
         {
@@ -39,6 +40,23 @@ internal class UpdateProductRequestHandler(IUnitOfWork unitOfWork, IMapper mappe
             product.ImageUrl = await blobService.UploadAsync(request.Image, request.ImageContentType);
 
             request.Image.Dispose();
+        }
+
+        if (request.Attributes is not null)
+        {
+            var specification = new CategoriesByIdsArraySpecification(request.Attributes);
+
+            var categories = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
+
+            unitOfWork.AttachInCommandContext(product);
+            unitOfWork.AttachInCommandContext(categories);
+
+            product.Categories.Clear();
+
+            foreach (var category in categories)
+            {
+                product.Categories.Add(category);
+            }
         }
 
         await unitOfWork.ProductCommandRepository.UpdateAsync(product, cancellationToken);

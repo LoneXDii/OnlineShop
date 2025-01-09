@@ -4,8 +4,8 @@
     <app-product-form
       *ngIf="product"
       [form]="form"
-      [selectedCategoryId]="product?.category?.id"
-      [selectedAttributeValues]="product?.attributeValues"
+      [selectedCategoryId]="product.category.id"
+      [selectedAttributeValues]="product.attributeValues"
       (submitForm)="onSubmit($event)"
     ></app-product-form>
   </div>

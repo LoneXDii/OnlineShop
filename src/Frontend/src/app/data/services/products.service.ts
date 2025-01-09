@@ -15,8 +15,12 @@ export class ProductsService {
     return this.http.post(`${this.baseUrl}`, formData);
   }
 
-  deleteProduct(id: number){
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  updateProduct(productId: number, formData: FormData){
+    return this.http.put(`${this.baseUrl}/${productId}`, formData);
+  }
+
+  deleteProduct(productId: number){
+    return this.http.delete(`${this.baseUrl}/${productId}`);
   }
 
   getProductById(id: number){
