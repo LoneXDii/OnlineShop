@@ -14,6 +14,10 @@ export class ProductsService {
     return this.http.post(`${this.baseUrl}`, formData);
   }
 
+  deleteProduct(id: number){
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
   getProducts(categoryId?: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number, PageSize: number = 10) {
     const params: any = {
       PageSize: PageSize,

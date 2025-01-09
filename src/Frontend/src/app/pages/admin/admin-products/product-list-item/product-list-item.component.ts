@@ -1,5 +1,6 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {Product} from '../../../../data/interfaces/catalog/product.interface';
+import {ProductsService} from '../../../../data/services/products.service';
 
 @Component({
   selector: 'app-product-list-item',
@@ -9,4 +10,14 @@ import {Product} from '../../../../data/interfaces/catalog/product.interface';
 })
 export class ProductListItemComponent {
   @Input() product!: Product;
+  @Output() productDeleted = new EventEmitter<void>();
+  productsService = inject(ProductsService);
+
+  onDelete(){
+    this.productsService.deleteProduct(this.product.id)
+      .subscribe(() => {
+        alert('Product deleted successfully.');
+        this.productDeleted.emit();
+      });
+  }
 }

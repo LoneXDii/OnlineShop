@@ -18,14 +18,19 @@ import {RouterLink} from '@angular/router';
 export class AdminProductsComponent implements OnInit {
   productsService = inject(ProductsService);
   products?: PaginatedProducts;
+  currentPage = 1;
 
   ngOnInit() {
-    this.productsService.getProducts(undefined, undefined, undefined, undefined, undefined, 20)
-      .subscribe(val => this.products = val);
+    this.refreshProducts();
   }
 
   handlePageChanged(pageNo: number) {
-    this.productsService.getProducts(undefined, undefined, undefined, undefined, pageNo, 20)
+    this.currentPage = pageNo;
+    this.refreshProducts();
+  }
+
+  refreshProducts(){
+    this.productsService.getProducts(undefined, undefined, undefined, undefined, this.currentPage, 20)
       .subscribe(val => this.products = val);
   }
 }

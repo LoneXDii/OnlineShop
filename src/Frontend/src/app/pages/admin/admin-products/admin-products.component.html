@@ -1,6 +1,7 @@
 <a type="button" class="btn btn-primary mb-2" [routerLink]="['/products/create']">Create</a>
 @for(product of products!.items; track product.id){
-  <app-product-list-item [product]="product"/>
+  <app-product-list-item [product]="product"
+                         (productDeleted)="refreshProducts()"/>
 }
 <div class="d-flex justify-content-center mt-3">
   <app-pagination [pageNo]="products!.currentPage"
