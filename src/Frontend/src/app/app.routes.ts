@@ -17,6 +17,7 @@ import {ProductEditingComponent} from './pages/cruds/product/product-editing/pro
 import {ProductInfoComponent} from './pages/cruds/product/product-info/product-info.component';
 import {CategoryCreationComponent} from './pages/cruds/category/category-creation/category-creation.component';
 import {CategoryEditingComponent} from './pages/cruds/category/category-editing/category-editing.component';
+import {CategoryInfoComponent} from './pages/cruds/category/category-info/category-info.component';
 
 export const routes: Routes = [
   {path: 'catalog/:categoryId', component: CatalogComponent},
@@ -30,6 +31,7 @@ export const routes: Routes = [
   {path: 'products/:id/info', component: ProductInfoComponent},
   {path: 'products/create', component: ProductCreationComponent, canActivate: [canActivateAdmin]},
   {path: 'products/:id/edit', component: ProductEditingComponent, canActivate: [canActivateAdmin]},
+  {path: 'categories/:id/info', component: CategoryInfoComponent, canActivate: [canActivateAdmin]},
   {path: 'categories/create', component: CategoryCreationComponent, canActivate: [canActivateAdmin]},
   {path: 'categories/:id/edit', component: CategoryEditingComponent, canActivate: [canActivateAdmin]},
 ];

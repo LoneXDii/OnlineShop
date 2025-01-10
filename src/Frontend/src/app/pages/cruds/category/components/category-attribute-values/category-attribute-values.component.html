@@ -1,0 +1,17 @@
+<div class="mb-3">
+  <h6>{{attributeValues.attribute.name}}:</h6>
+  <ul class="list-group">
+    @for(val of attributeValues.values; track val.id){
+      <li class="list-group-item">{{val.name}}</li>
+    }
+    <li class="list-group-item">
+      <button type="button" class="btn btn-primary btn-sm" (click)="openModal()">Add value</button>
+    </li>
+  </ul>
+</div>
+
+<app-product-attribute-value-creation-modal
+  *ngIf="isModalVisible"
+  [attribute]="attributeValues.attribute"
+  (closeModal)="closeModal()">
+</app-product-attribute-value-creation-modal>
