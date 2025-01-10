@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Specifications.Products;
 using ProductsService.Domain.Abstractions.Database;
 
 namespace ProductsService.Application.UseCases.CategoryUseCases.Commands.DeleteCategory;
@@ -19,6 +20,17 @@ internal class DeleteCategoryRequestHandler(IUnitOfWork unitOfWork, ILogger<Dele
             logger.LogError($"Category with id: {request.categoryId} not found");
 
             throw new NotFoundException("No such category");
+        }
+
+        var specification = new ProductCategoryOrAtributeSpecification(category.Id);
+        
+        var products = await unitOfWork.ProductQueryRepository.ListAsync(specification, cancellationToken);
+
+        if (products.Any())
+        {
+            logger.LogError($"Category with id: {request.categoryId} is in use. Cannot delete");
+
+            throw new BadRequestException("Can't delete category that is in use");
         }
 
         await unitOfWork.CategoryCommandRepository.DeleteAsync(category, cancellationToken);

@@ -10,7 +10,14 @@
         />
       </div>
       <div class="card-body">
-        <h5 class="card-title">{{ category.name }}</h5>
+        <div class="card-title">
+          <h5 >{{ category.name }}</h5>
+          <button type="button" class="btn btn-success me-2"
+                  [routerLink]="['/categories', category.id, 'edit']">
+            Edit
+          </button>
+          <button type="button" class="btn btn-danger" (click)="onDelete()">Delete</button>
+        </div>
         <app-category-attributes-values [category]="category"
                                         (categoryUpdated)="refreshCategory()">
         </app-category-attributes-values>

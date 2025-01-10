@@ -3,7 +3,7 @@
     @for(av of attributesValues; track av.attribute.id){
       <div class="col-4">
         <app-category-attribute-values [attributeValues]="av"
-                                       (categoryUpdated)="categoryUpdated.emit()"/>
+                                       (categoryUpdated)="closeModal()"/>
       </div>
     }
   </div>

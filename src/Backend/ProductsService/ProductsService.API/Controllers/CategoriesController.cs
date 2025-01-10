@@ -69,7 +69,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{CategoryId:min(1)}")]
-    [Authorize(Policy = "admin")]
+    //[Authorize(Policy = "admin")]
     public async Task<IActionResult> DeleteCategory([FromRoute] DeleteCategoryRequest request, CancellationToken cancellationToken)
     {
         await _mediator.Send(request, cancellationToken);
