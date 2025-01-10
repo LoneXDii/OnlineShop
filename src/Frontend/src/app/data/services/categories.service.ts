@@ -22,7 +22,15 @@ export class CategoriesService {
     return this.http.get<AttributeAllValues[]>(`${this.baseUrl}/${categoryId}/attributes/values`);
   }
 
+  createCategory(formData: FormData){
+    return this.http.post(`${this.baseUrl}`, formData);
+  }
+
   createChildCategory(category: {parentId: number, name: string}) {
     return this.http.post(`${this.baseUrl}/${category.parentId}/attributes`, {name: category.name});
+  }
+
+  deleteCategory(categoryId: number) {
+    return this.http.delete(`${this.baseUrl}/${categoryId}`);
   }
 }

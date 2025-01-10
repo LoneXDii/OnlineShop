@@ -85,7 +85,7 @@ internal class TokenService : ITokenService
              new("Id" , user.Id),
              new("StripeId", user.StripeId ?? "")
         };
-
+        
         var roles = await _userManager.GetRolesAsync(user);
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
