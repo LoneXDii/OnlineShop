@@ -27,32 +27,25 @@ export class ProductsService {
     return this.http.get<Product>(`${this.baseUrl}/${id}`);
   }
 
-  getProducts(categoryId?: number, minPrice?: number, maxPrice?: number, ValuesIds?: number[], PageNo?: number, PageSize: number = 10) {
+  getProducts(options: {
+    categoryId?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    valuesIds?: number[];
+    pageNo?: number;
+    pageSize?: number;
+  } = {}) {
     const params: any = {
-      PageSize: PageSize,
+      PageSize: options.pageSize ?? 10,
+      ...Object.entries(options)
+        .filter(([_, value]) => value && true)
+        .reduce((res, [key, value]) => {
+          res[key] = value;
+          return res;
+        }, {} as any)
     };
 
-    if(categoryId) {
-      params.categoryId = categoryId;
-    }
-
-    if (minPrice) {
-      params.MinPrice = minPrice;
-    }
-
-    if (maxPrice) {
-      params.MaxPrice = maxPrice;
-    }
-
-    if (ValuesIds) {
-      params.ValuesIds = ValuesIds;
-    }
-
-    if (PageNo) {
-      params.PageNo = PageNo;
-    }
-
-    return this.http.get<PaginatedProducts>(`${this.baseUrl}`, {params: params})
+    return this.http.get<PaginatedProducts>(`${this.baseUrl}`, { params })
       .pipe(
         catchError(error => {
           if (error.status === 404) {

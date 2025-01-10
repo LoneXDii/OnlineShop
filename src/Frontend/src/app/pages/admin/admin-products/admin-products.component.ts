@@ -30,7 +30,10 @@ export class AdminProductsComponent implements OnInit {
   }
 
   refreshProducts(){
-    this.productsService.getProducts(undefined, undefined, undefined, undefined, this.currentPage, 20)
+    this.productsService.getProducts({
+      pageNo: this.currentPage,
+      pageSize: 20
+    })
       .subscribe(val => this.products = val);
   }
 }

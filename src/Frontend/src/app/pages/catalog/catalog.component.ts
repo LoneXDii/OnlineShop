@@ -40,12 +40,23 @@ export class CatalogComponent implements OnInit {
     this.maxPrice = params.maxPrice;
     this.valuesIds = params.valuesIds;
 
-    this.productsService.getProducts(this.categoryId, this.minPrice, this.maxPrice, this.valuesIds)
+    this.productsService.getProducts({
+      categoryId: this.categoryId,
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+      valuesIds: this.valuesIds
+    })
       .subscribe(val => this.products = val);
   }
 
   handlePageChanged(pageNo: number) {
-    this.productsService.getProducts(this.categoryId, this.minPrice, this.maxPrice, this.valuesIds, pageNo)
+    this.productsService.getProducts({
+      categoryId: this.categoryId,
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+      valuesIds: this.valuesIds,
+      pageNo: pageNo
+    })
       .subscribe(val => this.products = val);
   }
 }
