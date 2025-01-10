@@ -30,6 +30,10 @@ export class CategoriesService {
     return this.http.post(`${this.baseUrl}/${category.parentId}/attributes`, {name: category.name});
   }
 
+  updateCategory(categoryId: number, formData: FormData) {
+    return this.http.put(`${this.baseUrl}/${categoryId}`, formData);
+  }
+
   deleteCategory(categoryId: number) {
     return this.http.delete(`${this.baseUrl}/${categoryId}`);
   }

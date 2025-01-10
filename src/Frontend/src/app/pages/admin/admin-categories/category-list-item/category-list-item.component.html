@@ -9,7 +9,7 @@
     </div>
   </div>
   <div>
-    <button class="btn btn-success btn-sm me-2">Edit</button>
+    <button class="btn btn-success btn-sm me-2" [routerLink]="['/categories', category.id, 'edit']">Edit</button>
     <button class="btn btn-info btn-sm me-2">Info</button>
     <button class="btn btn-danger btn-sm" (click)="onDelete()">Delete</button>
   </div>
