@@ -65,6 +65,7 @@ export class ProductFormComponent implements OnInit {
       formData.append('image', this.form.get('image')?.value || '');
 
       const attributes = this.form.get('attributes')?.value || [];
+
       attributes.forEach((attr: number) => {
         formData.append('attributes[]', attr.toString());
       });

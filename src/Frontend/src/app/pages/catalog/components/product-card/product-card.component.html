@@ -8,9 +8,9 @@
           <p>Quantity: <strong>{{product.quantity}}</strong></p>
           <p>Category: <strong>{{ product.category.name }}</strong></p>
         </div>
-        <ul>
+        <ul class="list-group mb-1">
           @for (attributeValue of product.attributeValues; track attributeValue){
-            <li>{{attributeValue.name}}: {{attributeValue.value}}</li>
+            <li class="list-group-item">{{attributeValue.name}}: {{attributeValue.value}}</li>
           }
         </ul>
         <a href="#" class="btn btn-primary">Add to cart</a>

@@ -36,18 +36,24 @@ export class ConfirmEmailComponent {
   }
 
   confirmEmail() {
-    if (this.form.valid) {
-      const code = this.form.value.code;
-      //@ts-ignore
-      this.authService.confirmEmail({ email: this.email!, code })
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/login']);
-          },
-          error: () => {
-            this.errorMessage = 'Invalid confirmation code. Please try again.';
-          }
-        });
+    if (!this.form.valid) {
+      return;
     }
+
+    const code = this.form.value.code;
+
+    if (!code){
+      return;
+    }
+
+    this.authService.confirmEmail({ email: this.email!, code })
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login']);
+        },
+        error: () => {
+          this.errorMessage = 'Invalid confirmation code. Please try again.';
+        }
+      });
   }
 }

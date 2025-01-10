@@ -37,6 +37,7 @@ export class CategoryInfoComponent implements OnInit {
     if(!this.categoryId){
       return;
     }
+
     this.categoriesService.getCategoryById(this.categoryId)
       .subscribe(category => this.category = category);
   }
@@ -45,6 +46,7 @@ export class CategoryInfoComponent implements OnInit {
     if(!this.categoryId){
       return;
     }
+
     this.categoriesService.deleteCategory(this.categoryId)
       .subscribe({
         next: () => this.refreshCategory(),

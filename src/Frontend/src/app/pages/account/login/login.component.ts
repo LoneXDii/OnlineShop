@@ -27,15 +27,22 @@ export class LoginComponent {
   errorMessage: string | null = null;
 
   onSubmit() {
-    if (this.form.valid) {
-      //@ts-ignore
-      this.authService.login(this.form.value)
-        .subscribe({
-          next: () => this.router.navigate(['/profile']),
-          error: (error) => {
-            this.errorMessage = 'Login failed. Please check your credentials.';
-          }
-        });
+    if (!this.form.valid) {
+      return;
     }
+
+    const { email, password } = this.form.value;
+
+    if (!(email && password)){
+      return;
+    }
+
+    this.authService.login({ email, password })
+      .subscribe({
+        next: () => this.router.navigate(['/profile']),
+        error: (error) => {
+          this.errorMessage = 'Login failed. Please check your credentials.';
+        }
+      });
   }
 }

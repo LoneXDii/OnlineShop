@@ -13,7 +13,6 @@ import {CategoryCardComponent} from './componets/category-card/category-card.com
 })
 export class CategoriesComponent {
   categoriesService = inject(CategoriesService);
-
   categories: Category[] = [];
 
   constructor() {

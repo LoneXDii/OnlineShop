@@ -34,15 +34,24 @@ export class RefreshPasswordComponent {
     return (form: AbstractControl): { [key: string]: any } | null => {
       const password = form.get('password')?.value;
       const confirmPassword = form.get('confirmPassword')?.value;
+
       return password === confirmPassword ? null : { mismatch: true };
     };
   }
 
   onEmailSubmit() {
-    if (this.emailForm.valid) {
-      const email = this.emailForm.value.email;
-      //@ts-ignore
-      this.profileService.askForPasswordRefreshCode(email).subscribe( {
+    if (!this.emailForm.valid) {
+      return;
+    }
+
+    const email = this.emailForm.value.email;
+
+    if (!email) {
+      return;
+    }
+
+    this.profileService.askForPasswordRefreshCode(email)
+      .subscribe({
         next: () => {
           this.emailSubmitted = true;
           this.errorMessage = null;
@@ -51,20 +60,25 @@ export class RefreshPasswordComponent {
           this.errorMessage = 'Wrong email. No user found with this email.';
         }
       });
-    }
   }
 
   onResetSubmit() {
-    if (this.resetForm.valid) {
-      const { password, code } = this.resetForm.value;
-      //@ts-ignore
-      this.profileService.refreshPassword({ password, code })
-        .subscribe({
-          next: () => this.router.navigate(['/login']),
-          error: (error) => {
-            this.errorMessage = 'Wrong code.';
-          }
-        });
+    if (!this.resetForm.valid) {
+      return;
     }
+
+    const { password, code } = this.resetForm.value;
+
+    if(!(password && code)){
+      return;
+    }
+
+    this.profileService.refreshPassword({ password, code })
+      .subscribe({
+        next: () => this.router.navigate(['/login']),
+        error: (error) => {
+          this.errorMessage = 'Wrong code.';
+        }
+      });
   }
 }

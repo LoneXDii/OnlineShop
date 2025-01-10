@@ -29,23 +29,27 @@ export class ProfileEmailComponent {
     this.emailForm.patchValue({
       email: this.email
     });
+
     this.editingEmail = !this.editingEmail;
   }
 
   submitEmail() {
-    if (this.emailForm.valid) {
-      //@ts-ignore
-      this.profileService.updateEmail({email: this.emailForm.value.email})
-        .subscribe({
-          next: () =>{
-            //@ts-ignore
-            this.email = this.emailForm.value.email;
-            this.editingEmail = false;
-            this.router.navigate([`/confirm-email/${this.emailForm.value.email}`]);
-          },
-          error: (err) => {
-            console.error('Update error', err);
-          }});
+    if (!this.emailForm.valid || !this.emailForm.value.email) {
+      return;
     }
+
+    const email = this.emailForm.value.email;
+
+    this.profileService.updateEmail({email: email})
+      .subscribe({
+        next: () =>{
+          this.email = email;
+          this.editingEmail = false;
+          this.router.navigate([`/confirm-email/${this.emailForm.value.email}`]);
+        },
+        error: (err) => {
+          console.error('Update error', err);
+        }
+      });
   }
 }

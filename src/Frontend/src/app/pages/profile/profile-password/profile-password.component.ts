@@ -42,21 +42,27 @@ export class ProfilePasswordComponent {
   }
 
   submitPassword() {
-    if (this.passwordForm.valid) {
-      const { oldPassword, newPassword } = this.passwordForm.value;
-      //@ts-ignore
-      this.profileService.updatePassword({ oldPassword, newPassword })
-        .subscribe({
-          next: (val) => {
-            this.passwordForm.reset();
-            this.authService.refreshToken = val;
-            alert('Password changed successfully!');
-          },
-          error: () => {
-            console.error('Password change error');
-          }
-        });
+    if (!this.passwordForm.valid) {
+      return;
     }
+
+    const { oldPassword, newPassword } = this.passwordForm.value;
+
+    if(!(oldPassword && newPassword)) {
+      return;
+    }
+
+    this.profileService.updatePassword({ oldPassword, newPassword })
+      .subscribe({
+        next: (val) => {
+          this.passwordForm.reset();
+          this.authService.refreshToken = val;
+          alert('Password changed successfully!');
+        },
+        error: () => {
+          console.error('Password change error');
+        }
+      });
   }
 
   onCancelChanging(){

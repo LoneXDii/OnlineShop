@@ -25,7 +25,6 @@ export class ProductAttributeValueCreationModalComponent {
     this.categoriesService.createChildCategory({
       parentId: this.attribute.id,
       name: this.attributeValue,
-    })
-    .subscribe(() => this.closeModal.emit());
+    }).subscribe(() => this.closeModal.emit());
   }
 }

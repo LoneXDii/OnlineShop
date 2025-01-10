@@ -1,20 +1,22 @@
 <div class="mb-3">
   <h5 class="form-label">Select values for attributes:</h5>
-  @for(attribute of attributeValues; track attribute.attribute.id){
-    <div>
-      <h6>{{ attribute.attribute.name }}</h6>
-      <select class="form-select" (change)="onSelectAttribute(attribute.attribute.id, getSelectedValue($event))">
-        <option value="0" disabled selected>Select value</option>
-        @for(value of attribute.values; track value.id){
-          <option [value]="value.id"
-                  [selected]="isSelectedValue(attribute.attribute.id, value.id)">
-            {{ value.name }}
-          </option>
-        }
-        <option value="0">Create New Value</option>
-      </select>
-    </div>
-  }
+  <div class="row">
+    @for(attribute of attributeValues; track attribute.attribute.id){
+      <div class="col-4">
+        <h6>{{ attribute.attribute.name }}</h6>
+        <select class="form-select" (change)="onSelectAttribute(attribute.attribute.id, getSelectedValue($event))">
+          <option value="0" disabled selected>Select value</option>
+          @for(value of attribute.values; track value.id){
+            <option [value]="value.id"
+                    [selected]="isSelectedValue(attribute.attribute.id, value.id)">
+              {{ value.name }}
+            </option>
+          }
+          <option value="0">Create New Value</option>
+        </select>
+      </div>
+    }
+  </div>
 </div>
 
 <app-product-attribute-value-creation-modal

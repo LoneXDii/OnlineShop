@@ -36,25 +36,26 @@ export class ProfileUserComponent {
   }
 
   submitProfile() {
-    if (this.profileForm.valid) {
-      const formData = new FormData();
-      //@ts-ignore
-      formData.append('firstName', this.profileForm.get('firstName')?.value);
-      //@ts-ignore
-      formData.append('lastName', this.profileForm.get('lastName')?.value);
-      //@ts-ignore
-      formData.append('avatar', this.profileForm.get('avatar')?.value);
-
-      this.profileService.updateProfile(formData)
-        .subscribe({
-          next: () =>{
-            this.profileUpdated.emit();
-            this.editingProfile = false;
-          },
-          error: (err) => {
-            console.error('Update error', err);
-          }});
+    if (!this.profileForm.valid) {
+      return;
     }
+
+    const formData = new FormData();
+
+    formData.append('firstName', this.profileForm.get('firstName')?.value || '');
+    formData.append('lastName', this.profileForm.get('lastName')?.value || '');
+    formData.append('avatar', this.profileForm.get('avatar')?.value || '');
+
+    this.profileService.updateProfile(formData)
+      .subscribe({
+        next: () =>{
+          this.profileUpdated.emit();
+          this.editingProfile = false;
+        },
+        error: (err) => {
+          console.error('Update error', err);
+        }
+      });
   }
 
   onFileChange(event: any) {

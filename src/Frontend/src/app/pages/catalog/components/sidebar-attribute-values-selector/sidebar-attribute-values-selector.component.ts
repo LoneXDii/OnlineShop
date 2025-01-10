@@ -21,8 +21,4 @@ export class SidebarAttributeValuesSelectorComponent {
       this.selectedValue = value;
     }
   }
-
-  onSelect(value: number) {
-    this.valueSelected.emit(value);
-  }
 }

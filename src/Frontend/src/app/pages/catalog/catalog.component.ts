@@ -30,7 +30,7 @@ export class CatalogComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.categoryId = +params['categoryId']; // Преобразуем в число, если нужно
+      this.categoryId = +params['categoryId'];
       this.fetchProducts({minPrice: this.minPrice, maxPrice: this.maxPrice, valuesIds: this.valuesIds});
     });
   }

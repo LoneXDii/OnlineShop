@@ -26,7 +26,7 @@ export class CategoryAttributeValuesComponent {
       .subscribe({
         next: () => this.categoryUpdated.emit(),
         error: err => alert("Can't delete value that is in use by any product")
-      })
+      });
   }
 
   openModal() {

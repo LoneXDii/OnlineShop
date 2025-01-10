@@ -87,8 +87,9 @@ export class ProductFormAttributesSelectorComponent implements OnInit, OnChanges
 
   updateAttributesArray() {
     const keys = Object.keys(this.selectedAttributes);
-    const values = Object.values(this.selectedAttributes);
-    //@ts-ignore
+    const values = Object.values(this.selectedAttributes)
+      .filter((value): value is string => value !== null);
+
     const data = keys.concat(values);
 
     this.attributesSelected.emit(data.map(Number));
@@ -96,6 +97,7 @@ export class ProductFormAttributesSelectorComponent implements OnInit, OnChanges
 
   getSelectedValue(event: Event): string {
     const target = event.target as HTMLSelectElement;
+
     return target.value;
   }
 
@@ -111,6 +113,7 @@ export class ProductFormAttributesSelectorComponent implements OnInit, OnChanges
 
   isSelectedValue(attributeId: number, valueId: number): boolean {
     const selectedAttribute = this.selectedAttributeValues?.find(attr => attr.attributeId === attributeId);
+
     return selectedAttribute ? selectedAttribute.valueId === valueId : false;
   }
 }

@@ -35,28 +35,26 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    if (this.form.valid) {
-      const formData = new FormData();
-      //@ts-ignore
-      formData.append('firstName', this.form.get('firstName')?.value);
-      //@ts-ignore
-      formData.append('lastName', this.form.get('lastName')?.value);
-      //@ts-ignore
-      formData.append('email', this.form.get('email')?.value);
-      //@ts-ignore
-      formData.append('password', this.form.get('password')?.value);
-      //@ts-ignore
-      formData.append('avatar', this.form.get('avatar')?.value);
-
-      this.authService.register(formData)
-        .subscribe({
-          next: () => {
-            this.router.navigate([`/confirm-email/${formData.get('email')}`]);
-          },
-          error: (err) => {
-            console.error('Registration error', err);
-          }
-      });
+    if (!this.form.valid) {
+      return;
     }
+
+    const formData = new FormData();
+
+    formData.append('firstName', this.form.get('firstName')?.value || '');
+    formData.append('lastName', this.form.get('lastName')?.value || '');
+    formData.append('email', this.form.get('email')?.value || '');
+    formData.append('password', this.form.get('password')?.value || '');
+    formData.append('avatar', this.form.get('avatar')?.value || '');
+
+    this.authService.register(formData)
+      .subscribe({
+        next: () => {
+          this.router.navigate([`/confirm-email/${formData.get('email')}`]);
+        },
+        error: (err) => {
+          console.error('Registration error', err);
+        }
+      });
   }
 }
