@@ -7,5 +7,8 @@
   @for(attribute of attributes; track attribute.attribute.id){
     <app-sidebar-attribute-values-selector [attributeValues] = attribute (valueSelected)="onValueSelected(attribute.attribute.id, $event)" />
   }
-  <button class="btn btn-primary w-100 mt-3" (click)="onFindClick()">Find</button>
+  <button class="btn btn-primary w-100 mt-3" (click)="onFindClick()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    Find
+  </button>
 </div>

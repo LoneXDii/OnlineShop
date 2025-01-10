@@ -8,7 +8,12 @@
   </div>
   <h5 class="card-title text-left">
     <span>Name: {{ profile.firstName }} {{ profile.lastName }}</span>
-    <button *ngIf="!editingProfile" (click)="editProfile()" type="button" class="btn btn-primary btn-sm ms-2">Edit</button>
+    <button *ngIf="!editingProfile"
+            (click)="editProfile()"
+            type="button"
+            class="btn btn-primary btn-sm ms-2">
+      <i class="fa-solid fa-edit"></i>
+    </button>
   </h5>
   <div *ngIf="editingProfile">
     <input formControlName="firstName" class="form-control mb-2" placeholder="First Name" required>

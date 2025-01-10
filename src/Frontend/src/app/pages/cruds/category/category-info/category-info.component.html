@@ -14,9 +14,13 @@
           <h5 >{{ category.name }}</h5>
           <button type="button" class="btn btn-success me-2"
                   [routerLink]="['/categories', category.id, 'edit']">
+            <i class="fa-solid fa-edit"></i>
             Edit
           </button>
-          <button type="button" class="btn btn-danger" (click)="onDelete()">Delete</button>
+          <button type="button" class="btn btn-danger" (click)="onDelete()">
+            <i class="fa-regular fa-trash-can"></i>
+            Delete
+          </button>
         </div>
         <app-category-attributes-values [category]="category"
                                         (categoryUpdated)="refreshCategory()">
