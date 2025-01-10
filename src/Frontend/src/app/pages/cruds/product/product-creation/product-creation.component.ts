@@ -36,6 +36,6 @@ export class ProductCreationComponent {
 
   onSubmit(formData: FormData) {
     this.productsService.createProduct(formData)
-      .subscribe(() => this.router.navigate(['/admin']));
+      .subscribe(() => this.router.navigate(['/admin/products']));
   }
 }

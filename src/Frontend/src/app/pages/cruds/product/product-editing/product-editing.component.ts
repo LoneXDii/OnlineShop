@@ -58,7 +58,7 @@ export class ProductEditingComponent implements OnInit {
   onSubmit(formData: FormData) {
     if(this.productId != null) {
       this.productsService.updateProduct(this.productId, formData)
-        .subscribe(() => this.router.navigate(['/admin']));
+        .subscribe(() => this.router.navigate(['/admin/products']));
     }
   }
 }

@@ -43,7 +43,7 @@ export class CategoryEditingComponent implements OnInit {
   onSubmit(formData: FormData) {
     if(this.categoryId != null){
       this.categoriesService.updateCategory(this.categoryId, formData)
-        .subscribe(() => this.router.navigate(['/admin']));
+        .subscribe(() => this.router.navigate(['/admin/categories']));
     }
   }
 }

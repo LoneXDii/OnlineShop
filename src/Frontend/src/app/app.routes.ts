@@ -28,6 +28,7 @@ export const routes: Routes = [
   {path: 'refresh-password', component: RefreshPasswordComponent, canActivate: [canActivateUnauthenticated]},
   {path: 'profile', component: ProfileComponent, canActivate: [canActivateAuth]},
   {path: 'admin', component: AdminComponent, canActivate: [canActivateAdmin]},
+  {path: 'admin/:tab', component: AdminComponent, canActivate: [canActivateAdmin]},
   {path: 'products/:id/info', component: ProductInfoComponent},
   {path: 'products/create', component: ProductCreationComponent, canActivate: [canActivateAdmin]},
   {path: 'products/:id/edit', component: ProductEditingComponent, canActivate: [canActivateAdmin]},

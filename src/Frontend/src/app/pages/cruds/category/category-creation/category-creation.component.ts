@@ -23,6 +23,6 @@ export class CategoryCreationComponent {
 
   onSubmit(formData: FormData) {
     this.categoriesService.createCategory(formData)
-      .subscribe(() => this.router.navigate(['/admin']));
+      .subscribe(() => this.router.navigate(['/admin/categories']));
   }
 }
