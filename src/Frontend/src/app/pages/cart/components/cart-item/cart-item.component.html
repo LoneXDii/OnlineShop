@@ -25,7 +25,7 @@
 </td>
 
 <td class="align-middle">
-  ${{(product.price * product.quantity).toFixed(2)}}
+  ${{(product.price * product.quantity * (100 - product.discount) / 100).toFixed(2)}}
 </td>
 
 <td class="align-middle">

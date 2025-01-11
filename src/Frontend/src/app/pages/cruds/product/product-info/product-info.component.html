@@ -35,10 +35,23 @@
               </li>
             </ul>
           </div>
-          <button class="btn btn-primary me-2">Add to Cart</button>
+          <button type="button" class="btn btn-primary m-3"
+                  (click)="addToCart()"
+                  [disabled]="!authService.isAuthenticated">
+            <i class="fa-solid fa-cart-arrow-down"></i>
+            Add to cart
+          </button>
           @if(authService.isAdmin){
-            <button class="btn btn-success me-2" [routerLink]="['/products', product.id, 'edit']">Edit</button>
-            <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+            <button class="btn btn-success me-2"
+                    [routerLink]="['/products', product.id, 'edit']">
+              <i class="fa-solid fa-edit"></i>
+              Edit
+            </button>
+            <button class="btn btn-danger"
+                    (click)="onDelete()">
+              <i class="fa-regular fa-trash-can"></i>
+              Delete
+            </button>
           }
         </div>
       </div>

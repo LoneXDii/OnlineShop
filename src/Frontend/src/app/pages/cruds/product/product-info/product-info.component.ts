@@ -4,6 +4,7 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {Product} from '../../../../data/interfaces/catalog/product.interface';
 import {NgForOf, NgIf} from '@angular/common';
 import {AuthService} from '../../../../data/services/auth.service';
+import {CartService} from '../../../../data/services/cart.service';
 
 @Component({
   selector: 'app-product-info',
@@ -18,6 +19,7 @@ import {AuthService} from '../../../../data/services/auth.service';
 export class ProductInfoComponent implements OnInit {
   productsService = inject(ProductsService);
   authService = inject(AuthService);
+  cartService = inject(CartService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   product: Product | null = null;
@@ -42,6 +44,17 @@ export class ProductInfoComponent implements OnInit {
       .subscribe(() => {
         alert('Product deleted successfully.');
         this.router.navigate(['/admin']);
+      });
+  }
+
+  addToCart(){
+    if(!this.product){
+      return;
+    }
+
+    this.cartService.addProduct(this.product.id, 1)
+      .subscribe({
+        error: () => alert("This product is out of stock")
       });
   }
 }

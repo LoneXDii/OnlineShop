@@ -15,7 +15,10 @@ export class CartItemComponent {
 
   onIncrease(){
     this.cartService.increaseProductQuantity(this.product.id, this.product.quantity + 1)
-      .subscribe(() => this.productChanged.emit());
+      .subscribe({
+        next: () => this.productChanged.emit(),
+        error: () => alert("This product is out of stock, can't add more")
+      });
   }
 
   onDecrease(){
@@ -24,7 +27,7 @@ export class CartItemComponent {
   }
 
   onDelete(){
-    this.cartService.removeProductFromCart(this.product.id)
+    this.cartService.removeProduct(this.product.id)
       .subscribe(() => this.productChanged.emit());
   }
 }

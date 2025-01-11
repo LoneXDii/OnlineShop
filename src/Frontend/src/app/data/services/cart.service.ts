@@ -20,7 +20,7 @@ export class CartService {
     this.loadCartInfo();
   }
 
-  private loadCartInfo(){
+  loadCartInfo(){
     this.getCart()
       .subscribe({
         next: (cart) => {
@@ -52,10 +52,22 @@ export class CartService {
         );
   }
 
-  removeProductFromCart(productId: number){
+  addProduct(productId: number, quantity: number){
+    return this.http.post(`${this.baseUrl}/products`, {id: productId, quantity: quantity})
+        .pipe(
+            tap(() => this.loadCartInfo())
+        );
+  }
+
+  removeProduct(productId: number){
     return this.http.delete(`${this.baseUrl}/products/${productId}`)
         .pipe(
             tap(() => this.loadCartInfo())
         );
+  }
+
+  clearCart(){
+    this.http.delete(`${this.baseUrl}`)
+        .subscribe(() => this.loadCartInfo());
   }
 }

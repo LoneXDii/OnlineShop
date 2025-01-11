@@ -14,6 +14,6 @@ internal class CartMappingProfile : Profile
             .ForMember(dest => dest.Count,
                 opt => opt.MapFrom(src => src.Sum(item => item.Value.Quantity)))
             .ForMember(dest => dest.TotalCost,
-                opt => opt.MapFrom(src => src.Sum(item => item.Value.Price * item.Value.Quantity)));
+                opt => opt.MapFrom(src => src.Sum(item => item.Value.Price * item.Value.Quantity * (100 - item.Value.Discount) / 100)));
     }
 }

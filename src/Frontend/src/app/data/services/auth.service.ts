@@ -6,6 +6,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {Router} from '@angular/router';
 import {DecodedToken} from '../interfaces/auth/decodedToken.interface';
 import {jwtDecode} from 'jwt-decode';
+import {CartService} from './cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import {jwtDecode} from 'jwt-decode';
 export class AuthService {
   http = inject(HttpClient);
   cookieService = inject(CookieService);
+  cartService = inject(CartService);
   router = inject(Router);
   baseUrl = 'http://localhost:5000/';
   accessToken: string | null = null;
@@ -68,6 +70,8 @@ export class AuthService {
         tap(val => {
           this.saveTokens(val);
           this.loggedIn.next(true);
+          this.cartService.loadCartInfo();
+
           if (this.isAdmin){
             this.isAdminRole.next(true);
           }
@@ -103,6 +107,8 @@ export class AuthService {
         this.cookieService.delete('refreshToken');
         this.accessToken = null;
         this.refreshToken = null;
+
+        this.cartService.loadCartInfo();
 
         this.router.navigate(['/login']);
       });
