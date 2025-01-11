@@ -1,9 +1,12 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {CartService} from '../../../../data/services/cart.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-nav-cart',
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './nav-cart.component.html',
   styleUrl: './nav-cart.component.css'
 })

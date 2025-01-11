@@ -14,7 +14,7 @@ internal class ReduceItemQuantityInCartRequestHandler(ITemporaryStorageService t
         {
             cart[request.ProductId].Quantity -= request.Quantity;
 
-            if (cart[request.ProductId].Quantity < 0)
+            if (cart[request.ProductId].Quantity <= 0)
             {
                 cart.Remove(request.ProductId);
             }

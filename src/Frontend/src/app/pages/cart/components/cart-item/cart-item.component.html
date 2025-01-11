@@ -1,0 +1,35 @@
+<td>
+  <img src="{{ product.imageUrl || '/assets/noimg.png' }}" alt="Product Image" class="list-image">
+</td>
+
+<td class="align-middle">
+  {{product.name}}
+</td>
+
+<td class="align-middle">
+  ${{product.price}}
+</td>
+
+<td class="align-middle">
+  <button class="btn btn-primary btn-sm" (click)="onDecrease()">
+    <i class="fa-solid fa-minus"></i>
+  </button>
+  {{product.quantity}}
+  <button class="btn btn-primary btn-sm" (click)="onIncrease()">
+    <i class="fa-solid fa-plus"></i>
+  </button>
+</td>
+
+<td class="align-middle">
+  {{product.discount}}%
+</td>
+
+<td class="align-middle">
+  ${{(product.price * product.quantity).toFixed(2)}}
+</td>
+
+<td class="align-middle">
+  <button class="btn btn-danger" (click)="onDelete()">
+    <i class="fa-solid fa-trash"></i>
+  </button>
+</td>
