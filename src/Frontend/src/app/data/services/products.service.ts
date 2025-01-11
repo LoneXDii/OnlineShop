@@ -3,13 +3,14 @@ import {HttpClient} from '@angular/common/http';
 import {PaginatedProducts} from '../interfaces/catalog/paginatedProducts.interface';
 import {catchError, of} from 'rxjs';
 import {Product} from '../interfaces/catalog/product.interface';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
   http = inject(HttpClient);
-  baseUrl = 'http://localhost:5000/products';
+  baseUrl = `${environment.apiUrl}/products`;
 
   createProduct(formData: FormData){
     return this.http.post(`${this.baseUrl}`, formData);

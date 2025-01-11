@@ -2,13 +2,14 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AttributeAllValues} from '../interfaces/catalog/attributeAllValues.interface';
 import {Category} from '../interfaces/catalog/category.interface';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriesService {
   http = inject(HttpClient);
-  baseUrl = 'http://localhost:5000/categories';
+  baseUrl = `${environment.apiUrl}/categories`;
 
   getCategories() {
     return this.http.get<Category[]>(`${this.baseUrl}`);

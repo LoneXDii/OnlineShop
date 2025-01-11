@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {DecodedToken} from '../interfaces/auth/decodedToken.interface';
 import {jwtDecode} from 'jwt-decode';
 import {CartService} from './cart.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
   cookieService = inject(CookieService);
   cartService = inject(CartService);
   router = inject(Router);
-  baseUrl = 'http://localhost:5000/';
+  baseUrl = `${environment.apiUrl}/`;
   accessToken: string | null = null;
   refreshToken: string | null = null;
 

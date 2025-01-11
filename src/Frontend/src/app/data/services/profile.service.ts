@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Profile} from '../interfaces/auth/profile.interface';
 import {AuthService} from './auth.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import {AuthService} from './auth.service';
 export class ProfileService {
   authService = inject(AuthService);
   http = inject(HttpClient);
-  baseUrl = 'http://localhost:5000/users';
+  baseUrl = `${environment.apiUrl}/users`;
 
   getUserInfo(){
     return this.http.get<Profile>(`${this.baseUrl}/info`);
