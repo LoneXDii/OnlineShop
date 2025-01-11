@@ -3,13 +3,15 @@ import {RouterLink} from '@angular/router';
 import {AuthService} from '../../../data/services/auth.service';
 import {ProfileInfoComponent} from './profile-info/profile-info.component';
 import {NgIf} from '@angular/common';
+import {NavCartComponent} from './nav-cart/nav-cart.component';
 
 @Component({
   selector: 'app-navigation',
   imports: [
     RouterLink,
     ProfileInfoComponent,
-    NgIf
+    NgIf,
+    NavCartComponent
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css'

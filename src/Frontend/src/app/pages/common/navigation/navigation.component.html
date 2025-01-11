@@ -10,16 +10,16 @@
         <a class="nav-link" [routerLink]="['/catalog']">Catalog</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Cart</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="#">Support</a>
       </li>
       <li class="nav-item" *ngIf="isAdmin">
         <a class="nav-link" [routerLink]="['/admin']">Admin</a>
       </li>
     </ul>
-    <div class="ms-auto">
+
+    <div class="nav-item d-flex align-items-center ms-auto">
+      <app-nav-cart class="me-3"></app-nav-cart>
+
       @if(isLoggedIn){
         <app-profile-info/>
       }
