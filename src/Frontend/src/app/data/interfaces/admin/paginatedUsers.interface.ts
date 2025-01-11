@@ -1,7 +1,7 @@
-import {Profile} from '../auth/profile.interface';
+import {UserWithRoles} from './userWithRoles.interface';
 
 export interface PaginatedUsers {
-  items: Profile[];
+  items: UserWithRoles[];
   currentPage: number;
   totalPages: number;
 }

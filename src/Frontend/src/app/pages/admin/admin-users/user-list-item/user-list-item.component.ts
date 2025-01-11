@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {Profile} from '../../../../data/interfaces/auth/profile.interface';
+import {Component, Input, OnInit} from '@angular/core';
+import {UserWithRoles} from '../../../../data/interfaces/admin/userWithRoles.interface';
 
 @Component({
   selector: 'app-user-list-item',
@@ -7,6 +7,12 @@ import {Profile} from '../../../../data/interfaces/auth/profile.interface';
   templateUrl: './user-list-item.component.html',
   styleUrl: './user-list-item.component.css'
 })
-export class UserListItemComponent {
-  @Input() user!: Profile;
+export class UserListItemComponent implements OnInit {
+  @Input() user!: UserWithRoles;
+
+  ngOnInit(){
+    if(this.user.roles.length === 0){
+      this.user.roles.push('customer')
+    }
+  }
 }

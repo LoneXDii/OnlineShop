@@ -3,6 +3,7 @@
     <img src="{{ user.avatar || '/assets/noimg.png' }}" alt="Product Image" class="list-image me-3">
     <div>
       <h5 class="mb-1">{{user.email}}</h5>
+      <h6 class="mb-1">Role: {{user.roles}}</h6>
       <div class="d-flex flex-wrap">
         <p class="mb-1 me-3">ID: {{user.id}}</p>
         <p class="mb-1 me-3">Name: {{user.firstName}} {{user.lastName}}</p>
