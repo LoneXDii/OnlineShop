@@ -15,15 +15,20 @@ import {UserListItemComponent} from './user-list-item/user-list-item.component';
 })
 export class AdminUsersComponent implements OnInit {
   usersService = inject(UsersService);
+  currentPage: number = 1;
   users?: PaginatedUsers;
 
   ngOnInit() {
-    this.usersService.getUsers(1, 20)
-      .subscribe(val => this.users = val);
+    this.refreshUsers();
   }
 
   handlePageChanged(pageNo: number) {
-    this.usersService.getUsers(pageNo, 20)
+    this.currentPage = pageNo;
+    this.refreshUsers();
+  }
+
+  refreshUsers(){
+    this.usersService.getUsers(this.currentPage, 20)
       .subscribe(val => this.users = val);
   }
 }

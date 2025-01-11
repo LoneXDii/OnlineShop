@@ -11,6 +11,11 @@
     </div>
   </div>
   <div>
+    <button class="btn btn-danger btn-sm me-1"
+            (click)="onRoleChanged()"
+            [disabled]="authService.getUserId === user.id">
+      ChangeRole
+    </button>
     <button class="btn btn-info btn-sm me-2">Info</button>
   </div>
 </li>

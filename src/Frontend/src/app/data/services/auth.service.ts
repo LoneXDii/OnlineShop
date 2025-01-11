@@ -54,6 +54,14 @@ export class AuthService {
     return this.accessToken;
   }
 
+  get getUserId(){
+    if (!this.accessToken) {
+      this.accessToken = this.cookieService.get('accessToken');
+    }
+
+    return jwtDecode<DecodedToken>(this.accessToken).Id;
+  }
+
   login(payload: {email: string, password: string}) {
     return this.http.post<Tokens>(`${this.baseUrl}accounts/login`, payload)
       .pipe(

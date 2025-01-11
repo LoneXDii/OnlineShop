@@ -14,4 +14,12 @@ export class UsersService {
 
     return this.http.get<PaginatedUsers>(`${this.baseUrl}`, {params: params});
   }
+
+  makeAdmin(userId: string){
+    return this.http.post(`${this.baseUrl}/${userId}/roles/admin`, {});
+  }
+
+  deleteFromAdmins(userId: string){
+    return this.http.delete(`${this.baseUrl}/${userId}/roles/admin`);
+  }
 }
