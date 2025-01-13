@@ -2,16 +2,14 @@ import {Component, inject, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {OrdersService} from '../../../data/services/orders.service';
 import {Order} from '../../../data/interfaces/cart/order.interface';
-import {DatePipe, JsonPipe, NgIf} from '@angular/common';
-import {OrderProductComponent} from './components/order-product/order-product.component';
+import {NgIf} from '@angular/common';
+import {OrderInfoTemplateComponent} from './components/order-info-template/order-info-template.component';
 
 @Component({
   selector: 'app-order-info',
   imports: [
-    JsonPipe,
     NgIf,
-    DatePipe,
-    OrderProductComponent
+    OrderInfoTemplateComponent
   ],
   templateUrl: './order-info.component.html',
   styleUrl: './order-info.component.css'

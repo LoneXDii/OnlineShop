@@ -1,4 +1,5 @@
-<li class="list-group-item mb-2 hover-effect" [routerLink]="['/orders', order.id]">
+<li class="list-group-item mb-2 hover-effect"
+    [routerLink]="authService.isAdmin ? ['/orders', order.id, 'admin'] : ['/orders', order.id]">
   <div class="d-flex mb-1">
     <h5>
       Order Status:
@@ -16,7 +17,7 @@
     </p>
     <p class="ms-2">
       Total Price:
-      <strong>${{ order.totalPrice }}</strong>
+      <strong>${{ order.totalPrice.toFixed(2) }}</strong>
     </p>
   </div>
 

@@ -1,0 +1,17 @@
+<div class="card-header">
+  <h5>User Info:</h5>
+</div>
+<div class="card-body border-bottom" *ngIf="user">
+  <div class="d-flex align-items-center">
+    <h6 class="m-0">Email:</h6>
+    <span class="ms-1">{{user.email}}</span>
+  </div>
+  <div class="d-flex align-items-center">
+    <h6 class="m-0">Name:</h6>
+    <span class="ms-1">{{user.firstName}} {{user.lastName}}</span>
+  </div>
+  <div class="d-flex align-items-center">
+    <h6 class="m-0">Id:</h6>
+    <span class="ms-1">{{user.id}}</span>
+  </div>
+</div>

@@ -16,6 +16,9 @@
             [disabled]="authService.getUserId === user.id">
       ChangeRole
     </button>
-    <button class="btn btn-info btn-sm me-2">Info</button>
+    <button class="btn btn-info btn-sm me-2"
+            [routerLink]="['/users', user.id, 'orders']">
+      Orders
+    </button>
   </div>
 </li>

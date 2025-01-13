@@ -1,4 +1,5 @@
 <div class="card" *ngIf="order">
+  <app-order-user-info [userId]="order.userId"></app-order-user-info>
   <app-order-info-template [order]="order"></app-order-info-template>
 </div>
 

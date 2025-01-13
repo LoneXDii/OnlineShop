@@ -20,8 +20,24 @@ export class OrdersService {
     return this.http.get<PaginatedOrder>(`${this.baseUrl}`, {params: params});
   }
 
+  getAllOrders(pageNo:number = 1, pageSize:number = 10) {
+    const params = {pageNo:pageNo, pageSize:pageSize};
+
+    return this.http.get<PaginatedOrder>(`${this.baseUrl}/admin`, {params: params});
+  }
+
   getOrderById(id: string) {
     return this.http.get<Order>(`${this.baseUrl}/${id}`);
+  }
+
+  getOrderByIdAsAdmin(id: string) {
+    return this.http.get<Order>(`${this.baseUrl}/${id}/admin`);
+  }
+
+  getUsersOrders(userId: string, pageNo:number = 1, pageSize:number = 10) {
+    const params = {pageNo:pageNo, pageSize:pageSize};
+
+    return this.http.get<PaginatedOrder>(`http://localhost:5000/users/${userId}/orders`, {params: params});
   }
 
   createOrder(){

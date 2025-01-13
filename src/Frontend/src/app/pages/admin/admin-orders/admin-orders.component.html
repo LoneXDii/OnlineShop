@@ -1,1 +1,5 @@
-<p>admin-orders works!</p>
+<ul class="list-group" *ngIf="paginatedOrders">
+  @for(order of paginatedOrders.items; track order.id){
+    <app-admin-orders-list-item [order]="order"></app-admin-orders-list-item>
+  }
+</ul>

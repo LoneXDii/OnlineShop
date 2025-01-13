@@ -2,10 +2,13 @@ import {Component, EventEmitter, inject, Input, OnChanges, OnInit, Output} from 
 import {UserWithRoles} from '../../../../data/interfaces/admin/userWithRoles.interface';
 import {UsersService} from '../../../../data/services/users.service';
 import {AuthService} from '../../../../data/services/auth.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-user-list-item',
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './user-list-item.component.html',
   styleUrl: './user-list-item.component.css'
 })
@@ -37,4 +40,6 @@ export class UserListItemComponent implements OnInit, OnChanges {
         .subscribe(() => this.userUpdated.emit());
     }
   }
+
+  protected readonly RouterLink = RouterLink;
 }

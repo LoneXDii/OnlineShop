@@ -1,7 +1,8 @@
-import {Component, Input} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {Order} from '../../../../../data/interfaces/cart/order.interface';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {AuthService} from '../../../../../data/services/auth.service';
 
 @Component({
   selector: 'app-orders-list-item',
@@ -14,4 +15,5 @@ import {RouterLink} from '@angular/router';
 })
 export class OrdersListItemComponent {
   @Input() order!: Order;
+  authService = inject(AuthService);
 }

@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {PaginatedUsers} from '../interfaces/admin/paginatedUsers.interface';
 import {environment} from '../../../environments/environment';
+import {Profile} from '../interfaces/auth/profile.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class UsersService {
     const params = {pageNo:pageNo, pageSize:pageSize};
 
     return this.http.get<PaginatedUsers>(`${this.baseUrl}`, {params: params});
+  }
+
+  getUserById(id: string) {
+    return this.http.get<Profile>(`${this.baseUrl}/${id}/info`);
   }
 
   makeAdmin(userId: string){
