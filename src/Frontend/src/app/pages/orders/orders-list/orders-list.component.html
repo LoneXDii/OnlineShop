@@ -1,4 +1,12 @@
-Works!
-<pre *ngIf="orders">
-  {{orders | json}}
-</pre>
+<div *ngIf="paginatedOrders">
+  <ul class="list-group" >
+    @for(order of paginatedOrders.items; track order.id){
+      <app-orders-list-item [order]="order"></app-orders-list-item>
+    }
+  </ul>
+  <div class="d-flex justify-content-center mt-3">
+    <app-pagination [pageNo]="paginatedOrders.currentPage"
+                    [totalPages]="paginatedOrders.totalPages"
+                    (onPageChange)="handlePageChanged($event)"/>
+  </div>
+</div>
