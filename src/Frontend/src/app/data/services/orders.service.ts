@@ -5,6 +5,7 @@ import {CartService} from './cart.service';
 import {tap} from 'rxjs';
 import {PaginatedOrder} from '../interfaces/cart/paginetedOrder.interface';
 import {Order} from '../interfaces/cart/order.interface';
+import {AuthService} from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ export class OrdersService {
   http = inject(HttpClient);
   cartService = inject(CartService);
   baseUrl = `${environment.apiUrl}/orders`;
+  authService = inject(AuthService);
+
 
   getOrders(pageNo:number = 1, pageSize:number = 10) {
     const params = {pageNo:pageNo, pageSize:pageSize};
@@ -27,11 +30,11 @@ export class OrdersService {
   }
 
   getOrderById(id: string) {
-    return this.http.get<Order>(`${this.baseUrl}/${id}`);
-  }
+    if(this.authService.isAdmin){
+      return this.http.get<Order>(`${this.baseUrl}/${id}/admin`);
+    }
 
-  getOrderByIdAsAdmin(id: string) {
-    return this.http.get<Order>(`${this.baseUrl}/${id}/admin`);
+    return this.http.get<Order>(`${this.baseUrl}/${id}`);
   }
 
   getUsersOrders(userId: string, pageNo:number = 1, pageSize:number = 10) {
@@ -45,5 +48,21 @@ export class OrdersService {
       .pipe(
         tap(() => this.cartService.loadCartInfo())
       );
+  }
+
+  confirmOrder(orderId: string){
+    return this.http.put(`${this.baseUrl}/${orderId}/confirmation/admin`, {});
+  }
+
+  completeOrder(orderId: string) {
+    return this.http.put(`${this.baseUrl}/${orderId}/completion/admin`, {});
+  }
+
+  cancelOrder(orderId: string){
+    if(this.authService.isAdmin){
+      return this.http.put(`${this.baseUrl}/${orderId}/cancellation/admin`, {});
+    }
+
+    return this.http.put(`${this.baseUrl}/${orderId}/cancellation`, {});
   }
 }

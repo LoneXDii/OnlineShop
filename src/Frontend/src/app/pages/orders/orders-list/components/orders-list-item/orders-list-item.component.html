@@ -29,7 +29,8 @@
              [alt]="product.name"
              class="img-fluid"
              style="max-height: 50px; max-width: 50px">
-        {{ product.name }} (Quantity: {{ product.quantity }})
+        {{ product.name }}
+        <span class="badge bg-secondary">{{ product.quantity }} x ${{ product.price }}</span>
       </li>
     }
   </ul>

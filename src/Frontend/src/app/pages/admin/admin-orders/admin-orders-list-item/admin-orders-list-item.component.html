@@ -24,8 +24,19 @@
   </div>
   <div>
     <button class="btn btn-info me-1" [routerLink]="['/orders', order.id, 'admin']">Details</button>
-    <button class="btn btn-primary me-1">Confirm</button>
-    <button class="btn btn-success me-1">Complete</button>
-    <button class="btn btn-danger">Cancel</button>
+    <button class="btn btn-primary me-1"
+            (click)="onConfirm()"
+            [disabled]="order.orderStatus !== 'Created'">
+      Confirm
+    </button>
+    <button class="btn btn-success me-1"
+            (click)="onComplete()"
+            [disabled]="order.orderStatus !== 'Confirmed' || order.paymentStatus === 'NotPaid'">
+      Complete
+    </button>
+    <button class="btn btn-danger"
+            (click)="onCancel()" [disabled]="order.orderStatus === 'Cancelled'">
+      Cancel
+    </button>
   </div>
 </li>

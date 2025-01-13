@@ -1,5 +1,12 @@
 <ul class="list-group" *ngIf="paginatedOrders">
   @for(order of paginatedOrders.items; track order.id){
-    <app-admin-orders-list-item [order]="order"></app-admin-orders-list-item>
+    <app-admin-orders-list-item [order]="order"
+                                (orderChanged)="onOrderChanged()">
+    </app-admin-orders-list-item>
   }
+  <div class="d-flex justify-content-center mt-3">
+    <app-pagination [pageNo]="paginatedOrders.currentPage"
+                    [totalPages]="paginatedOrders.totalPages"
+                    (onPageChange)="handlePageChanged($event)"/>
+  </div>
 </ul>

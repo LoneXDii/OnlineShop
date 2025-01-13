@@ -20,23 +20,60 @@ import {OrderUserInfoComponent} from './components/order-user-info/order-user-in
 })
 export class OrderInfoAdminComponent implements OnInit{
   route = inject(ActivatedRoute);
-  orderService = inject(OrdersService);
+  ordersService = inject(OrdersService);
   order: Order | null = null;
   errorMessage: string | null = null;
 
-  ngOnInit() {
+  ngOnInit(){
     this.route.params.subscribe(params => {
       const orderId = params['id'];
-      this.orderService.getOrderByIdAsAdmin(orderId)
-        .subscribe({
-          next: order => {
-            this.order = order;
-            this.errorMessage = null;
-          },
-          error: () => {
-            this.order = null;
-            this.errorMessage = 'Order not found. Please check the order ID and try again. If the problem persists, contact support.';
-          }});
+      this.getOrder(orderId);
     })
+  }
+
+  getOrder(orderId: string){
+    this.ordersService.getOrderById(orderId)
+      .subscribe({
+        next: order => {
+          this.order = order;
+          this.errorMessage = null;
+        },
+        error: () => {
+          this.order = null;
+          this.errorMessage = 'Order not found. Please check the order ID and try again. If the problem persists, contact support.';
+        }});
+  }
+
+  onConfirm(){
+    if(this.order) {
+      this.ordersService.confirmOrder(this.order.id)
+        .subscribe(() => {
+          if(this.order) {
+            this.getOrder(this.order.id);
+          }
+        });
+    }
+  }
+
+  onComplete(){
+    if(this.order) {
+      this.ordersService.completeOrder(this.order.id)
+        .subscribe(() => {
+          if(this.order) {
+            this.getOrder(this.order.id);
+          }
+        });
+    }
+  }
+
+  onCancel(){
+    if(this.order) {
+      this.ordersService.cancelOrder(this.order.id)
+        .subscribe(() => {
+          if(this.order) {
+            this.getOrder(this.order.id);
+          }
+        });
+    }
   }
 }
