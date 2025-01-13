@@ -20,9 +20,10 @@
         </ul>
       </div>
 
-      <button type="button" class="btn btn-primary m-3"
+      <h4 class="ms-3" *ngIf="product.quantity <= 0">Out of stock</h4>
+      <button type="button" class="btn btn-primary me-3 ms-3 mb-3"
               (click)="addToCart()"
-              [disabled]="!authService.isAuthenticated">
+              [disabled]="!authService.isAuthenticated || product.quantity <= 0">
         <i class="fa-solid fa-cart-arrow-down"></i>
         Add to cart
       </button>

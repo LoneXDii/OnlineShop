@@ -7,6 +7,7 @@ import {AuthService} from '../../data/services/auth.service';
 import {ProfileUserComponent} from './profile-user/profile-user.component';
 import {ProfileEmailComponent} from './profile-email/profile-email.component';
 import {ProfilePasswordComponent} from './profile-password/profile-password.component';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +16,8 @@ import {ProfilePasswordComponent} from './profile-password/profile-password.comp
     NgIf,
     ProfileUserComponent,
     ProfileEmailComponent,
-    ProfilePasswordComponent
+    ProfilePasswordComponent,
+    RouterLink
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'

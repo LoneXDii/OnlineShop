@@ -9,6 +9,7 @@
         <div class="d-flex justify-content-center mt-4">
           <button (click)="logout()" class="btn btn-danger me-2">Logout</button>
           <a (click)="changePassword()" class="btn btn-link">Change Password</a>
+          <a [routerLink]="['orders']" class="btn btn-link">My orders</a>
         </div>
       </div>
     </div>

@@ -3,11 +3,13 @@ import {Product} from '../../../../data/interfaces/catalog/product.interface';
 import {RouterLink} from '@angular/router';
 import { CartService } from '../../../../data/services/cart.service';
 import {AuthService} from '../../../../data/services/auth.service';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-product-card',
   imports: [
-    RouterLink
+    RouterLink,
+    NgIf
   ],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
