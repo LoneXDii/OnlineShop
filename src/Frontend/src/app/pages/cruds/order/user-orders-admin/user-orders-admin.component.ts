@@ -25,6 +25,8 @@ export class UserOrdersAdminComponent implements OnInit {
   route = inject(ActivatedRoute);
   paginatedOrders: PaginatedOrder | null = null;
   userId: string | null = null;
+  errorMessage: string | null = null;
+
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -36,7 +38,16 @@ export class UserOrdersAdminComponent implements OnInit {
         }
 
         this.ordersService.getUsersOrders(this.userId, 1, 4)
-          .subscribe(orders => this.paginatedOrders = orders);
+          .subscribe({
+            next: orders => {
+              this.paginatedOrders = orders;
+              this.errorMessage = null;
+            },
+            error: () => {
+              this.paginatedOrders = null;
+              this.errorMessage = "No orders found for this user";
+            }
+          });
       }
     )
   }

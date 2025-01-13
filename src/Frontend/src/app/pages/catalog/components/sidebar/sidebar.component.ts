@@ -6,12 +6,14 @@ import {Category} from '../../../../data/interfaces/catalog/category.interface';
 import {
   SidebarAttributeValuesSelectorComponent
 } from '../sidebar-attribute-values-selector/sidebar-attribute-values-selector.component';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
     FormsModule,
-    SidebarAttributeValuesSelectorComponent
+    SidebarAttributeValuesSelectorComponent,
+    NgIf
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'

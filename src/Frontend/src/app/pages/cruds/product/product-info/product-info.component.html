@@ -13,13 +13,17 @@
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text">
-            <span class="text-muted" *ngIf="product.discount">{{ product.price }}</span>
-            <span *ngIf="product.discount" class="text-danger">
-                {{ product.price * (1 - product.discount.percent / 100) }}
+            @if(product.discount){
+              <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
+              <span class="text-danger">
+                  ${{ product.price * (1 - product.discount.percent / 100) }}
               </span>
-            <span *ngIf="!product.discount" class="text-success">
-                {{ product.price }}
+            }
+            @else{
+              <span class="text-success">
+                  ${{ product.price }}
               </span>
+            }
           </p>
           <p class="card-text">
             Quantity: <strong>{{ product.quantity }}</strong>

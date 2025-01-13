@@ -4,6 +4,7 @@ import {Cart} from '../../data/interfaces/cart/cart.interface';
 import {NgIf} from '@angular/common';
 import {CartItemComponent} from './components/cart-item/cart-item.component';
 import {OrdersService} from '../../data/services/orders.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -18,6 +19,7 @@ export class CartComponent implements OnInit {
   cartService = inject(CartService);
   ordersService = inject(OrdersService);
   cart: Cart | null = null;
+  router = inject(Router);
 
   ngOnInit() {
     this.refreshCart();
@@ -35,6 +37,9 @@ export class CartComponent implements OnInit {
 
   createOrder(){
     this.ordersService.createOrder()
-      .subscribe(() => this.refreshCart());
+      .subscribe(() => {
+        this.refreshCart();
+        this.router.navigate(['/profile/orders']);
+      });
   }
 }

@@ -1,4 +1,4 @@
-<div class="sidebar border-right p-3 border rounded">
+<div class="sidebar border-right p-3 border rounded" *ngIf="attributes[0].values.length > 0">
   <h3>{{category.name}}</h3>
   <h5 class="mt-4">Price</h5>
   <input type="hidden" value="{{category.id}}">
