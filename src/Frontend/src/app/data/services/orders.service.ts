@@ -16,7 +16,6 @@ export class OrdersService {
   baseUrl = `${environment.apiUrl}/orders`;
   authService = inject(AuthService);
 
-
   getOrders(pageNo:number = 1, pageSize:number = 10) {
     const params = {pageNo:pageNo, pageSize:pageSize};
 
@@ -64,5 +63,10 @@ export class OrdersService {
     }
 
     return this.http.put(`${this.baseUrl}/${orderId}/cancellation`, {});
+  }
+
+  payOrder(orderId: string){
+    this.http.get(`${this.baseUrl}/${orderId}/payment`, {responseType: "text"})
+      .subscribe(paymentUrl => window.location.href = paymentUrl);
   }
 }

@@ -101,15 +101,15 @@ export class AuthService {
   logout(){
     this.http.get(`${this.baseUrl}accounts/logout`)
       .subscribe(() => {
-        this.loggedIn.next(false);
-        this.isAdminRole.next(false);
-
-        this.cookieService.delete('accessToken');
         this.cookieService.delete('refreshToken');
-        this.accessToken = null;
+        this.cookieService.delete('accessToken');
         this.refreshToken = null;
+        this.accessToken = null;
 
         this.cartService.loadCartInfo();
+
+        this.loggedIn.next(false);
+        this.isAdminRole.next(false);
 
         this.router.navigate(['/login']);
       });

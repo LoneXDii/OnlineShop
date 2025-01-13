@@ -1,5 +1,17 @@
 <div class="card" *ngIf="order">
   <app-order-info-template [order]="order"></app-order-info-template>
+  <div class="card-footer">
+    <button class="btn btn-primary me-1"
+            (click)="onPay()"
+            [disabled]="order.paymentStatus === 'Paid'">
+      Pay
+    </button>
+    <button class="btn btn-danger"
+            (click)="onCancel()"
+            [disabled]="order.orderStatus === 'Cancelled'">
+      Cancel
+    </button>
+  </div>
 </div>
 
 <div *ngIf="errorMessage" class="alert alert-danger d-flex justify-content-center" role="alert">

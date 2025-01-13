@@ -16,15 +16,20 @@ import {OrderInfoTemplateComponent} from './components/order-info-template/order
 })
 export class OrderInfoComponent implements OnInit {
   route = inject(ActivatedRoute);
-  orderService = inject(OrdersService);
+  ordersService = inject(OrdersService);
   order: Order | null = null;
   errorMessage: string | null = null;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const orderId = params['id'];
-      this.orderService.getOrderById(orderId)
-        .subscribe({
+      this.getOrder(orderId);
+    })
+  }
+
+  getOrder(orderId: string){
+    this.ordersService.getOrderById(orderId)
+      .subscribe({
         next: order => {
           this.order = order;
           this.errorMessage = null;
@@ -33,6 +38,22 @@ export class OrderInfoComponent implements OnInit {
           this.order = null;
           this.errorMessage = 'Order not found. Please check the order ID and try again. If the problem persists, contact support.';
         }});
-    })
+  }
+
+  onCancel(){
+    if(this.order) {
+      this.ordersService.cancelOrder(this.order.id)
+        .subscribe(() => {
+          if(this.order) {
+            this.getOrder(this.order.id);
+          }
+        });
+    }
+  }
+
+  onPay(){
+    if(this.order) {
+      this.ordersService.payOrder(this.order.id);
+    }
   }
 }
