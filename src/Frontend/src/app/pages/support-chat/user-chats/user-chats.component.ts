@@ -5,15 +5,15 @@ import {ChatsListComponent} from '../components/chats-list/chats-list.component'
 import {NgIf} from '@angular/common';
 
 @Component({
-  selector: 'app-admin-chats',
+  selector: 'app-user-chats',
   imports: [
     ChatsListComponent,
     NgIf
   ],
-  templateUrl: './admin-chats.component.html',
-  styleUrl: './admin-chats.component.css'
+  templateUrl: './user-chats.component.html',
+  styleUrl: './user-chats.component.css'
 })
-export class AdminChatsComponent implements OnInit {
+export class UserChatsComponent implements OnInit {
   signalRService = inject(SignalRService);
   chats: Chat[] = [];
 
@@ -29,12 +29,16 @@ export class AdminChatsComponent implements OnInit {
     }
   }
 
-  private configureSignalRService() {
+  createChat(){
+    this.signalRService.createChat();
+  }
+
+  private configureSignalRService(){
     this.signalRService.connect()
       .subscribe(() => {
-        this.signalRService.getAllChats();
+        this.signalRService.getUserChats();
 
-        this.signalRService.receiveAllChats()
+        this.signalRService.receiveUserChats()
           .subscribe((chats) => {
             this.chats = chats;
           });

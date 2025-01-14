@@ -1,3 +1,4 @@
 <div class="card" *ngIf="chats">
+  <button (click)="createChat()">Create chat</button>
   <app-chats-list [chats]="chats"></app-chats-list>
 </div>

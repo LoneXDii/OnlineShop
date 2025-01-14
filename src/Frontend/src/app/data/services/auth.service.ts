@@ -116,6 +116,8 @@ export class AuthService {
   }
 
   saveTokens(res: Tokens) {
+    this.cookieService.delete('refreshToken');
+    this.cookieService.delete('accessToken');
     this.accessToken = res.accessToken;
     this.refreshToken = res.refreshToken;
     this.cookieService.set('accessToken', this.accessToken);

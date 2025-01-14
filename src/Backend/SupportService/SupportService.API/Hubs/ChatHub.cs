@@ -5,6 +5,7 @@ using SupportService.Application.DTO;
 using SupportService.Application.UseCases.CloseChat;
 using SupportService.Application.UseCases.CreateChat;
 using SupportService.Application.UseCases.GetAllChats;
+using SupportService.Application.UseCases.GetChatById;
 using SupportService.Application.UseCases.GetChatMessages;
 using SupportService.Application.UseCases.GetUserChats;
 using SupportService.Application.UseCases.SendMessage;
@@ -81,6 +82,21 @@ public class ChatHub : Hub
         await Clients.Group("admin").SendAsync("ReceiveNewChat", chat);
 
         await Clients.Caller.SendAsync("ReceiveNewChat", chat);
+    }
+
+    public async Task GetChatByIdAsync(int chatId)
+    {
+        string? userId = null;
+        var role = Context.User.FindFirst(ClaimTypes.Role)?.Value;
+
+        if (role != "admin")
+        {
+            userId = Context.User.FindFirst("Id")?.Value;
+        }
+
+        var chat = await _mediator.Send(new GetChatByIdRequest(chatId, userId));
+
+        await Clients.Caller.SendAsync("ReceiveChat", chat);
     }
 
     public async Task CloseChatAsync(int chatId)

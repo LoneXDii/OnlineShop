@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-header">
+    Current Chat:
+    <span *ngIf="chat">{{chat.clientName}}</span>
+  </div>
+  <div class="card-body">
+    <ul class="list-group">
+      @for(message of messages; track message){
+        <li class="list-group-item">
+          <h5>{{message.senderId}}</h5>
+          <p>{{message.text}}</p>
+        </li>
+      }
+    </ul>
+  </div>
+  <div class="card-footer">
+    <input type="text" [(ngModel)]="currentInputText" placeholder="Введите сообщение" />
+    <button (click)="onSendMessage()">Send</button>
+  </div>
+</div>

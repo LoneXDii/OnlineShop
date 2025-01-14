@@ -1,0 +1,24 @@
+<div class="card-header">
+  <h4>Active chats:</h4>
+</div>
+<div class="card-body">
+  <ul class="list-group">
+    @for(chat of activeChats; track chat.id){
+      <li class="list-group-item" [routerLink]="['/support/chat', chat.id]">
+        <h5>{{chat.clientName}}</h5>
+      </li>
+    }
+  </ul>
+</div>
+<div class="card-header">
+  <h4>Closed chats:</h4>
+</div>
+<div class="card-body">
+  <ul class="list-group">
+    @for(chat of closedChats; track chat.id){
+      <li class="list-group-item" [routerLink]="['/support/chat', chat.id]">
+        <h5>{{chat.clientName}}</h5>
+      </li>
+    }
+  </ul>
+</div>

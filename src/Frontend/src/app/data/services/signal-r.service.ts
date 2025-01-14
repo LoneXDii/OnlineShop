@@ -25,6 +25,10 @@ export class SignalRService {
 
   connect(){
     return new Observable<void>((observer) => {
+      if(this.hubConnection.state === 'Connected'){
+        this.hubConnection.stop();
+      }
+
       this.hubConnection
         .start()
         .then(() => {
@@ -63,8 +67,8 @@ export class SignalRService {
     });
   }
 
-  getChatMessages(){
-    return this.hubConnection.invoke('GetChatMessagesAsync');
+  getChatMessages(chatId: number){
+    return this.hubConnection.invoke('GetChatMessagesAsync', chatId);
   }
 
   receiveChatMessages(){
@@ -107,6 +111,18 @@ export class SignalRService {
     return new Observable<ChatMessage>((observer) => {
       this.hubConnection.on("ReceiveMessage", (message: ChatMessage) => {
         observer.next(message);
+      });
+    });
+  }
+
+  getChatById(chatId: number){
+    return this.hubConnection.invoke('GetChatByIdAsync', chatId);
+  }
+
+  receiveChat(){
+    return new Observable<Chat>((observer) => {
+      this.hubConnection.on("ReceiveChat", (chat: Chat) => {
+        observer.next(chat);
       });
     });
   }

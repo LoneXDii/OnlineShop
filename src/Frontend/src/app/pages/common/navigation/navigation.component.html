@@ -10,7 +10,10 @@
         <a class="nav-link" [routerLink]="['/catalog']">Catalog</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Support</a>
+        <a class="nav-link"
+           [routerLink]="isAdmin ? ['/support/admin'] : ['/support']">
+          Support
+        </a>
       </li>
       <li class="nav-item" *ngIf="isAdmin">
         <a class="nav-link" [routerLink]="['/admin']">Admin</a>
