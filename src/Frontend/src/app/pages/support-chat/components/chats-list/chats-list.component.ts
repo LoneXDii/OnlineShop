@@ -34,6 +34,4 @@ export class ChatsListComponent implements OnChanges {
       }
     }
   }
-
-  protected readonly close = close;
 }

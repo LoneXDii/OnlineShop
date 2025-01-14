@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HubConnection, HubConnectionBuilder} from '@microsoft/signalr';
+import {HubConnection, HubConnectionBuilder, HubConnectionState} from '@microsoft/signalr';
 import {environment} from '../../../environments/environment';
 import {Observable} from 'rxjs';
 import {Chat} from '../interfaces/signalR/chat.interface';
@@ -11,7 +11,7 @@ import {AuthService} from './auth.service';
 })
 export class SignalRService {
   authService = inject(AuthService);
-  private hubConnection: HubConnection;
+  private  hubConnection: HubConnection;
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
@@ -24,34 +24,21 @@ export class SignalRService {
   }
 
   connect(){
-    return new Observable<void>((observer) => {
-      if(this.hubConnection.state === 'Connected'){
-        this.hubConnection.stop();
-      }
-
+    if (this.hubConnection.state === HubConnectionState.Disconnected) {
       this.hubConnection
         .start()
-        .then(() => {
-          console.log('Connection established with SignalR hub');
-          observer.next();
-          observer.complete();
-        })
-        .catch((error) => {
-          console.error('Error connecting to SignalR hub:', error);
-          observer.error(error);
-        });
-    });
+        .then(() => console.log('Connection started'))
+        .catch(err => console.log('Error while starting connection: ' + err));
+    }
   }
 
   getAllChats(){
     return this.hubConnection.invoke('GetAllChatsAsync');
   }
 
-  receiveAllChats(){
-    return new Observable<Chat[]>((observer) => {
-      this.hubConnection.on("ReceiveChats", (chats: Chat[]) => {
-        observer.next(chats);
-      });
+  receiveAllChats(callback: (chats: Chat[]) => void){
+    this.hubConnection.on("ReceiveChats", (chats: Chat[]) => {
+      callback(chats);
     });
   }
 
@@ -59,11 +46,9 @@ export class SignalRService {
     return this.hubConnection.invoke('GetUserChatsAsync');
   }
 
-  receiveUserChats(){
-    return new Observable<Chat[]>((observer) => {
-      this.hubConnection.on("ReceiveUserChats", (chats: Chat[]) => {
-        observer.next(chats);
-      });
+  receiveUserChats(callback: (chats: Chat[]) => void){
+    this.hubConnection.on("ReceiveUserChats", (chats: Chat[]) => {
+      callback(chats);
     });
   }
 
@@ -71,11 +56,9 @@ export class SignalRService {
     return this.hubConnection.invoke('GetChatMessagesAsync', chatId);
   }
 
-  receiveChatMessages(){
-    return new Observable<ChatMessage[]>((observer) => {
-      this.hubConnection.on("ReceiveChatMessages", (messages: ChatMessage[]) => {
-        observer.next(messages);
-      });
+  receiveChatMessages(callback: (messages: ChatMessage[]) => void){
+    this.hubConnection.on("ReceiveChatMessages", (messages: ChatMessage[]) => {
+      callback(messages);
     });
   }
 
@@ -83,11 +66,9 @@ export class SignalRService {
     return this.hubConnection.invoke('CreateChatAsync');
   }
 
-  receiveNewChat(){
-    return new Observable<Chat>((observer) => {
-      this.hubConnection.on("ReceiveNewChat", (chat: Chat) => {
-        observer.next(chat);
-      });
+  receiveNewChat(callback: (chat: Chat) => void){
+    this.hubConnection.on("ReceiveNewChat", (chat: Chat) => {
+      callback(chat);
     });
   }
 
@@ -95,11 +76,9 @@ export class SignalRService {
     return this.hubConnection.invoke('CloseChatAsync', chatId);
   }
 
-  receiveClosedChat(){
-    return new Observable<number>((observer) => {
-      this.hubConnection.on("ReceiveNewChat", (chatId: number) => {
-        observer.next(chatId);
-      });
+  receiveClosedChat(callback: (chatId: number) => void){
+    this.hubConnection.on("CloseChat", (chatId: number) => {
+      callback(chatId);
     });
   }
 
@@ -107,11 +86,9 @@ export class SignalRService {
     return this.hubConnection.invoke('SendMessageAsync', message);
   }
 
-  receiveMessage(){
-    return new Observable<ChatMessage>((observer) => {
-      this.hubConnection.on("ReceiveMessage", (message: ChatMessage) => {
-        observer.next(message);
-      });
+  receiveMessage(callback: (message: ChatMessage) => void){
+    this.hubConnection.on("ReceiveMessage", (message: ChatMessage) => {
+      callback(message);
     });
   }
 
@@ -119,11 +96,9 @@ export class SignalRService {
     return this.hubConnection.invoke('GetChatByIdAsync', chatId);
   }
 
-  receiveChat(){
-    return new Observable<Chat>((observer) => {
-      this.hubConnection.on("ReceiveChat", (chat: Chat) => {
-        observer.next(chat);
-      });
+  receiveChat(callback: (chat: Chat) => void){
+    this.hubConnection.on("ReceiveChat", (chat: Chat) => {
+      callback(chat);
     });
   }
 }

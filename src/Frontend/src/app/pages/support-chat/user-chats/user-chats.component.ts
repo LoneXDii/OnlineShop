@@ -34,24 +34,22 @@ export class UserChatsComponent implements OnInit {
   }
 
   private configureSignalRService(){
-    this.signalRService.connect()
-      .subscribe(() => {
-        this.signalRService.getUserChats();
+    this.signalRService.connect();
 
-        this.signalRService.receiveUserChats()
-          .subscribe((chats) => {
-            this.chats = chats;
-          });
+    this.signalRService.receiveUserChats(chats => {
+      this.chats = chats;
+    });
 
-        this.signalRService.receiveNewChat()
-          .subscribe((chat) => {
-            this.chats.push(chat);
-          })
+    this.signalRService.receiveNewChat(chat => {
+      this.chats = [...this.chats, chat];
+    });
 
-        this.signalRService.receiveClosedChat()
-          .subscribe((chatId) => {
-            this.onChatClosed(chatId);
-          })
-      });
+    this.signalRService.receiveClosedChat(chatId => {
+      this.onChatClosed(chatId);
+    });
+
+    //TODO
+    //Fix this (not working)
+    this.signalRService.getUserChats();
   }
 }

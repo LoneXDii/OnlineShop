@@ -24,12 +24,22 @@ export class ChatComponent implements OnInit {
   messages: ChatMessage[] = [];
   currentInputText: string = '';
 
+  //temporary
+  chatId: number | null = null;
+
+  constructor() {
+    this.route.params.subscribe(
+      params => {
+        this.chatId = +params['id'];
+      });
+  }
+
+
   ngOnInit() {
     this.configureSignalRService();
   }
 
   onSendMessage(){
-    console.log(this.chat);
     if(this.currentInputText !== '' && this.chat) {
       this.signalRService.sendMessage({text: this.currentInputText, chatId: this.chat.id})
       this.currentInputText = '';
@@ -37,36 +47,37 @@ export class ChatComponent implements OnInit {
   }
 
   private configureSignalRService() {
-    this.signalRService.connect()
-      .subscribe(() => {
-        this.signalRService.receiveChatMessages()
-          .subscribe(messages => this.messages = messages);
+    this.signalRService.connect();
 
-        this.signalRService.receiveChat()
-          .subscribe(chat => this.chat = chat);
+    this.signalRService.receiveChatMessages(messages => {
+      this.messages = messages;
+    });
 
-        this.signalRService.receiveMessage()
-          .subscribe(message => {
-            if (this.chat?.clientId === message.chatOwnerId) {
-              this.messages.push(message)
-            }
-          });
+    this.signalRService.receiveChat(chat => {
+      this.chat = chat
+    });
 
-        this.signalRService.receiveClosedChat()
-          .subscribe(chatId => {
-            if(this.chat?.id === chatId){
-              this.chat.isActive = false;
-            }
-          });
+    this.signalRService.receiveMessage(message => {
+      if (this.chat?.clientId === message.chatOwnerId) {
+        this.messages.push(message)
+      }
+    });
 
-        this.route.params.subscribe(
-          params => {
-            const chatId = +params['chatId'];
-            this.signalRService.getChatById(chatId)
-              .catch(error => console.log(error));
-            this.signalRService.getChatMessages(chatId)
-              .catch(error => console.log(error));
-          })
-      });
+    this.signalRService.receiveClosedChat(chatId => {
+      if(this.chat?.id === chatId){
+        this.chat.isActive = false;
+      }
+    });
+
+    //TODO
+    //Fix this (not working)
+    this.route.params.subscribe(
+      params => {
+        const chatId = +params['id'];
+        this.signalRService.getChatById(chatId)
+          .catch(error => console.log(error));
+        this.signalRService.getChatMessages(chatId)
+          .catch(error => console.log(error));
+      })
   }
 }

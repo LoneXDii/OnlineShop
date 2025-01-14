@@ -30,24 +30,23 @@ export class AdminChatsComponent implements OnInit {
   }
 
   private configureSignalRService() {
-    this.signalRService.connect()
-      .subscribe(() => {
-        this.signalRService.getAllChats();
+    this.signalRService.connect();
 
-        this.signalRService.receiveAllChats()
-          .subscribe((chats) => {
-            this.chats = chats;
-          });
+    this.signalRService.receiveAllChats(chats => {
+      this.chats = chats;
+    });
 
-        this.signalRService.receiveNewChat()
-          .subscribe((chat) => {
-            this.chats.push(chat);
-          })
+    this.signalRService.receiveNewChat(chat => {
+      this.chats = [...this.chats, chat];
+    });
 
-        this.signalRService.receiveClosedChat()
-          .subscribe((chatId) => {
-            this.onChatClosed(chatId);
-          })
-      });
+    this.signalRService.receiveClosedChat(chatId => {
+      this.onChatClosed(chatId);
+    });
+
+    //TODO
+    //Fix this (not working)
+    //Only if there is no connection before
+    this.signalRService.getAllChats();
   }
 }
