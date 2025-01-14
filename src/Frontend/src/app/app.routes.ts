@@ -6,6 +6,7 @@ import {catalogRoutes} from './pages/catalog/catalog.routes';
 import {profileRoutes} from './pages/profile/profile.routes';
 import {cartRoutes} from './pages/cart/cart.routes';
 import {ordersRoutes} from './pages/orders/orders.routes';
+import {supportChatRoutes} from './pages/support-chat/support-chat.routes';
 
 export const routes: Routes = [
   ...accountRoutes,
@@ -15,4 +16,5 @@ export const routes: Routes = [
   ...crudsRoutes,
   ...cartRoutes,
   ...ordersRoutes,
+  ...supportChatRoutes,
 ];

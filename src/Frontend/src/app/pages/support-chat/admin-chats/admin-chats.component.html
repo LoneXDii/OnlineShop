@@ -1,0 +1,7 @@
+@if(chat){
+  {{chat | json}}
+}
+@else{
+  <h2>No chats yet</h2>
+}
+<button (click)="createChat()">Create chat</button>

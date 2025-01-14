@@ -27,9 +27,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(options =>
-    options.AllowAnyOrigin()
+    options.WithOrigins(builder.Configuration["ClientHost"])
         .AllowAnyHeader()
         .AllowAnyMethod()
+        .AllowCredentials()
 );
 
 app.UseAuthentication();
