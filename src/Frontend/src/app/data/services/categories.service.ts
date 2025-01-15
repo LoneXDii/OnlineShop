@@ -8,8 +8,8 @@ import {environment} from '../../../environments/environment';
   providedIn: 'root'
 })
 export class CategoriesService {
-  http = inject(HttpClient);
-  baseUrl = `${environment.apiUrl}/categories`;
+  private http = inject(HttpClient);
+  private baseUrl = `${environment.apiUrl}/categories`;
 
   getCategories() {
     return this.http.get<Category[]>(`${this.baseUrl}`);

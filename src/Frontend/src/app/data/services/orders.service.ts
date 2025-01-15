@@ -11,10 +11,10 @@ import {AuthService} from './auth.service';
   providedIn: 'root'
 })
 export class OrdersService {
-  http = inject(HttpClient);
-  cartService = inject(CartService);
-  baseUrl = `${environment.apiUrl}/orders`;
-  authService = inject(AuthService);
+  private http = inject(HttpClient);
+  private cartService = inject(CartService);
+  private baseUrl = `${environment.apiUrl}/orders`;
+  private authService = inject(AuthService);
 
   getOrders(pageNo:number = 1, pageSize:number = 10) {
     const params = {pageNo:pageNo, pageSize:pageSize};

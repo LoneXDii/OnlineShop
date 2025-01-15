@@ -14,14 +14,4 @@ import {RouterOutlet} from '@angular/router';
 })
 export class AppComponent {
   title = 'Frontend';
-
-  category: Category;
-
-  constructor() {
-    this.category = {
-      id: 1,
-      name: 'Test',
-      imageUrl: 'https://example.com/image.jpg'
-    };
-  }
 }

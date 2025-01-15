@@ -9,7 +9,7 @@ import {AuthService} from './auth.service';
   providedIn: 'root'
 })
 export class SignalRService {
-  authService = inject(AuthService);
+  private authService = inject(AuthService);
   private  hubConnection: HubConnection;
 
   constructor() {

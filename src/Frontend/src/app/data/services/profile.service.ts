@@ -8,9 +8,9 @@ import {environment} from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ProfileService {
-  authService = inject(AuthService);
-  http = inject(HttpClient);
-  baseUrl = `${environment.apiUrl}/users`;
+  private authService = inject(AuthService);
+  private http = inject(HttpClient);
+  private baseUrl = `${environment.apiUrl}/users`;
 
   getUserInfo(){
     return this.http.get<Profile>(`${this.baseUrl}/info`);

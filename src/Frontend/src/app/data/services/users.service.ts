@@ -8,8 +8,8 @@ import {Profile} from '../interfaces/auth/profile.interface';
   providedIn: 'root'
 })
 export class UsersService {
-  http = inject(HttpClient);
-  baseUrl = `${environment.apiUrl}/users`;
+  private http = inject(HttpClient);
+  private  baseUrl = `${environment.apiUrl}/users`;
 
   getUsers(pageNo:number = 1, pageSize:number = 10) {
     const params = {pageNo:pageNo, pageSize:pageSize};

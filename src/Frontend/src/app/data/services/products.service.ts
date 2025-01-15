@@ -9,8 +9,8 @@ import {environment} from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ProductsService {
-  http = inject(HttpClient);
-  baseUrl = `${environment.apiUrl}/products`;
+  private http = inject(HttpClient);
+  private baseUrl = `${environment.apiUrl}/products`;
 
   createProduct(formData: FormData){
     return this.http.post(`${this.baseUrl}`, formData);

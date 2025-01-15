@@ -13,12 +13,12 @@ import {environment} from '../../../environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  http = inject(HttpClient);
-  cookieService = inject(CookieService);
-  cartService = inject(CartService);
-  router = inject(Router);
-  baseUrl = `${environment.apiUrl}/`;
-  accessToken: string | null = null;
+  private http = inject(HttpClient);
+  private cookieService = inject(CookieService);
+  private cartService = inject(CartService);
+  private router = inject(Router);
+  private baseUrl = `${environment.apiUrl}/`;
+  private accessToken: string | null = null;
   refreshToken: string | null = null;
 
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated);
@@ -116,7 +116,7 @@ export class AuthService {
       ;
   }
 
-  saveTokens(res: Tokens) {
+  private saveTokens(res: Tokens) {
     this.cookieService.delete('refreshToken');
     this.cookieService.delete('accessToken');
     this.accessToken = res.accessToken;
@@ -125,7 +125,7 @@ export class AuthService {
     this.cookieService.set('refreshToken', this.refreshToken);
   }
 
-  updateAccessToken(token: string) {
+  private updateAccessToken(token: string) {
     this.accessToken = token;
     this.cookieService.delete('accessToken');
     this.cookieService.set('accessToken', this.accessToken);

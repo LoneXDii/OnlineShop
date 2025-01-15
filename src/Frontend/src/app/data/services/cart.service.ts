@@ -8,8 +8,8 @@ import {environment} from "../../../environments/environment";
   providedIn: 'root'
 })
 export class CartService {
-  http = inject(HttpClient);
-  baseUrl = `${environment.apiUrl}/cart`;
+  private http = inject(HttpClient);
+  private baseUrl = `${environment.apiUrl}/cart`;
 
   private cartItemsCount = new BehaviorSubject<number>(0);
   cartItemsCount$ = this.cartItemsCount.asObservable();
