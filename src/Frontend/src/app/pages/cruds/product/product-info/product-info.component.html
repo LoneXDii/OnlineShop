@@ -28,9 +28,27 @@
           <p class="card-text">
             Quantity: <strong>{{ product.quantity }}</strong>
           </p>
-          <div *ngIf="product.discount" class="alert alert-warning" role="alert">
-            Discount: {{ product.discount.percent }}%
-          </div>
+          @if(product.discount){
+            <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+              <span>Discount: {{ product.discount.percent }}%</span>
+              <button class="btn btn-danger"
+                      *ngIf="authService.isAdmin"
+                      (click)="onDeleteDiscount()">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          }
+          @else{
+            <button class="btn btn-primary mb-2"
+                    *ngIf="authService.isAdmin"
+                    (click)="onAddDiscount()">
+              Add discount
+            </button>
+            <app-product-discount-creation *ngIf="authService.isAdmin && isDiscountCreating"
+                                           (onUpdate)="refreshProduct($event)"
+                                           [productId]="product.id">
+            </app-product-discount-creation>
+          }
           <div class="mb-3">
             <h6>Attributes:</h6>
             <ul class="list-group">
@@ -39,7 +57,7 @@
               </li>
             </ul>
           </div>
-          <button type="button" class="btn btn-primary m-3"
+          <button type="button" class="btn btn-primary m-2"
                   (click)="addToCart()"
                   [disabled]="!authService.isAuthenticated">
             <i class="fa-solid fa-cart-arrow-down"></i>

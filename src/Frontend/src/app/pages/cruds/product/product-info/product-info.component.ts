@@ -5,13 +5,17 @@ import {Product} from '../../../../data/interfaces/catalog/product.interface';
 import {NgForOf, NgIf} from '@angular/common';
 import {AuthService} from '../../../../data/services/auth.service';
 import {CartService} from '../../../../data/services/cart.service';
+import {
+  ProductDiscountCreationComponent
+} from '../components/product-discount-creation/product-discount-creation.component';
 
 @Component({
   selector: 'app-product-info',
   imports: [
     NgIf,
     NgForOf,
-    RouterLink
+    RouterLink,
+    ProductDiscountCreationComponent
   ],
   templateUrl: './product-info.component.html',
   styleUrl: './product-info.component.css'
@@ -23,16 +27,33 @@ export class ProductInfoComponent implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
   product: Product | null = null;
+  isDiscountCreating: boolean = false;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const productId = +params['id'];
-
-      this.productsService.getProductById(productId)
-        .subscribe(product => {
-          this.product = product;
-        })
+      this.refreshProduct(productId);
     });
+  }
+
+  refreshProduct(productId: number) {
+    this.productsService.getProductById(productId)
+      .subscribe(product => {
+        this.product = product;
+      });
+  }
+
+  onDeleteDiscount() {
+    if(!this.product || !this.product.discount){
+      return;
+    }
+
+    return this.productsService.deleteDiscount(this.product.discount.id)
+      .subscribe(() => {
+        if(this.product){
+          this.refreshProduct(this.product.id)
+        }
+      });
   }
 
   onDelete(){
@@ -57,4 +78,10 @@ export class ProductInfoComponent implements OnInit {
         error: () => alert("This product is out of stock")
       });
   }
+
+  onAddDiscount(){
+    this.isDiscountCreating = !this.isDiscountCreating;
+  }
+
+  protected readonly AuthService = AuthService;
 }

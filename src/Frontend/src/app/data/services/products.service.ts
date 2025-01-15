@@ -56,4 +56,12 @@ export class ProductsService {
         })
       );
   }
+
+  addDiscount(params: {productId: number, percent: number, endDate: Date}) {
+    return this.http.post(`${environment.apiUrl}/discounts`, {...params, startDate: new Date(Date.now() + 120)});
+  }
+
+  deleteDiscount(discountId: number) {
+    return this.http.delete(`${environment.apiUrl}/discounts/${discountId}`);
+  }
 }

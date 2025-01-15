@@ -1,0 +1,15 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="percent">Percent:</label>
+  <input id="percent" formControlName="percent" type="number" class="form-control"/>
+  <div *ngIf="form.get('percent')?.invalid && form.get('percent')?.touched" class="text-danger">
+    Percent is required and must be between 0 and 100.
+  </div>
+
+  <label for="endDate">End Date:</label>
+  <input id="endDate" formControlName="endDate" type="date" class="form-control"/>
+  <div *ngIf="form.get('endDate')?.invalid && form.get('endDate')?.touched" class="text-danger">
+    End Date is required and must be today or later.
+  </div>
+
+  <button type="submit" [disabled]="form.invalid" class="btn btn-primary mt-1">Submit</button>
+</form>
