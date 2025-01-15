@@ -112,7 +112,8 @@ export class AuthService {
         this.isAdminRole.next(false);
 
         this.router.navigate(['/login']);
-      });
+      })
+      ;
   }
 
   saveTokens(res: Tokens) {
@@ -126,6 +127,7 @@ export class AuthService {
 
   updateAccessToken(token: string) {
     this.accessToken = token;
+    this.cookieService.delete('accessToken');
     this.cookieService.set('accessToken', this.accessToken);
   }
 

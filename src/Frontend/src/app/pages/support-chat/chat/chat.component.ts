@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  private configureSignalRService() {
+  configureSignalRService() {
     this.signalRService.receiveChatMessages(messages => {
       this.messages = messages.map((message: ChatMessage) => ({
         ...message,
