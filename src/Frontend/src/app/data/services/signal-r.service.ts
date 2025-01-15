@@ -1,7 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HubConnection, HubConnectionBuilder, HubConnectionState} from '@microsoft/signalr';
 import {environment} from '../../../environments/environment';
-import {Observable} from 'rxjs';
 import {Chat} from '../interfaces/signalR/chat.interface';
 import {ChatMessage} from '../interfaces/signalR/chatMessage.interface';
 import {AuthService} from './auth.service';
@@ -25,11 +24,13 @@ export class SignalRService {
 
   connect(){
     if (this.hubConnection.state === HubConnectionState.Disconnected) {
-      this.hubConnection
+      return this.hubConnection
         .start()
         .then(() => console.log('Connection started'))
         .catch(err => console.log('Error while starting connection: ' + err));
     }
+
+    return null;
   }
 
   getAllChats(){

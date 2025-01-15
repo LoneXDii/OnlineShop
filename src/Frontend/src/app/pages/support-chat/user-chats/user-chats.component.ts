@@ -34,8 +34,6 @@ export class UserChatsComponent implements OnInit {
   }
 
   private configureSignalRService(){
-    this.signalRService.connect();
-
     this.signalRService.receiveUserChats(chats => {
       this.chats = chats;
     });
@@ -48,8 +46,15 @@ export class UserChatsComponent implements OnInit {
       this.onChatClosed(chatId);
     });
 
-    //TODO
-    //Fix this (not working)
-    this.signalRService.getUserChats();
+    const connection = this.signalRService.connect();
+
+    if (connection) {
+      connection.then(() => {
+        this.signalRService.getUserChats();
+      });
+    }
+    else{
+      this.signalRService.getUserChats();
+    }
   }
 }

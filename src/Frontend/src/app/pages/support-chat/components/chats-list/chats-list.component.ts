@@ -1,6 +1,7 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, inject, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Chat} from '../../../../data/interfaces/signalR/chat.interface';
 import {RouterLink} from '@angular/router';
+import {AuthService} from '../../../../data/services/auth.service';
 
 @Component({
   selector: 'app-chats-list',
@@ -12,6 +13,7 @@ import {RouterLink} from '@angular/router';
 })
 export class ChatsListComponent implements OnChanges {
   @Input() chats!: Chat[];
+  authService = inject(AuthService);
   activeChats: Chat[] = [];
   closedChats: Chat[] = [];
 

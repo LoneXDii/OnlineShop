@@ -30,8 +30,6 @@ export class AdminChatsComponent implements OnInit {
   }
 
   private configureSignalRService() {
-    this.signalRService.connect();
-
     this.signalRService.receiveAllChats(chats => {
       this.chats = chats;
     });
@@ -44,9 +42,15 @@ export class AdminChatsComponent implements OnInit {
       this.onChatClosed(chatId);
     });
 
-    //TODO
-    //Fix this (not working)
-    //Only if there is no connection before
-    this.signalRService.getAllChats();
+    const connection = this.signalRService.connect();
+
+    if (connection) {
+      connection.then(() => {
+        this.signalRService.getAllChats();
+      });
+    }
+    else{
+      this.signalRService.getAllChats();
+    }
   }
 }

@@ -5,7 +5,12 @@
   <ul class="list-group">
     @for(chat of activeChats; track chat.id){
       <li class="list-group-item" [routerLink]="['/support/chat', chat.id]">
-        <h5>{{chat.clientName}}</h5>
+        @if(authService.isAdmin){
+          <h5>{{chat.clientName}}</h5>
+        }
+        @else{
+          <h5>Active chat</h5>
+        }
       </li>
     }
   </ul>
@@ -17,7 +22,12 @@
   <ul class="list-group">
     @for(chat of closedChats; track chat.id){
       <li class="list-group-item" [routerLink]="['/support/chat', chat.id]">
-        <h5>{{chat.clientName}}</h5>
+        @if(authService.isAdmin){
+          <h5>{{chat.clientName}}</h5>
+        }
+        @else{
+          <h5>Closed chat</h5>
+        }
       </li>
     }
   </ul>

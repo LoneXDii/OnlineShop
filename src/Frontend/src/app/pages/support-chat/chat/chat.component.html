@@ -1,20 +1,40 @@
-<div class="card">
-  <div class="card-header">
-    Current Chat:
-    <span *ngIf="chat">{{chat.clientName}}</span>
-  </div>
-  <div class="card-body">
-    <ul class="list-group">
-      @for(message of messages; track message){
-        <li class="list-group-item">
-          <h5>{{message.senderId}}</h5>
-          <p>{{message.text}}</p>
-        </li>
-      }
-    </ul>
-  </div>
-  <div class="card-footer">
-    <input type="text" [(ngModel)]="currentInputText" placeholder="Введите сообщение" />
-    <button (click)="onSendMessage()">Send</button>
+<div class="d-flex justify-content-center" *ngIf="chat">
+  <div class="card col-md-6">
+    <div class="card-header">
+      Current Chat:
+      <span>{{chat.clientName}}</span>
+    </div>
+    <div class="card-body" style="height: 60vh; overflow-y: auto;">
+        @for(message of messages; track message){
+          <div [class]="message.senderId === userId
+                      ? 'd-flex justify-content-end mb-2'
+                      : 'd-flex justify-content-start mb-2'">
+            <div [class]="message.senderId === userId
+                        ? 'bg-primary text-white rounded p-2'
+                        : 'bg-light rounded p-2'">
+              <strong>
+                @if(message.senderId === chat.clientId){
+                  {{chat.clientName}}
+                }
+                @else{
+                  admin
+                }
+                :
+              </strong>
+              <span>{{message.text}}</span>
+              <p class="mb-0">{{message.dateTime | date: 'dd-MM-yyyy, HH:mm'}}</p>
+            </div>
+          </div>
+        }
+    </div>
+    <div class="card-footer input-group">
+      <input type="text" class="form-control"
+             [(ngModel)]="currentInputText"
+             placeholder="Enter your message" />
+      <button class="btn btn-primary" (click)="onSendMessage()"
+              [disabled]="!chat.isActive || currentInputText === ''">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
   </div>
 </div>

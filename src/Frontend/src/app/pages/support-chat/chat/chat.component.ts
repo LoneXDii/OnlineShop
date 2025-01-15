@@ -1,17 +1,18 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {SignalRService} from '../../../data/services/signal-r.service';
 import {ActivatedRoute} from '@angular/router';
 import {Chat} from '../../../data/interfaces/signalR/chat.interface';
 import {AuthService} from '../../../data/services/auth.service';
 import {ChatMessage} from '../../../data/interfaces/signalR/chatMessage.interface';
-import {NgIf} from '@angular/common';
+import {DatePipe, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-chat',
   imports: [
     NgIf,
-    FormsModule
+    FormsModule,
+    DatePipe
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
@@ -23,17 +24,11 @@ export class ChatComponent implements OnInit {
   chat: Chat | null = null;
   messages: ChatMessage[] = [];
   currentInputText: string = '';
-
-  //temporary
-  chatId: number | null = null;
+  userId: string;
 
   constructor() {
-    this.route.params.subscribe(
-      params => {
-        this.chatId = +params['id'];
-      });
+    this.userId = this.authService.getUserId;
   }
-
 
   ngOnInit() {
     this.configureSignalRService();
@@ -47,10 +42,11 @@ export class ChatComponent implements OnInit {
   }
 
   private configureSignalRService() {
-    this.signalRService.connect();
-
     this.signalRService.receiveChatMessages(messages => {
-      this.messages = messages;
+      this.messages = messages.map((message: ChatMessage) => ({
+        ...message,
+        dateTime: message.dateTime + 'Z'
+      }));
     });
 
     this.signalRService.receiveChat(chat => {
@@ -69,8 +65,19 @@ export class ChatComponent implements OnInit {
       }
     });
 
-    //TODO
-    //Fix this (not working)
+    const connection = this.signalRService.connect();
+
+    if (connection) {
+      connection.then(() => {
+        this.getData();
+      });
+    }
+    else{
+      this.getData();
+    }
+  }
+
+  getData(){
     this.route.params.subscribe(
       params => {
         const chatId = +params['id'];
@@ -78,6 +85,6 @@ export class ChatComponent implements OnInit {
           .catch(error => console.log(error));
         this.signalRService.getChatMessages(chatId)
           .catch(error => console.log(error));
-      })
+      });
   }
 }
