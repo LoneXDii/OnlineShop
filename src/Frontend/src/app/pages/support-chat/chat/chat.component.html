@@ -3,6 +3,12 @@
     <div class="card-header">
       Current Chat:
       <span>{{chat.clientName}}</span>
+      <button class="btn btn-primary btn-sm ms-2"
+              [disabled]="!chat.isActive"
+              (click)="onClose()">
+        Close chat
+      </button>
+      <h5 *ngIf="!chat.isActive" class="alert alert-danger mt-2 mb-2">This chat is closed</h5>
     </div>
     <div class="card-body" style="height: 60vh; overflow-y: auto;">
         @for(message of messages; track message){
@@ -30,11 +36,17 @@
     <div class="card-footer input-group">
       <input type="text" class="form-control"
              [(ngModel)]="currentInputText"
+             [readonly]="!chat.isActive"
              placeholder="Enter your message" />
       <button class="btn btn-primary" (click)="onSendMessage()"
               [disabled]="!chat.isActive || currentInputText === ''">
         <i class="fa-solid fa-paper-plane"></i>
       </button>
     </div>
+  </div>
+</div>
+<div *ngIf="errorMessage">
+  <div class="alert alert-danger">
+    <h5 class="text-center">{{errorMessage}}</h5>
   </div>
 </div>

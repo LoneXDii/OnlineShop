@@ -30,20 +30,13 @@ export class UserChatsComponent implements OnInit {
   }
 
   createChat(){
-    this.signalRService.createChat();
+    this.signalRService.createChat()
+      .catch(err => alert("You already have an opened chat"));
   }
 
-  private configureSignalRService(){
+  configureSignalRService(){
     this.signalRService.receiveUserChats(chats => {
       this.chats = chats;
-    });
-
-    this.signalRService.receiveNewChat(chat => {
-      this.chats = [...this.chats, chat];
-    });
-
-    this.signalRService.receiveClosedChat(chatId => {
-      this.onChatClosed(chatId);
     });
 
     const connection = this.signalRService.connect();

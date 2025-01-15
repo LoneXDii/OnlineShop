@@ -29,17 +29,9 @@ export class AdminChatsComponent implements OnInit {
     }
   }
 
-  private configureSignalRService() {
+  configureSignalRService() {
     this.signalRService.receiveAllChats(chats => {
       this.chats = chats;
-    });
-
-    this.signalRService.receiveNewChat(chat => {
-      this.chats = [...this.chats, chat];
-    });
-
-    this.signalRService.receiveClosedChat(chatId => {
-      this.onChatClosed(chatId);
     });
 
     const connection = this.signalRService.connect();

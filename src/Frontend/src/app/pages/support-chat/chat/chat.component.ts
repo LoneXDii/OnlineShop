@@ -25,6 +25,8 @@ export class ChatComponent implements OnInit {
   messages: ChatMessage[] = [];
   currentInputText: string = '';
   userId: string;
+  errorMessage: string | null = null;
+
 
   constructor() {
     this.userId = this.authService.getUserId;
@@ -82,9 +84,15 @@ export class ChatComponent implements OnInit {
       params => {
         const chatId = +params['id'];
         this.signalRService.getChatById(chatId)
-          .catch(error => console.log(error));
+          .catch(error => this.errorMessage = "Chat is not found");
         this.signalRService.getChatMessages(chatId)
-          .catch(error => console.log(error));
+          .catch(error => this.errorMessage = "Chat is not found");
       });
+  }
+
+  onClose(){
+    if(this.chat) {
+      this.signalRService.closeChat(this.chat.id);
+    }
   }
 }
