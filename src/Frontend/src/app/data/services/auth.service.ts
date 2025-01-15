@@ -140,4 +140,8 @@ export class AuthService {
       responseType: "text"
     });
   }
+
+  resendEmailConfirmationCode(email: string) {
+    return this.http.get(`${this.baseUrl}accounts/confirmation/resend`, {params: {email: email}});
+  }
 }

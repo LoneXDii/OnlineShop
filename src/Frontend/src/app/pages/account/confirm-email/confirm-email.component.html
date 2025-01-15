@@ -23,10 +23,11 @@
           formControlName="code"
           required>
         <div *ngIf="form.get('code')?.invalid && form.get('code')?.touched" class="text-danger">
-          Confirmation code must be exactly 6 characters.
+          Confirmation code must be exactly 6 digits.
         </div>
       </div>
       <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="form.invalid">Confirm</button>
+      <button type="button" class="btn btn-primary btn-block me-2">Resend code</button>
     </form>
   </div>
 </div>

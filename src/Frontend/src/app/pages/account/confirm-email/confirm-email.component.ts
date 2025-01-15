@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { AuthService } from '../../../data/services/auth.service';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,7 +13,7 @@ import {NgIf} from '@angular/common';
   templateUrl: './confirm-email.component.html',
   styleUrl: './confirm-email.component.css'
 })
-export class ConfirmEmailComponent {
+export class ConfirmEmailComponent implements OnInit {
   authService = inject(AuthService);
   route = inject(ActivatedRoute);
   router = inject(Router);
@@ -55,5 +55,12 @@ export class ConfirmEmailComponent {
           this.errorMessage = 'Invalid confirmation code. Please try again.';
         }
       });
+  }
+
+  resendEmailConfirmationCode() {
+    if(this.email) {
+      this.authService.resendEmailConfirmationCode(this.email)
+        .subscribe(() => alert("Your code was resend successfully."));
+    }
   }
 }

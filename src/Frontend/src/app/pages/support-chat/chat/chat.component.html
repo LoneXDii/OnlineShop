@@ -34,7 +34,7 @@
         }
     </div>
     <div class="card-footer input-group">
-      <input type="text" class="form-control" 
+      <input type="text" class="form-control"
              (keydown.enter)="onSendMessage()"
              [(ngModel)]="currentInputText"
              [readonly]="!chat.isActive"
