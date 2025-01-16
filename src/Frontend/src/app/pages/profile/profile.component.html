@@ -1,0 +1,17 @@
+<div class="row justify-content-center">
+  <div class="col-md-6 text-left">
+    <h2 class="mb-4 text-center">Profile Information</h2>
+    <div class="card">
+      <div class="card-body">
+        <app-profile-user [profile]="profile" (profileUpdated)="loadProfile()"/>
+        <app-profile-email [email]="profile.email"/>
+        <app-profile-password *ngIf="changingPassword" (changePassword)="changePassword()"/>
+        <div class="d-flex justify-content-center mt-4">
+          <button (click)="logout()" class="btn btn-danger me-2">Logout</button>
+          <a (click)="changePassword()" class="btn btn-link">Change Password</a>
+          <a [routerLink]="['orders']" class="btn btn-link">My orders</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

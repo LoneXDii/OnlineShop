@@ -10,4 +10,5 @@ public sealed class UpdateProductRequest() : IRequest
     public int? Quantity { get; set; }
     public Stream? Image { get; set; }
     public string? ImageContentType { get; set; }
+    public int[]? Attributes { get; set; }
 }

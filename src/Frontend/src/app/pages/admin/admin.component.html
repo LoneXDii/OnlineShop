@@ -1,0 +1,33 @@
+<div class="border-right p-3 border rounded">
+  <div class="d-flex justify-content-start mb-3">
+    <button
+      class="btn btn-primary me-2"
+      [disabled]="status === 'products'"
+      (click)="changeStatus('products')">Products</button>
+
+    <button
+      class="btn btn-primary me-2"
+      [disabled]="status === 'categories'"
+      (click)="changeStatus('categories')">Categories</button>
+
+    <button
+      class="btn btn-primary me-2"
+      [disabled]="status === 'users'"
+      (click)="changeStatus('users')">Users</button>
+
+    <button
+      class="btn btn-primary"
+      [disabled]="status === 'orders'"
+      (click)="changeStatus('orders')">Orders</button>
+  </div>
+
+  @if(status === 'products'){
+    <app-admin-products/>
+  } @else if (status === 'categories'){
+    <app-admin-categories/>
+  } @else if (status === 'users'){
+    <app-admin-users/>
+  } @else if (status === 'orders'){
+    <app-admin-orders/>
+  }
+</div>

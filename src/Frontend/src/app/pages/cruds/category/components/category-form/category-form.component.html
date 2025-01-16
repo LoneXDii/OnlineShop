@@ -1,0 +1,20 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="border rounded p-5" >
+  <div>
+    <label for="name">Name</label>
+    <input id="name" formControlName="name" type="text" class="form-control" />
+    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+      Name is required.
+    </div>
+  </div>
+
+  <div>
+    <label for="image">Image</label>
+    <input
+      id="image"
+      type="file"
+      (change)="onFileChange($event)"
+      class="form-control"
+    />
+  </div>
+  <button type="submit" [disabled]="form.invalid" class="btn btn-primary mt-2">Submit</button>
+</form>

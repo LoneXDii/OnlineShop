@@ -1,0 +1,54 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="border rounded p-5" >
+  <div>
+    <label for="name">Name</label>
+    <input id="name" formControlName="name" type="text" class="form-control" />
+    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+      Name is required.
+    </div>
+  </div>
+
+  <div>
+    <label for="price">Price</label>
+    <input id="price" formControlName="price" type="number" class="form-control" />
+    <div *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+      Price is required.
+    </div>
+  </div>
+
+  <div>
+    <label for="quantity">Quantity</label>
+    <input id="quantity" formControlName="quantity" type="number" class="form-control" />
+    <div *ngIf="form.get('quantity')?.invalid && form.get('quantity')?.touched">
+      Quantity is required.
+    </div>
+  </div>
+
+  <div>
+    <label for="image">Image</label>
+    <input
+      id="image"
+      type="file"
+      (change)="onFileChange($event)"
+      class="form-control"
+    />
+  </div>
+
+  <app-product-form-category-selector
+    [selectedCategoryId]="selectedCategoryId"
+    (categorySelected)="onCategorySelected($event)"
+  ></app-product-form-category-selector>
+
+   @if(selectedCategoryId){
+    <app-product-form-attributes-selector
+      [categoryId]="selectedCategoryId"
+      [selectedAttributeValues]="selectedAttributeValues"
+      (attributesSelected)="onAttributesSelected($event)"
+    ></app-product-form-attributes-selector>
+  } @else if(categoryId){
+    <app-product-form-attributes-selector
+      [categoryId]="categoryId"
+      (attributesSelected)="onAttributesSelected($event)"
+    ></app-product-form-attributes-selector>
+  }
+  <button type="submit" [disabled]="form.invalid" class="btn btn-primary">Submit</button>
+</form>

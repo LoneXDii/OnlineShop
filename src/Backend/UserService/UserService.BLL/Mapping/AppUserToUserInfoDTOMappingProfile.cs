@@ -10,5 +10,8 @@ internal class AppUserToUserInfoDTOMappingProfile : Profile
     {
         CreateMap<AppUser, UserInfoDTO>()
             .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.AvatarUrl));
+
+        CreateMap<AppUser, UserWithRolesDTO>()
+            .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.AvatarUrl));
     }
 }

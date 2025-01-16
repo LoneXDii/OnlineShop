@@ -1,0 +1,43 @@
+@if(product){
+    <div class="card flex-fill">
+      <img src="{{ product.imageUrl || '/assets/noimg.png' }}"
+           [routerLink]="['/products', product.id, 'info']"
+           class="card-img-top"
+           alt="{{ product.name }}">
+
+      <div class="card-body d-flex flex-column justify-content-between"
+           [routerLink]="['/products', product.id, 'info']">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <div class="card-text">
+          <p>Price:
+            @if(product.discount){
+              <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
+              <strong class="text-danger">
+                ${{ product.price * (1 - product.discount.percent / 100) }}
+              </strong>
+            }
+            @else{
+              <strong>${{ product.price }}</strong>
+            }
+          </p>
+          <p>Quantity: <strong>{{product.quantity}}</strong></p>
+          <p>Category: <strong>{{ product.category.name }}</strong></p>
+        </div>
+        <ul class="list-group mb-1">
+          @for (attributeValue of product.attributeValues; track attributeValue){
+            <li class="list-group-item">{{attributeValue.name}}: {{attributeValue.value}}</li>
+          }
+        </ul>
+      </div>
+
+      <h4 class="ms-3" *ngIf="product.quantity <= 0">Out of stock</h4>
+      <button type="button" class="btn btn-primary me-3 ms-3 mb-3"
+              (click)="addToCart()"
+              [disabled]="!authService.isAuthenticated || product.quantity <= 0">
+        <i class="fa-solid fa-cart-arrow-down"></i>
+        Add to cart
+      </button>
+    </div>
+} @else{
+  <p>Loading...</p>
+}

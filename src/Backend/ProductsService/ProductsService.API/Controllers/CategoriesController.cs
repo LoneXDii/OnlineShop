@@ -9,6 +9,7 @@ using ProductsService.Application.UseCases.CategoryUseCases.Commands.DeleteCateg
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.UpdateCategory;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetAllCategories;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryAttributes;
+using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetCategoryById;
 using ProductsService.Application.UseCases.CategoryUseCases.Queries.GetUniqueCategoryAttributesValues;
 
 namespace ProductsService.API.Controllers;
@@ -32,6 +33,15 @@ public class CategoriesController : ControllerBase
         var categories = await _mediator.Send(new GetAllCategoriesReguest(), cancellationToken);
 
         return Ok(categories);
+    }
+
+    [HttpGet("{CategoryId:min(1)}")]
+    public async Task<ActionResult<ResponseCategoryDTO>> GetCategory([FromRoute] GetCategoryByIdRequest request, 
+        CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(request, cancellationToken);
+
+        return Ok(response);
     }
 
     [HttpPost]

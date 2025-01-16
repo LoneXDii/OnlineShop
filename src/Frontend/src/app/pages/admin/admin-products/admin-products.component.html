@@ -1,0 +1,10 @@
+<a type="button" class="btn btn-primary mb-3" [routerLink]="['/products/create']">Create</a>
+@for(product of products!.items; track product.id){
+  <app-product-list-item [product]="product"
+                         (productDeleted)="refreshProducts()"/>
+}
+<div class="d-flex justify-content-center mt-3">
+  <app-pagination [pageNo]="products!.currentPage"
+                  [totalPages]="products!.totalPages"
+                  (onPageChange)="handlePageChanged($event)"/>
+</div>

@@ -9,18 +9,29 @@ using UserService.DAL.Entities;
 namespace UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 
 internal class ListUsersWithPaginationRequestHandler(UserManager<AppUser> userManager, IMapper mapper)
-    : IRequestHandler<ListUsersWithPaginationRequest, PaginatedListModel<UserInfoDTO>>
+    : IRequestHandler<ListUsersWithPaginationRequest, PaginatedListModel<UserWithRolesDTO>>
 {
-    public async Task<PaginatedListModel<UserInfoDTO>> Handle(ListUsersWithPaginationRequest request, CancellationToken cancellationToken)
+    public async Task<PaginatedListModel<UserWithRolesDTO>> Handle(ListUsersWithPaginationRequest request, CancellationToken cancellationToken)
     {
         var users = await userManager.Users.OrderBy(user => user.Email)
             .Skip((request.pagination.PageNo - 1) * request.pagination.PageSize)
             .Take(request.pagination.PageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var response = new PaginatedListModel<UserInfoDTO>
+        var usersWithRoles = new List<UserWithRolesDTO>();
+
+        foreach (var user in users)
+        {
+            var userWithRoles = mapper.Map<UserWithRolesDTO>(user);
+
+            userWithRoles.Roles = (await userManager.GetRolesAsync(user)).ToList();
+
+            usersWithRoles.Add(userWithRoles);
+        }
+
+        var response = new PaginatedListModel<UserWithRolesDTO>
         { 
-            Items = mapper.Map<List<UserInfoDTO>>(users),
+            Items = usersWithRoles,
             CurrentPage = request.pagination.PageNo,
             TotalPages = request.pagination.TotalPages
         };

@@ -1,0 +1,17 @@
+<div class="card-header">
+  <h5>Order Details:</h5>
+</div>
+<div class="card-body">
+  <h6 class="card-title">Order ID: {{ order.id }}</h6>
+  <p>Status: <span class="badge bg-info">{{ order.orderStatus }}</span></p>
+  <p>Payment Status: <span class="badge bg-warning text-dark">{{ order.paymentStatus }}</span></p>
+  <p>Total Price: <strong>${{ order.totalPrice.toFixed(2) }}</strong></p>
+  <p>Created At: {{ order.createdAt | date:'medium' }}</p>
+
+  <h6 class="mt-4">Products:</h6>
+  <ul class="list-group">
+    @for(product of order.products; track product.id){
+      <app-order-product [product]="product"></app-order-product>
+    }
+  </ul>
+</div>

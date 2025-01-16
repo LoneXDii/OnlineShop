@@ -1,0 +1,25 @@
+<form [formGroup]="profileForm" (ngSubmit)="submitProfile()">
+  <div class="mb-3 d-flex justify-content-center">
+    <img
+      src="{{ profile.avatar || '/assets/noimg.png' }}"
+      alt="User Avatar"
+      class="img-fluid mb-3"
+      style="width: 150px; height: 150px;">
+  </div>
+  <h5 class="card-title text-left">
+    <span>Name: {{ profile.firstName }} {{ profile.lastName }}</span>
+    <button *ngIf="!editingProfile"
+            (click)="editProfile()"
+            type="button"
+            class="btn btn-primary btn-sm ms-2">
+      <i class="fa-solid fa-edit"></i>
+    </button>
+  </h5>
+  <div *ngIf="editingProfile">
+    <input formControlName="firstName" class="form-control mb-2" placeholder="First Name" required>
+    <input formControlName="lastName" class="form-control mb-2" placeholder="Last Name" required>
+    <input type="file" (change)="onFileChange($event)" class="form-control mb-2">
+    <button type="submit" class="btn btn-success btn-sm">Submit</button>
+    <button type="button" class="btn btn-danger btn-sm ms-2" (click)="editProfile()">Cancel</button>
+  </div>
+</form>

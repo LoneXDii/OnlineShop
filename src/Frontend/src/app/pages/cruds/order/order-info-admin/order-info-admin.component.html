@@ -1,0 +1,26 @@
+<div class="d-flex justify-content-center">
+  <div class="card col-md-5" *ngIf="order">
+    <app-order-user-info [userId]="order.userId"></app-order-user-info>
+    <app-order-info-template [order]="order"></app-order-info-template>
+    <div class="card-footer">
+      <button class="btn btn-primary me-1"
+              (click)="onConfirm()"
+              [disabled]="order.orderStatus !== 'Created'">
+        Confirm
+      </button>
+      <button class="btn btn-success me-1"
+              (click)="onComplete()"
+              [disabled]="order.orderStatus !== 'Confirmed' || order.paymentStatus === 'NotPaid'">
+        Complete
+      </button>
+      <button class="btn btn-danger"
+              (click)="onCancel()" [disabled]="order.orderStatus === 'Cancelled'">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger d-flex justify-content-center" role="alert">
+    {{ errorMessage }}
+  </div>
+</div>

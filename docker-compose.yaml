@@ -223,6 +223,12 @@ services:
     networks:
       - backend
 
+  frontend:
+    container_name: frontend
+    build: ./src/Frontend
+    ports:
+      - "4200:4200"
+
 volumes: 
   mongodb_data:
   shop_data:

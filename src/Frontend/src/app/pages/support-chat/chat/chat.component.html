@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-center" *ngIf="chat">
+  <div class="card col-md-6">
+    <div class="card-header">
+      Current Chat:
+      <span>{{chat.clientName}}</span>
+      <button class="btn btn-primary btn-sm ms-2"
+              [disabled]="!chat.isActive"
+              (click)="onClose()">
+        Close chat
+      </button>
+      <h5 *ngIf="!chat.isActive" class="alert alert-danger mt-2 mb-2">This chat is closed</h5>
+    </div>
+    <div class="card-body" style="height: 60vh; overflow-y: auto;">
+        @for(message of messages; track message){
+          <div [class]="message.senderId === userId
+                      ? 'd-flex justify-content-end mb-2'
+                      : 'd-flex justify-content-start mb-2'">
+            <div [class]="message.senderId === userId
+                        ? 'bg-primary text-white rounded p-2'
+                        : 'bg-light rounded p-2'">
+              <strong>
+                @if(message.senderId === chat.clientId){
+                  {{chat.clientName}}
+                }
+                @else{
+                  admin
+                }
+                :
+              </strong>
+              <span>{{message.text}}</span>
+              <p class="mb-0">{{message.dateTime | date: 'dd-MM-yyyy, HH:mm'}}</p>
+            </div>
+          </div>
+        }
+    </div>
+    <div class="card-footer input-group">
+      <input type="text" class="form-control"
+             (keydown.enter)="onSendMessage()"
+             [(ngModel)]="currentInputText"
+             [readonly]="!chat.isActive"
+             placeholder="Enter your message" />
+      <button class="btn btn-primary" (click)="onSendMessage()"
+              [disabled]="!chat.isActive || currentInputText === ''">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="errorMessage">
+  <div class="alert alert-danger">
+    <h5 class="text-center">{{errorMessage}}</h5>
+  </div>
+</div>

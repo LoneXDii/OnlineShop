@@ -1,0 +1,5 @@
+<a type="button" class="btn btn-primary mb-3" [routerLink]="['/categories/create']">Create</a>
+@for(category of categories; track category.id){
+  <app-category-list-item [category]="category"
+                          (categoryDeleted)="refreshCategories()"/>
+}

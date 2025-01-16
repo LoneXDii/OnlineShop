@@ -9,7 +9,8 @@ public class CloseChatRequestValidator : AbstractValidator<CloseChatRequest>
     {
         RuleFor(req => req.UserId)
             .NotEmpty()
-            .WithMessage("Wrong user Id");
+            .WithMessage("Wrong user Id")
+            .When(req => req.UserId is not null);
 
         RuleFor(req => req.ChatId)
             .GreaterThan(0)

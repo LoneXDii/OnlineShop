@@ -1,0 +1,20 @@
+<div class="mb-3" *ngIf="attributesValues">
+  <div class="row">
+    @for(av of attributesValues; track av.attribute.id){
+      <div class="col-4">
+        <app-category-attribute-values [attributeValues]="av"
+                                       (categoryUpdated)="closeModal()"/>
+      </div>
+    }
+  </div>
+  <button type="button" class="btn btn-primary" (click)="openModal()">
+    <i class="fa-solid fa-plus"></i>
+    Add attribute
+  </button>
+</div>
+
+<app-product-attribute-value-creation-modal
+  *ngIf="isModalVisible && category"
+  [attribute]="category"
+  (closeModal)="closeModal()">
+</app-product-attribute-value-creation-modal>

@@ -1,0 +1,42 @@
+<li class="list-group-item mb-2 d-flex justify-content-between align-items-center">
+  <div>
+    <h4>Id: {{order.id}}</h4>
+    <div class="d-flex mb-1">
+      <h6>
+        Order Status:
+        <span class="badge bg-info">{{ order.orderStatus }}</span>
+      </h6>
+      <h6 class="ms-3">
+        Payment Status:
+        <span class="badge bg-warning">{{ order.paymentStatus }}</span>
+      </h6>
+    </div>
+    <div class="d-flex">
+      <p>
+        Creation Date:
+        <strong>{{ order.createdAt | date: 'dd-MM-yyyy, hh:mm' }}</strong>
+      </p>
+      <p class="ms-2">
+        Total Price:
+        <strong>${{ order.totalPrice.toFixed(2) }}</strong>
+      </p>
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-info me-1" [routerLink]="['/orders', order.id, 'admin']">Details</button>
+    <button class="btn btn-primary me-1"
+            (click)="onConfirm()"
+            [disabled]="order.orderStatus !== 'Created'">
+      Confirm
+    </button>
+    <button class="btn btn-success me-1"
+            (click)="onComplete()"
+            [disabled]="order.orderStatus !== 'Confirmed' || order.paymentStatus === 'NotPaid'">
+      Complete
+    </button>
+    <button class="btn btn-danger"
+            (click)="onCancel()" [disabled]="order.orderStatus === 'Cancelled'">
+      Cancel
+    </button>
+  </div>
+</li>

@@ -1,0 +1,31 @@
+<div class="row justify-content-center" *ngIf="category">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="d-flex justify-content-center">
+        <img
+          src="{{ category.imageUrl || '/assets/noimg.png' }}"
+          class="card-img-top"
+          alt="{{ category.name }}"
+          style="max-width: 25%; height: auto;"
+        />
+      </div>
+      <div class="card-body">
+        <div class="card-title">
+          <h5 >{{ category.name }}</h5>
+          <button type="button" class="btn btn-success me-2"
+                  [routerLink]="['/categories', category.id, 'edit']">
+            <i class="fa-solid fa-edit"></i>
+            Edit
+          </button>
+          <button type="button" class="btn btn-danger" (click)="onDelete()">
+            <i class="fa-regular fa-trash-can"></i>
+            Delete
+          </button>
+        </div>
+        <app-category-attributes-values [category]="category"
+                                        (categoryUpdated)="refreshCategory()">
+        </app-category-attributes-values>
+      </div>
+    </div>
+  </div>
+</div>

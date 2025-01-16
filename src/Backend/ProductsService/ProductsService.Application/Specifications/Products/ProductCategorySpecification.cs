@@ -19,6 +19,6 @@ internal class ProductCategorySpecification : Specification<Product>
             return product => true;
         }
 
-        return product => product.Categories.Any(category => category.Id == _categoryId);
+        return product => product.Categories.Any(category => category.Id == _categoryId && category.ParentId == null);
     }
 }

@@ -63,7 +63,7 @@ public class OrderController : ControllerBase
         return Ok(data);
     }
 
-    [HttpGet("/api/users/{userId:regex(^[[a-fA-F0-9]]{{24}}$)}/orders")]
+    [HttpGet("/api/users/{userId:regex(^[[0-9a-fA-F]]{{8}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{12}}$)}/orders")]
     [Authorize(Policy = "Admin")]
     public async Task<ActionResult<PaginatedListModel<OrderDTO>>> GetUserOrders(CancellationToken cancellationToken,
         [FromRoute] string userId,

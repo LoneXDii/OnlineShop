@@ -26,6 +26,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors(options =>
+    options.WithOrigins(builder.Configuration["ClientHost"])
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+);
+
 app.UseAuthentication();
 app.UseAuthorization();
 

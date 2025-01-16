@@ -8,4 +8,5 @@ public class UpdateProductDTO
     public double? Price { get; set; }
     public int? Quantity { get; set; }
     public IFormFile? Image { get; set; }
+    public int[]? Attributes { get; set; }
 }

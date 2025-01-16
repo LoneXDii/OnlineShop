@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <h2 class="text-center">Confirm Email</h2>
+    <form [formGroup]="form" (ngSubmit)="confirmEmail()" class="border rounded p-5">
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="text"
+          id="email"
+          class="form-control"
+          [value]="email"
+          readonly>
+      </div>
+      <div class="form-group">
+        <label for="code">Confirmation Code</label>
+        <input
+          type="text"
+          id="code"
+          class="form-control"
+          formControlName="code"
+          required>
+        <div *ngIf="form.get('code')?.invalid && form.get('code')?.touched" class="text-danger">
+          Confirmation code must be exactly 6 digits.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="form.invalid">Confirm</button>
+      <button type="button" class="btn btn-primary btn-block me-2">Resend code</button>
+    </form>
+  </div>
+</div>

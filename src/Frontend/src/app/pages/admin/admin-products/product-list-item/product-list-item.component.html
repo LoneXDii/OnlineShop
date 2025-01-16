@@ -1,0 +1,29 @@
+<li class="list-group-item d-flex justify-content-between align-items-center border mb-2 p-2">
+  <div class="d-flex align-items-center">
+    <img src="{{ product.imageUrl || '/assets/noimg.png' }}" alt="Product Image" class="list-image me-3">
+    <div>
+      <h5 class="mb-1">{{product.name}}</h5>
+      <div class="d-flex flex-wrap">
+        <p class="mb-1 me-3">ID: {{product.id}}</p>
+        <p class="mb-1 me-3">Price: ${{product.price}}</p>
+        <p class="mb-1 me-3">Quantity: {{product.quantity}}</p>
+        <p class="mb-1 me-3">Discount: {{product.discount?.percent || 0}}%</p>
+        <p class="mb-1">Category: {{product.category.name}}</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-success btn-sm me-2" [routerLink]="['/products', product.id, 'edit']">
+      <i class="fa-solid fa-edit"></i>
+      Edit
+    </button>
+    <button class="btn btn-info btn-sm me-2" [routerLink]="['/products', product.id, 'info']">
+      <i class="fa-solid fa-info"></i>
+      Info
+    </button>
+    <button class="btn btn-danger btn-sm" (click)="onDelete()">
+      <i class="fa-regular fa-trash-can"></i>
+      Delete
+    </button>
+  </div>
+</li>

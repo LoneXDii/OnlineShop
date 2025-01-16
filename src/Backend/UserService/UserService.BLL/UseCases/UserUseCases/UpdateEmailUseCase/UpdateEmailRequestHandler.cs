@@ -7,10 +7,11 @@ using UserService.BLL.Exceptions;
 using UserService.DAL.Services.EmailNotifications;
 using Hangfire;
 using Microsoft.Extensions.Logging;
+using UserService.DAL.Services.TemporaryStorage;
 
 namespace UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
 
-internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmailService emailService,
+internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmailService emailService, ICacheService cacheService,
     ILogger<UpdateEmailRequestHandler> logger)
     : IRequestHandler<UpdateEmailRequest>
 {
@@ -41,10 +42,9 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
         user.Email = request.newEmail;
         user.UserName = request.newEmail;
         user.EmailConfirmed = false;
-
         await userManager.UpdateAsync(user);
 
-        var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
         BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
 

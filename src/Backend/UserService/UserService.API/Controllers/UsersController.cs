@@ -10,6 +10,8 @@ using UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;
 using UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
 using UserService.BLL.UseCases.UserUseCases.UpdatePasswordUseCase;
 using UserService.BLL.UseCases.UserUseCases.UpdateUserUseCase;
+using UserService.BLL.UseCases.UserUseCases.AssignToAdminRole;
+using UserService.BLL.UseCases.UserUseCases.RemoveUserFromAdmins;
 
 namespace UserService.API.Controllers;
 
@@ -59,7 +61,7 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = "admin")]
-    public async Task<ActionResult<PaginatedListModel<UserInfoDTO>>> ListUsers([FromQuery] PaginationDTO pagination)
+    public async Task<ActionResult<PaginatedListModel<UserWithRolesDTO>>> ListUsers([FromQuery] PaginationDTO pagination)
     {
         var users = await _mediator.Send(new ListUsersWithPaginationRequest(pagination));
 
@@ -77,7 +79,8 @@ public class UsersController : ControllerBase
         return user;
     }
 
-    [HttpGet("{userId:regex(^[[a-fA-F0-9]]{{24}}$)}/info")]
+
+    [HttpGet("{userId:regex(^[[0-9a-fA-F]]{{8}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{12}}$)}/info")]
     [Authorize(Policy = "admin")]
     public async Task<ActionResult<UserInfoDTO>> GetUserInfo([FromRoute] string userId)
     {
@@ -86,8 +89,7 @@ public class UsersController : ControllerBase
         return user;
     }
 
-    [HttpGet]
-    [Route("password/resetting")]
+    [HttpGet("password/resetting")]
     public async Task<IActionResult> AskForResetPassword([FromQuery] AskForResetPasswordRequest request)
     {
         await _mediator.Send(request);
@@ -95,11 +97,30 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
-    [HttpPost]
-    [Route("password/resetting")]
+    [HttpPost("password/resetting")]
     public async Task<ActionResult<string>> ResetPassword([FromBody] ResetPasswordRequest request)
     {
         await _mediator.Send(request);
+
+        return Ok();
+    }
+
+    [HttpPost("{UserId:regex(^[[0-9a-fA-F]]{{8}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{12}}$)}/roles/admin")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> AssignUserToAdmin([FromRoute] AssignToAdminRoleRequest request, 
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
+
+        return Ok();
+    }
+
+    [HttpDelete("{UserId:regex(^[[0-9a-fA-F]]{{8}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{4}}-[[0-9a-fA-F]]{{12}}$)}/roles/admin")]
+    [Authorize(Policy = "admin")]
+    public async Task<IActionResult> DeleteUserFromAdmins([FromRoute] RemoveUserFromAdminsRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(request, cancellationToken);
 
         return Ok();
     }

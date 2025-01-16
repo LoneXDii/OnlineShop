@@ -1,0 +1,5 @@
+<div class="row">
+  @for (product of products; track product.id){
+    <app-product-card [product] = "product" class="col-md-3 d-flex"></app-product-card>
+  }
+</div>

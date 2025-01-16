@@ -1,0 +1,23 @@
+<div class="d-flex justify-content-center">
+  @if(paymentStatus === 'success'){
+    <div class="text-center p-4 border rounded bg-success text-white">
+      <h1 class="display-6">Payment Successful</h1>
+      <p>Your payment has been processed successfully. Thank you for your order!</p>
+      <a class="btn btn-light" [routerLink]="['/profile/orders']">Back to orders</a>
+    </div>
+  }
+  @else if(paymentStatus === 'fail'){
+    <div class="text-center p-4 border rounded bg-danger text-white">
+      <h1 class="display-6">Payment Failed</h1>
+      <p>Unfortunately, your payment could not be processed. Please try again or contact support.</p>
+      <a class="btn btn-light" [routerLink]="['/profile/orders']">Back to orders</a>
+    </div>
+  }
+  @else{
+    <div class="text-center p-4 border rounded bg-warning text-dark">
+      <h1 class="display-6">Invalid Status</h1>
+      <p>The status "{{ paymentStatus }}" does not exist. Please check the link or contact support for help.</p>
+      <a class="btn btn-dark" [routerLink]="['/profile/orders']">Back to orders</a>
+    </div>
+  }
+</div>

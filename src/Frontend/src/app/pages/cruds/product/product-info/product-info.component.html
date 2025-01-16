@@ -1,0 +1,82 @@
+@if(product){
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="d-flex justify-content-center">
+          <img
+            src="{{ product.imageUrl || '/assets/noimg.png' }}"
+            class="card-img-top"
+            alt="{{ product.name }}"
+            style="max-width: 50%; height: auto;"
+          />
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text">
+            @if(product.discount){
+              <span class="text-muted text-decoration-line-through">${{ product.price }}</span>
+              <span class="text-danger">
+                  ${{ product.price * (1 - product.discount.percent / 100) }}
+              </span>
+            }
+            @else{
+              <span class="text-success">
+                  ${{ product.price }}
+              </span>
+            }
+          </p>
+          <p class="card-text">
+            Quantity: <strong>{{ product.quantity }}</strong>
+          </p>
+          @if(product.discount){
+            <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+              <span>Discount: {{ product.discount.percent }}%</span>
+              <button class="btn btn-danger"
+                      *ngIf="authService.isAdmin"
+                      (click)="onDeleteDiscount()">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          }
+          @else{
+            <button class="btn btn-primary mb-2"
+                    *ngIf="authService.isAdmin"
+                    (click)="onAddDiscount()">
+              Add discount
+            </button>
+            <app-product-discount-creation *ngIf="authService.isAdmin && isDiscountCreating"
+                                           (onUpdate)="refreshProduct($event)"
+                                           [productId]="product.id">
+            </app-product-discount-creation>
+          }
+          <div class="mb-3">
+            <h6>Attributes:</h6>
+            <ul class="list-group">
+              <li *ngFor="let attribute of product.attributeValues" class="list-group-item">
+                {{ attribute.name }}: {{ attribute.value }}
+              </li>
+            </ul>
+          </div>
+          <button type="button" class="btn btn-primary m-2"
+                  (click)="addToCart()"
+                  [disabled]="!authService.isAuthenticated">
+            <i class="fa-solid fa-cart-arrow-down"></i>
+            Add to cart
+          </button>
+          @if(authService.isAdmin){
+            <button class="btn btn-success me-2"
+                    [routerLink]="['/products', product.id, 'edit']">
+              <i class="fa-solid fa-edit"></i>
+              Edit
+            </button>
+            <button class="btn btn-danger"
+                    (click)="onDelete()">
+              <i class="fa-regular fa-trash-can"></i>
+              Delete
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
