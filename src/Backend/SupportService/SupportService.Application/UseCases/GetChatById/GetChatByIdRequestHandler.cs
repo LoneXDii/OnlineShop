@@ -22,14 +22,11 @@ internal class GetChatByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapper,
             throw new BadRequestException("No such chat");
         }
 
-        if (request.UserId is not null)
+        if (request.UserId is not null && chat.ClientId != request.UserId)
         {
-            if (chat.ClientId != request.UserId)
-            {
-                logger.LogError($"User with id:{request.UserId} has no access to chat with id: {request.ChatId}");
+            logger.LogError($"User with id:{request.UserId} has no access to chat with id: {request.ChatId}");
 
-                throw new BadRequestException("You have no access to this chat");
-            }
+            throw new BadRequestException("You have no access to this chat");
         }
 
         return mapper.Map<ChatDTO>(chat);
