@@ -20,7 +20,7 @@ internal class CreateChatRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, 
 
         if(dbChat is not null)
         {
-            logger.LogInformation($"User with id: {request.ClientId} already have opened chat");
+            logger.LogError($"User with id: {request.ClientId} already have opened chat");
 
             throw new BadRequestException("This chat is already exists");
         }

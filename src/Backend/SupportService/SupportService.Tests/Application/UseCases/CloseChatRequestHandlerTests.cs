@@ -7,10 +7,9 @@ using SupportService.Application.Proxy;
 using SupportService.Application.UseCases.CloseChat;
 using SupportService.Domain.Abstractions;
 using SupportService.Domain.Entities;
-using System;
 using System.Linq.Expressions;
 
-namespace SupportService.Tests.UseCases;
+namespace SupportService.Tests.Application.UseCases;
 
 public class CloseChatRequestHandlerTests
 {
@@ -35,12 +34,12 @@ public class CloseChatRequestHandlerTests
     }
 
     [Fact]
-    public async Task Handle_Should_ThrowBadRequestException_WhenChatIsNotFound()
+    public async Task Handle_WhenChatIsNotExists_ShouldThrowBadRequestException()
     {
         // Arrange
         var request = new CloseChatRequest(1, "1");
 
-        _unitOfWorkMock.Setup(unitOfWork => 
+        _unitOfWorkMock.Setup(unitOfWork =>
             unitOfWork.ChatRepository.GetByIdAsync(request.ChatId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Chat?)null);
 
@@ -61,14 +60,14 @@ public class CloseChatRequestHandlerTests
     }
 
     [Fact]
-    public async Task Handle_Should_ThrowBadRequestException_WhenUserHasNoAccessToChat()
+    public async Task Handle_WhenUserHasNoAccessToChat_ShouldThrowBadRequestException()
     {
         //Arrange
         var request = new CloseChatRequest(1, "1");
 
-        _unitOfWorkMock.Setup(unitOfWork => 
+        _unitOfWorkMock.Setup(unitOfWork =>
             unitOfWork.ChatRepository.GetByIdAsync(request.ChatId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Chat { ClientId = "2"});
+            .ReturnsAsync(new Chat { ClientId = "2" });
 
         // Act
         var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, default));
@@ -87,7 +86,7 @@ public class CloseChatRequestHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnClosedChat_WherUserIsChatOwner()
+    public async Task Handle_WherUserIsChatOwner_ShouldReturnClosedChat()
     {
         //Arrange
         var request = new CloseChatRequest(1, "1");
@@ -101,7 +100,7 @@ public class CloseChatRequestHandlerTests
             .Returns((Chat chat) => new ChatDTO
             {
                 Id = chat.Id,
-                IsActive = chat.IsActive 
+                IsActive = chat.IsActive
             });
 
         //Act
@@ -111,18 +110,18 @@ public class CloseChatRequestHandlerTests
         Assert.NotNull(result);
         Assert.False(result.IsActive);
 
-        _unitOfWorkMock.Verify(unitOfWork => 
+        _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.ChatRepository.UpdateAsync(chat, It.IsAny<CancellationToken>()), Times.Once);
 
-        _unitOfWorkMock.Verify(unitOfWork => 
+        _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.SaveAllAsync(It.IsAny<CancellationToken>()), Times.Once);
 
-        _backgroundJobProxyMock.Verify(backroundJob => 
+        _backgroundJobProxyMock.Verify(backroundJob =>
             backroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnClosedChat_WherRequestedByAdmin()
+    public async Task Handle_WherRequestedByAdmin_ShouldReturnClosedChat()
     {
         //Arrange
         var request = new CloseChatRequest(1, null);

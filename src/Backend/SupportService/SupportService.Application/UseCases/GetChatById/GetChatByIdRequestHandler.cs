@@ -3,12 +3,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SupportService.Application.DTO;
 using SupportService.Application.Exceptions;
-using SupportService.Application.UseCases.CloseChat;
 using SupportService.Domain.Abstractions;
 
 namespace SupportService.Application.UseCases.GetChatById;
 
-internal class GetChatByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CloseChatRequestHandler> logger)
+internal class GetChatByIdRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<GetChatByIdRequestHandler> logger)
     : IRequestHandler<GetChatByIdRequest, ChatDTO>
 {
     public async Task<ChatDTO> Handle(GetChatByIdRequest request, CancellationToken cancellationToken)
