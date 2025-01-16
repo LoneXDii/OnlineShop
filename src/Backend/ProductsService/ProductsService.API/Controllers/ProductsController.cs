@@ -58,7 +58,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{productId:min(1)}")]
-    //[Authorize(Policy = "admin")]
+    [Authorize(Policy = "admin")]
     public async Task<IActionResult> UpdateProduct([FromRoute] int productId, [FromForm] UpdateProductDTO product, 
         CancellationToken cancellationToken)
     {
