@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SupportService.Application.DTO;
