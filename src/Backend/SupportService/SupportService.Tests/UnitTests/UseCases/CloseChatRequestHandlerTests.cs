@@ -9,7 +9,7 @@ using SupportService.Domain.Abstractions;
 using SupportService.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace SupportService.Tests.Application.UseCases;
+namespace SupportService.Tests.UnitTests.UseCases;
 
 public class CloseChatRequestHandlerTests
 {

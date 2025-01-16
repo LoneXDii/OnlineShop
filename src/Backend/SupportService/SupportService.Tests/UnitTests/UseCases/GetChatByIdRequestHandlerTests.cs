@@ -7,7 +7,7 @@ using SupportService.Application.UseCases.GetChatById;
 using SupportService.Domain.Abstractions;
 using SupportService.Domain.Entities;
 
-namespace SupportService.Tests.Application.UseCases;
+namespace SupportService.Tests.UnitTests.UseCases;
 
 public class GetChatByIdRequestHandlerTests
 {

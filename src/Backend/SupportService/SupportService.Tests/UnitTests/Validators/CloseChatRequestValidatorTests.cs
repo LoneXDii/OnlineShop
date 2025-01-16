@@ -1,17 +1,17 @@
-﻿using SupportService.Application.UseCases.GetChatById;
+﻿using SupportService.Application.UseCases.CloseChat;
 using SupportService.Application.Validators;
 
-namespace SupportService.Tests.Application.Validators;
+namespace SupportService.Tests.UnitTests.Validators;
 
-public class GetChatByIdRequestValidatorTests
+public class CloseChatRequestValidatorTests
 {
-    private readonly GetChatByIdRequestValidator _validator = new();
+    private readonly CloseChatRequestValidator _validator = new();
 
     [Fact]
     public void Validate_WhenEmptyUserIdAndChatIdIsGreaterThanZero_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(1, "");
+        var request = new CloseChatRequest(1, "");
 
         //Act
         var result = _validator.Validate(request);
@@ -26,7 +26,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsZeroAndUserIdIsNotEmpty_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(0, "1");
+        var request = new CloseChatRequest(0, "1");
 
         //Act
         var result = _validator.Validate(request);
@@ -41,7 +41,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsLessThanZeroAndUserIdIsNotEmpty_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(-1, "1");
+        var request = new CloseChatRequest(-1, "1");
 
         //Act
         var result = _validator.Validate(request);
@@ -56,7 +56,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsZeroAndAndEmptyUserId_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(0, "");
+        var request = new CloseChatRequest(0, "");
 
         //Act
         var result = _validator.Validate(request);
@@ -72,7 +72,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsLessThanZeroAndEmptyUserId_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(-1, "");
+        var request = new CloseChatRequest(-1, "");
 
         //Act
         var result = _validator.Validate(request);
@@ -88,7 +88,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsZeroAndUserIdIsNull_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(0, null);
+        var request = new CloseChatRequest(0, null);
 
         //Act
         var result = _validator.Validate(request);
@@ -103,7 +103,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsLessThanZeroAndUserIdIsNull_ShouldReturnFalseWithCorrectErrorMessage()
     {
         //Assert
-        var request = new GetChatByIdRequest(-1, null);
+        var request = new CloseChatRequest(-1, null);
 
         //Act
         var result = _validator.Validate(request);
@@ -118,7 +118,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsGreaterThanZeroAndUserIdIsNotEmpty_ShouldReturnTrueWithEmptyErrorsList()
     {
         //Assert
-        var request = new GetChatByIdRequest(1, "1");
+        var request = new CloseChatRequest(1, "1");
 
         //Act
         var result = _validator.Validate(request);
@@ -132,7 +132,7 @@ public class GetChatByIdRequestValidatorTests
     public void Validate_WhenChatIdIsGreaterThanZeroAndUserIdIsNull_ShouldReturnTrueWithEmptyErrorsList()
     {
         //Assert
-        var request = new GetChatByIdRequest(1, null);
+        var request = new CloseChatRequest(1, null);
 
         //Act
         var result = _validator.Validate(request);

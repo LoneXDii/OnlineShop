@@ -5,7 +5,7 @@ using SupportService.Application.UseCases.GetUserChats;
 using SupportService.Domain.Abstractions;
 using SupportService.Domain.Entities;
 
-namespace SupportService.Tests.Application.UseCases;
+namespace SupportService.Tests.UnitTests.UseCases;
 
 public class GetUserChatsRequestHandlerTests
 {

@@ -1,7 +1,7 @@
 ﻿using SupportService.Application.UseCases.CreateChat;
 using SupportService.Application.Validators;
 
-namespace SupportService.Tests.Application.Validators;
+namespace SupportService.Tests.UnitTests.Validators;
 
 public class CreateChatRequestValidatorTests
 {

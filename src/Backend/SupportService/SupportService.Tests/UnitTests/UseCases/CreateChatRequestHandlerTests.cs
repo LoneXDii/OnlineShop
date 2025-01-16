@@ -8,11 +8,11 @@ using SupportService.Domain.Abstractions;
 using SupportService.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace SupportService.Tests.Application.UseCases;
+namespace SupportService.Tests.UnitTests.UseCases;
 
 public class CreateChatRequestHandlerTests
 {
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new(); 
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<ILogger<CreateChatRequestHandler>> _loggerMock = new();
     private readonly CreateChatRequestHandler _handler;

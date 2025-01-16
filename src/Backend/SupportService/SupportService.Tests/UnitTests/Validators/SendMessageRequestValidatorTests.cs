@@ -2,7 +2,7 @@
 using SupportService.Application.UseCases.SendMessage;
 using SupportService.Application.Validators;
 
-namespace SupportService.Tests.Application.Validators;
+namespace SupportService.Tests.UnitTests.Validators;
 
 public class SendMessageRequestValidatorTests
 {
