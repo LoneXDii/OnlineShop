@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportService.API", "SupportService.API\SupportService.API.csproj", "{6994AE40-6E93-4B40-9E2D-97EF44DC7249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportService.API", "SupportService.API\SupportService.API.csproj", "{6994AE40-6E93-4B40-9E2D-97EF44DC7249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportService.Application", "SupportService.Application\SupportService.Application.csproj", "{DD394217-CFB9-43A9-84BE-0CC23782D973}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportService.Application", "SupportService.Application\SupportService.Application.csproj", "{DD394217-CFB9-43A9-84BE-0CC23782D973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportService.Domain", "SupportService.Domain\SupportService.Domain.csproj", "{4DE0A6FA-B7F5-42DF-AFB1-C9011B57727A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportService.Domain", "SupportService.Domain\SupportService.Domain.csproj", "{4DE0A6FA-B7F5-42DF-AFB1-C9011B57727A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportService.Infrastructure", "SupportService.Infrastructure\SupportService.Infrastructure.csproj", "{163FBB49-E6F4-4E46-8FCA-85E73D7D5D7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupportService.Infrastructure", "SupportService.Infrastructure\SupportService.Infrastructure.csproj", "{163FBB49-E6F4-4E46-8FCA-85E73D7D5D7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportService.Tests", "SupportService.Tests\SupportService.Tests.csproj", "{219E5036-C317-485B-841B-234FB2FE2177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{163FBB49-E6F4-4E46-8FCA-85E73D7D5D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{163FBB49-E6F4-4E46-8FCA-85E73D7D5D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{163FBB49-E6F4-4E46-8FCA-85E73D7D5D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{219E5036-C317-485B-841B-234FB2FE2177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{219E5036-C317-485B-841B-234FB2FE2177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{219E5036-C317-485B-841B-234FB2FE2177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{219E5036-C317-485B-841B-234FB2FE2177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
