@@ -12,17 +12,13 @@ namespace SupportService.Tests.Application.UseCases;
 
 public class CreateChatRequestHandlerTests
 {
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IMapper> _mapperMock;
-    private readonly Mock<ILogger<CreateChatRequestHandler>> _loggerMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new(); 
+    private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<ILogger<CreateChatRequestHandler>> _loggerMock = new();
     private readonly CreateChatRequestHandler _handler;
 
     public CreateChatRequestHandlerTests()
     {
-        _unitOfWorkMock = new();
-        _mapperMock = new();
-        _loggerMock = new();
-
         _handler = new CreateChatRequestHandler(
             _unitOfWorkMock.Object,
             _mapperMock.Object,

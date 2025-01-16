@@ -11,17 +11,13 @@ namespace SupportService.Tests.Application.UseCases;
 
 public class SendMessageRequestHandlerTests
 {
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IMapper> _mapperMock;
-    private readonly Mock<ILogger<SendMessageRequestHandler>> _loggerMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<ILogger<SendMessageRequestHandler>> _loggerMock = new();
     private readonly SendMessageRequestHandler _handler;
 
     public SendMessageRequestHandlerTests()
     {
-        _unitOfWorkMock = new();
-        _mapperMock = new();
-        _loggerMock = new();
-
         _handler = new SendMessageRequestHandler(
             _unitOfWorkMock.Object,
             _mapperMock.Object,

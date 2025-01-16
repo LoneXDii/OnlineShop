@@ -9,15 +9,12 @@ namespace SupportService.Tests.Application.UseCases;
 
 public class GetChatMessagesRequestHandlerTests
 {
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IMapper> _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<IMapper> _mapperMock = new();
     private readonly GetChatMessagesRequestHandler _handler;
 
     public GetChatMessagesRequestHandlerTests()
     {
-        _unitOfWorkMock = new();
-        _mapperMock = new();
-
         _handler = new GetChatMessagesRequestHandler(
             _unitOfWorkMock.Object,
             _mapperMock.Object);

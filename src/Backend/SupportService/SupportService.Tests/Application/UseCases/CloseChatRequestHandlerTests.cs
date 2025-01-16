@@ -13,19 +13,14 @@ namespace SupportService.Tests.Application.UseCases;
 
 public class CloseChatRequestHandlerTests
 {
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IMapper> _mapperMock;
-    private readonly Mock<ILogger<CloseChatRequestHandler>> _loggerMock;
-    private readonly Mock<IBackgroundJobProxy> _backgroundJobProxyMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
+    private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<ILogger<CloseChatRequestHandler>> _loggerMock = new();
+    private readonly Mock<IBackgroundJobProxy> _backgroundJobProxyMock = new();
     private readonly CloseChatRequestHandler _handler;
 
     public CloseChatRequestHandlerTests()
     {
-        _unitOfWorkMock = new();
-        _mapperMock = new();
-        _loggerMock = new();
-        _backgroundJobProxyMock = new();
-
         _handler = new CloseChatRequestHandler(
             _unitOfWorkMock.Object,
             _mapperMock.Object,

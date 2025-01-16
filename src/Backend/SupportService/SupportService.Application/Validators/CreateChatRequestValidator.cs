@@ -13,6 +13,6 @@ public class CreateChatRequestValidator : AbstractValidator<CreateChatRequest>
 
         RuleFor(req => req.ClientName)
             .NotEmpty()
-            .WithMessage("wrong client name");
+            .WithMessage("Wrong client name");
     }
 }
