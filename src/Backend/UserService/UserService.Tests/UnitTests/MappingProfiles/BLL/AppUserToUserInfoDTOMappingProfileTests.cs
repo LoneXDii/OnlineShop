@@ -24,13 +24,13 @@ public class AppUserToUserInfoDTOMappingProfileTests
     [Fact]
     public void Map_AppUserToUserInfoDTO_ShouldMapCorrectly()
     {
-        // Arrange
+        //Arrange
         var appUser = _fixture.Create<AppUser>();
 
-        // Act
+        //Act
         var userInfoDTO = _mapper.Map<UserInfoDTO>(appUser);
 
-        // Assert
+        //Assert
         Assert.NotNull(userInfoDTO);
         Assert.Equal(appUser.Id, userInfoDTO.Id);
         Assert.Equal(appUser.FirstName, userInfoDTO.FirstName);
@@ -42,14 +42,14 @@ public class AppUserToUserInfoDTOMappingProfileTests
     [Fact]
     public void Map_AppUserToUserWithRolesDTO_ShouldMapCorrectly()
     {
-        // Arrange
+        //Arrange
         var appUser = _fixture.Create<AppUser>();
         var roles = _fixture.CreateMany<string>(3).ToList();
 
-        // Act
+        //Act
         var userWithRolesDTO = _mapper.Map<UserWithRolesDTO>(appUser);
 
-        // Assert
+        //Assert
         Assert.NotNull(userWithRolesDTO);
         Assert.Equal(appUser.Id, userWithRolesDTO.Id);
         Assert.Equal(appUser.FirstName, userWithRolesDTO.FirstName);
@@ -61,20 +61,20 @@ public class AppUserToUserInfoDTOMappingProfileTests
     [Fact]
     public void Map_NullAppUserToUserInfoDTO_ShouldReturnNull()
     {
-        // Act
+        //Act
         var userInfoDTO = _mapper.Map<UserInfoDTO>(null);
 
-        // Assert
+        //Assert
         Assert.Null(userInfoDTO);
     }
 
     [Fact]
     public void Map_NullAppUserToUserWithRolesDTO_ShouldReturnNull()
     {
-        // Act
+        //Act
         var userWithRolesDTO = _mapper.Map<UserWithRolesDTO>(null);
 
-        // Assert
+        //Assert
         Assert.Null(userWithRolesDTO);
     }
 }

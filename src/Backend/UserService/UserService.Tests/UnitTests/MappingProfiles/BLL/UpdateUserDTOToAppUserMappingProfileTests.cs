@@ -24,15 +24,15 @@ public class UpdateUserDTOToAppUserMappingProfileTests
     [Fact]
     public void Map_UpdateUserDTOToAppUser_ShouldMapCorrectly()
     {
-        // Arrange
+        //Arrange
         var updateUserDTO = _fixture.Build<UpdateUserDTO>()
             .Without(dto => dto.Avatar)
             .Create();
 
-        // Act
+        //Act
         var appUser = _mapper.Map<AppUser>(updateUserDTO);
 
-        // Assert
+        //Assert
         Assert.NotNull(appUser);
         Assert.Equal(updateUserDTO.FirstName, appUser.FirstName);
         Assert.Equal(updateUserDTO.LastName, appUser.LastName);   
@@ -42,10 +42,10 @@ public class UpdateUserDTOToAppUserMappingProfileTests
     [Fact]
     public void Map_NullUpdateUserDTOToAppUser_ShouldReturnNull()
     {
-        // Act
+        //Act
         var appUser = _mapper.Map<AppUser>(null);
 
-        // Assert
+        //Assert
         Assert.Null(appUser);
     }
 }

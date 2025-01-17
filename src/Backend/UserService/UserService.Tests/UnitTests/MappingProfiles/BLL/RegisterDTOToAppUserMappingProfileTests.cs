@@ -24,15 +24,15 @@ public class RegisterDTOToAppUserMappingProfileTests
     [Fact]
     public void Map_RegisterDTOToAppUser_ShouldMapCorrectly()
     {
-        // Arrange
+        //Arrange
         var registerDTO = _fixture.Build<RegisterDTO>()
             .Without(dto => dto.Avatar)
             .Create();
 
-        // Act
+        //Act
         var appUser = _mapper.Map<AppUser>(registerDTO);
 
-        // Assert
+        //Assert
         Assert.NotNull(appUser);
         Assert.Equal(registerDTO.Email, appUser.UserName);
         Assert.Equal(registerDTO.FirstName, appUser.FirstName); 
@@ -42,10 +42,10 @@ public class RegisterDTOToAppUserMappingProfileTests
     [Fact]
     public void Map_NullRegisterDTOToAppUser_ShouldReturnNull()
     {
-        // Act
+        //Act
         var appUser = _mapper.Map<AppUser>(null);
 
-        // Assert
+        //Assert
         Assert.Null(appUser);
     }
 }

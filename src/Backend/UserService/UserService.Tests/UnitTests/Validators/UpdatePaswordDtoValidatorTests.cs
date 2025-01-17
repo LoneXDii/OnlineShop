@@ -10,13 +10,13 @@ public class UpdatePasswordDTOValidatorTests
     [Fact]
     public void Validate_WhenNewPasswordIsEmpty_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var changePasswordDto = new UpdatePasswordDTO { NewPassword = "" };
 
-        // Act
+        //Act
         var result = _validator.Validate(changePasswordDto);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Equal(2, result.Errors.Count);
         Assert.Equal("Password must contains lower and uppercase letters, at least 1 digit and special symbol and be at least 8 symbols long", result.Errors[1].ErrorMessage);
@@ -25,13 +25,13 @@ public class UpdatePasswordDTOValidatorTests
     [Fact]
     public void Validate_WhenNewPasswordDoesNotMeetCriteria_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var changePasswordDto = new UpdatePasswordDTO { NewPassword = "weakpassword" };
 
-        // Act
+        //Act
         var result = _validator.Validate(changePasswordDto);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Password must contains lower and uppercase letters, at least 1 digit and special symbol and be at least 8 symbols long", result.Errors[0].ErrorMessage);
@@ -40,13 +40,13 @@ public class UpdatePasswordDTOValidatorTests
     [Fact]
     public void Validate_WhenNewPasswordIsValid_ShouldReturnTrueWithNoErrors()
     {
-        // Arrange
+        //Arrange
         var changePasswordDto = new UpdatePasswordDTO { NewPassword = "Valid1Password!" };
 
-        // Act
+        //Act
         var result = _validator.Validate(changePasswordDto);
 
-        // Assert
+        //Assert
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
     }

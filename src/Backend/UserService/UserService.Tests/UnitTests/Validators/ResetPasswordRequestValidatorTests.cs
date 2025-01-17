@@ -10,13 +10,13 @@ public class ResetPasswordRequestValidatorTests
     [Fact]
     public void Validate_WhenCodeIsEmpty_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new ResetPasswordRequest("Valid1Password!", "");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Equal(2, result.Errors.Count);
         Assert.Equal("Wrong code", result.Errors[1].ErrorMessage);
@@ -25,13 +25,13 @@ public class ResetPasswordRequestValidatorTests
     [Fact]
     public void Validate_WhenCodeIsNotSixCharacters_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new ResetPasswordRequest("Valid1Password!", "12345");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Wrong code", result.Errors[0].ErrorMessage);
@@ -40,13 +40,13 @@ public class ResetPasswordRequestValidatorTests
     [Fact]
     public void Validate_WhenPasswordIsEmpty_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new ResetPasswordRequest("", "123456");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Equal(2, result.Errors.Count);
         Assert.Equal("Password must contains lower and uppercase letters, at least 1 digit and special symbol and be at least 8 symbols long", result.Errors[1].ErrorMessage);
@@ -55,13 +55,13 @@ public class ResetPasswordRequestValidatorTests
     [Fact]
     public void Validate_WhenPasswordDoesNotMeetCriteria_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new ResetPasswordRequest("weakpassword", "123456");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Password must contains lower and uppercase letters, at least 1 digit and special symbol and be at least 8 symbols long", result.Errors[0].ErrorMessage);
@@ -70,13 +70,13 @@ public class ResetPasswordRequestValidatorTests
     [Fact]
     public void Validate_WhenCodeAndPasswordAreValid_ShouldReturnTrueWithNoErrors()
     {
-        // Arrange
+        //Arrange
         var request = new ResetPasswordRequest("Valid1Password!", "123456");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
     }

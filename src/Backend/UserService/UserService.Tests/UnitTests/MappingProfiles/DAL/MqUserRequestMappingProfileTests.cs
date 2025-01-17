@@ -24,13 +24,13 @@ public class MqUserRequestMappingProfileTests
     [Fact]
     public void Map_AppUserToMqUserRequest_ShouldMapCorrectly()
     {
-        // Arrange
+        //Arrange
         var appUser = _fixture.Create<AppUser>();
 
-        // Act
+        //Act
         var mqUserRequest = _mapper.Map<MqUserRequest>(appUser);
 
-        // Assert
+        //Assert
         Assert.NotNull(mqUserRequest);
         Assert.Equal(appUser.Id, mqUserRequest.Id);
         Assert.Equal(appUser.Email, mqUserRequest.Email); 
@@ -40,10 +40,10 @@ public class MqUserRequestMappingProfileTests
     [Fact]
     public void Map_NullAppUserToMqUserRequest_ShouldReturnNull()
     {
-        // Act
+        //Act
         var mqUserRequest = _mapper.Map<MqUserRequest>(null);
 
-        // Assert
+        //Assert
         Assert.Null(mqUserRequest);
     }
 }

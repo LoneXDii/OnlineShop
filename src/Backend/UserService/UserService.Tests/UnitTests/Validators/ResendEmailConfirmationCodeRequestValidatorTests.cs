@@ -10,13 +10,13 @@ public class ResendEmailConfirmationCodeRequestValidatorTests
     [Fact]
     public void Validate_WhenEmailIsEmpty_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new ResendEmailConfirmationCodeRequest("");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Equal(2, result.Errors.Count);
         Assert.Equal("Incorrect email adress", result.Errors[1].ErrorMessage);
@@ -25,13 +25,13 @@ public class ResendEmailConfirmationCodeRequestValidatorTests
     [Fact]
     public void Validate_WhenEmailIsInvalidFormat_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new ResendEmailConfirmationCodeRequest("invalid-email");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Incorrect email adress", result.Errors[0].ErrorMessage);
@@ -40,13 +40,13 @@ public class ResendEmailConfirmationCodeRequestValidatorTests
     [Fact]
     public void Validate_WhenEmailIsValid_ShouldReturnTrueWithNoErrors()
     {
-        // Arrange
+        //Arrange
         var request = new ResendEmailConfirmationCodeRequest("test@example.com");
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
     }

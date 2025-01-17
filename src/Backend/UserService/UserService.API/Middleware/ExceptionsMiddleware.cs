@@ -29,7 +29,7 @@ public class ExceptionMiddleware
         }
     }
 
-    public async Task HandleExceptionAsync(HttpContext context, Exception ex)
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
         var problemDetails = new ProblemDetails
         {
