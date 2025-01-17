@@ -32,5 +32,12 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\products.proto" GrpcServices="Client" />
-  </ItemGroup>	
+  </ItemGroup>
+
+  <ItemGroup>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>OrderService.Tests</_Parameter1>
+	</AssemblyAttribute>
+	<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 </Project>
