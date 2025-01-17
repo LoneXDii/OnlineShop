@@ -24,13 +24,13 @@ public class ProductResponseMappingProfileTests
     [Fact]
     public void Map_WhenProductResponseIsNotNull_ShouldReturnCorrectProductEntity()
     {
-        // Arrange
+        //Arrange
         var productResponse = _fixture.Create<ProductResponse>();
 
-        // Act
+        //Act
         var productEntity = _mapper.Map<ProductEntity>(productResponse);
 
-        // Assert
+        //Assert
         Assert.NotNull(productEntity);
         Assert.Equal(productResponse.Id, productEntity.Id);
         Assert.Equal(productResponse.Name, productEntity.Name);
@@ -44,10 +44,10 @@ public class ProductResponseMappingProfileTests
     [Fact]
     public void Map_WhenProductResponseIsNull_ShouldReturnNull()
     {
-        // Act
+        //Act
         var productEntity = _mapper.Map<ProductEntity>(null);
 
-        // Assert
+        //Assert
         Assert.Null(productEntity);
     }
 }

@@ -24,13 +24,13 @@ public class GetUserOrdersRequestMappingProfileTests
     [Fact]
     public void Map_WhenPaginationDTOIsNotNull_ShouldReturnCorrectGetUserOrdersRequest()
     {
-        // Arrange
+        //Arrange
         var paginationDTO = _fixture.Create<PaginationDTO>();
 
-        // Act
+        //Act
         var getUserOrdersRequest = _mapper.Map<GetUserOrdersRequest>(paginationDTO);
 
-        // Assert
+        //Assert
         Assert.NotNull(getUserOrdersRequest);
         Assert.Equal(paginationDTO.PageNo, getUserOrdersRequest.PageNo);
         Assert.Equal(paginationDTO.PageSize, getUserOrdersRequest.PageSize);
@@ -40,10 +40,10 @@ public class GetUserOrdersRequestMappingProfileTests
     [Fact]
     public void Map_WhenPaginationDTOIsNull_ShouldReturnNull()
     {
-        // Act
+        //Act
         var getUserOrdersRequest = _mapper.Map<GetUserOrdersRequest>(null);
 
-        // Assert
+        //Assert
         Assert.Null(getUserOrdersRequest);
     }
 }

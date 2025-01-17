@@ -24,7 +24,7 @@ public class CartMappingProfileTests
     [Fact]
     public void Map_WhenDictionaryIsNotEmpty_ShouldReturnCorrectCartDTO()
     {
-        // Arrange
+        //Arrange
         var products = _fixture.CreateMany<ProductEntity>(3).ToDictionary(p => p.Id);
         foreach (var product in products.Values)
         {
@@ -33,10 +33,10 @@ public class CartMappingProfileTests
             product.Discount = _fixture.Create<int>() % 50; 
         }
 
-        // Act
+        //Act
         var cartDTO = _mapper.Map<CartDTO>(products);
 
-        // Assert
+        //Assert
         Assert.NotNull(cartDTO);
         Assert.Equal(products.Sum(item => item.Value.Quantity), cartDTO.Count);
         Assert.Equal(products.Sum(item => item.Value.Price * item.Value.Quantity * (100 - item.Value.Discount) / 100), cartDTO.TotalCost);
@@ -46,13 +46,13 @@ public class CartMappingProfileTests
     [Fact]
     public void Map_WhenDictionaryIsEmpty_ShouldReturnEmptyCartDTO()
     {
-        // Arrange
+        //Arrange
         var products = new Dictionary<int, ProductEntity>();
 
-        // Act
+        //Act
         var cartDTO = _mapper.Map<CartDTO>(products);
 
-        // Assert
+        //Assert
         Assert.NotNull(cartDTO);
         Assert.Equal(0, cartDTO.Count);
         Assert.Equal(0, cartDTO.TotalCost);
@@ -62,10 +62,10 @@ public class CartMappingProfileTests
     [Fact]
     public void Map_WhenDictionaryIsNull_ShouldReturnNull()
     {
-        // Act
+        //Act
         var cartDTO = _mapper.Map<CartDTO>(null);
 
-        // Assert
+        //Assert
         Assert.Null(cartDTO);
     }
 }

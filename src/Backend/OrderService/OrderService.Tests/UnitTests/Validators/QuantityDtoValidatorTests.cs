@@ -10,13 +10,13 @@ public class QuantityDtoValidatorTests
     [Fact]
     public void Validate_WhenQuantityIsNegative_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var quantityDto = new QuantityDTO { Quantity = -1 };
 
-        // Act
+        //Act
         var result = _validator.Validate(quantityDto);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Wrong quantity", result.Errors[0].ErrorMessage);
@@ -25,13 +25,13 @@ public class QuantityDtoValidatorTests
     [Fact]
     public void Validate_WhenQuantityIsZero_ShouldReturnTrueWithNoErrors()
     {
-        // Arrange
+        //Arrange
         var quantityDto = new QuantityDTO { Quantity = 0 };
 
-        // Act
+        //Act
         var result = _validator.Validate(quantityDto);
 
-        // Assert
+        //Assert
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
     }
@@ -39,13 +39,13 @@ public class QuantityDtoValidatorTests
     [Fact]
     public void Validate_WhenQuantityIsPositive_ShouldReturnTrueWithNoErrors()
     {
-        // Arrange
+        //Arrange
         var quantityDto = new QuantityDTO { Quantity = 10 };
 
-        // Act
+        //Act
         var result = _validator.Validate(quantityDto);
 
-        // Assert
+        //Assert
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
     }

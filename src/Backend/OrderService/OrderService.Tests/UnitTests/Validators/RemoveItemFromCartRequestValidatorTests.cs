@@ -10,13 +10,13 @@ public class RemoveItemFromCartRequestValidatorTests
     [Fact]
     public void Validate_WhenItemIdIsZero_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new RemoveItemFromCartRequest(0);
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Wrong item id", result.Errors[0].ErrorMessage);
@@ -25,13 +25,13 @@ public class RemoveItemFromCartRequestValidatorTests
     [Fact]
     public void Validate_WhenItemIdIsNegative_ShouldReturnFalseWithCorrectErrorMessage()
     {
-        // Arrange
+        //Arrange
         var request = new RemoveItemFromCartRequest(-1);
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.False(result.IsValid);
         Assert.Single(result.Errors);
         Assert.Equal("Wrong item id", result.Errors[0].ErrorMessage);
@@ -40,13 +40,13 @@ public class RemoveItemFromCartRequestValidatorTests
     [Fact]
     public void Validate_WhenItemIdIsPositive_ShouldReturnTrueWithNoErrors()
     {
-        // Arrange
+        //Arrange
         var request = new RemoveItemFromCartRequest(1);
 
-        // Act
+        //Act
         var result = _validator.Validate(request);
 
-        // Assert
+        //Assert
         Assert.True(result.IsValid);
         Assert.Empty(result.Errors);
     }

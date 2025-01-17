@@ -24,13 +24,13 @@ public class OrderMappingProfileTests
     [Fact]
     public void Map_WhenOrderEntityIsNotNull_ShouldReturnCorrectOrderDTO()
     {
-        // Arrange
+        //Arrange
         var orderEntity = _fixture.Create<OrderEntity>();
 
-        // Act
+        //Act
         var orderDTO = _mapper.Map<OrderDTO>(orderEntity);
 
-        // Assert
+        //Assert
         Assert.NotNull(orderDTO);
         Assert.Equal(orderEntity.Id, orderDTO.Id);
         Assert.Equal(orderEntity.OrderStatus, orderDTO.OrderStatus);
@@ -44,10 +44,10 @@ public class OrderMappingProfileTests
     [Fact]
     public void Map_WhenOrderEntityIsNull_ShouldReturnNull()
     {
-        // Act
+        //Act
         var orderDTO = _mapper.Map<OrderDTO>(null);
 
-        // Assert
+        //Assert
         Assert.Null(orderDTO);
     }
 }
