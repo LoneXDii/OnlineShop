@@ -11,16 +11,13 @@ namespace OrderService.Tests.UnitTests.Middleware;
 
 public class ExceptionMiddlewareTests
 {
-    private readonly Mock<RequestDelegate> _nextMock;
-    private readonly Mock<ILogger<ExceptionMiddleware>> _loggerMock;
-    private readonly Mock<IWebHostEnvironment> _envMock;
+    private readonly Mock<RequestDelegate> _nextMock = new();
+    private readonly Mock<ILogger<ExceptionMiddleware>> _loggerMock = new();
+    private readonly Mock<IWebHostEnvironment> _envMock = new();
     private readonly ExceptionMiddleware _middleware;
 
     public ExceptionMiddlewareTests()
     {
-        _nextMock = new Mock<RequestDelegate>();
-        _loggerMock = new Mock<ILogger<ExceptionMiddleware>>();
-        _envMock = new Mock<IWebHostEnvironment>();
         _middleware = new ExceptionMiddleware(_nextMock.Object, _loggerMock.Object, _envMock.Object);
     }
 
