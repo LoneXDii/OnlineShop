@@ -55,8 +55,8 @@ public class ValidationBehaviorTests
         Assert.NotNull(exception);
         Assert.NotEmpty(exception.Message);
     }
-
-    private class TestRequest { }
-
-    private class TestResponse { }
 }
+
+public class TestRequest { }
+
+public class TestResponse { }
