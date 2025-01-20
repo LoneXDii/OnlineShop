@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SupportService.Application.DTO;
@@ -32,17 +31,17 @@ public class CloseChatRequestHandlerTests
     [Fact]
     public async Task Handle_WhenChatIsNotExists_ShouldThrowBadRequestException()
     {
-        // Arrange
+        //Arrange
         var request = new CloseChatRequest(1, "1");
 
         _unitOfWorkMock.Setup(unitOfWork =>
             unitOfWork.ChatRepository.GetByIdAsync(request.ChatId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Chat?)null);
 
-        // Act
+        //Act
         var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, default));
 
-        // Assert
+        //Assert
         Assert.Equal("No such chat", exception.Message);
 
         _unitOfWorkMock.Verify(unitOfWork =>
@@ -51,8 +50,8 @@ public class CloseChatRequestHandlerTests
         _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.SaveAllAsync(It.IsAny<CancellationToken>()), Times.Never);
 
-        _backgroundJobProxyMock.Verify(backroundJob =>
-            backroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Never);
+        _backgroundJobProxyMock.Verify(backgroundJob =>
+            backgroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Never);
     }
 
     [Fact]
@@ -65,10 +64,10 @@ public class CloseChatRequestHandlerTests
             unitOfWork.ChatRepository.GetByIdAsync(request.ChatId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Chat { ClientId = "2" });
 
-        // Act
+        //Act
         var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, default));
 
-        // Assert
+        //Assert
         Assert.Equal("You have no access to this chat", exception.Message);
 
         _unitOfWorkMock.Verify(unitOfWork =>
@@ -77,12 +76,12 @@ public class CloseChatRequestHandlerTests
         _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.SaveAllAsync(It.IsAny<CancellationToken>()), Times.Never);
 
-        _backgroundJobProxyMock.Verify(backroundJob =>
-            backroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Never);
+        _backgroundJobProxyMock.Verify(backgroundJob =>
+            backgroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Never);
     }
 
     [Fact]
-    public async Task Handle_WherUserIsChatOwner_ShouldReturnClosedChat()
+    public async Task Handle_WhenUserIsChatOwner_ShouldReturnClosedChat()
     {
         //Arrange
         var request = new CloseChatRequest(1, "1");
@@ -112,12 +111,12 @@ public class CloseChatRequestHandlerTests
         _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.SaveAllAsync(It.IsAny<CancellationToken>()), Times.Once);
 
-        _backgroundJobProxyMock.Verify(backroundJob =>
-            backroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Once);
+        _backgroundJobProxyMock.Verify(backgroundJob =>
+            backgroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_WherRequestedByAdmin_ShouldReturnClosedChat()
+    public async Task Handle_WhenRequestedByAdmin_ShouldReturnClosedChat()
     {
         //Arrange
         var request = new CloseChatRequest(1, null);
@@ -147,7 +146,7 @@ public class CloseChatRequestHandlerTests
         _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.SaveAllAsync(It.IsAny<CancellationToken>()), Times.Once);
 
-        _backgroundJobProxyMock.Verify(backroundJob =>
-            backroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Once);
+        _backgroundJobProxyMock.Verify(backgroundJob =>
+            backgroundJob.Schedule(It.IsAny<Expression<Func<Task>>>(), It.IsAny<TimeSpan>()), Times.Once);
     }
 }
