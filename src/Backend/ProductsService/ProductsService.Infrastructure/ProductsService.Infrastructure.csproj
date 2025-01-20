@@ -23,4 +23,10 @@
     <ProjectReference Include="..\ProductsService.Application\ProductsService.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ProductsService.Tests</_Parameter1>
+    </AssemblyAttribute>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 </Project>
