@@ -68,7 +68,7 @@ public class DeleteCategoryRequestHandlerTests
             .ReturnsAsync(category);
 
         _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.ProductQueryRepository.ListAsync(It.IsAny<ProductCategoryOrAtributeSpecification>(), It.IsAny<CancellationToken>()))
+                unitOfWork.ProductQueryRepository.ListAsync(It.IsAny<ProductCategoryOrAttributeSpecification>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(products);
 
         //Act
@@ -97,7 +97,7 @@ public class DeleteCategoryRequestHandlerTests
             .ReturnsAsync(category);
 
         _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.ProductQueryRepository.ListAsync(It.IsAny<ProductCategoryOrAtributeSpecification>(), It.IsAny<CancellationToken>()))
+                unitOfWork.ProductQueryRepository.ListAsync(It.IsAny<ProductCategoryOrAttributeSpecification>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Product>());
 
         //Act

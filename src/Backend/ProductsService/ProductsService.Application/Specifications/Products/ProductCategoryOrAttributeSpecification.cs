@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 
 namespace ProductsService.Application.Specifications.Products;
 
-internal class ProductCategoryOrAtributeSpecification : Specification<Product>
+internal class ProductCategoryOrAttributeSpecification : Specification<Product>
 {
     private readonly int? _categoryId;
 
-    public ProductCategoryOrAtributeSpecification(int? categoryId)
+    public ProductCategoryOrAttributeSpecification(int? categoryId)
     {
         _categoryId = categoryId;
     }
