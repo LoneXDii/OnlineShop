@@ -41,7 +41,7 @@ public class GetUniqueCategoryAttributesValuesRequestHandlerTests
             .Returns(categoryAttributesValues);
 
         //Act
-        var result = await _handler.Handle(request, default);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         Assert.Equal(categoryAttributesValues, result);

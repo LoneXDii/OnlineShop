@@ -37,7 +37,7 @@ public class AddAttributeRequestHandlerTests
             .ReturnsAsync((Category?)null);
 
         //Act
-        var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, default));
+        var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, CancellationToken.None));
 
         //Assert
         Assert.Equal("No such parent", exception.Message);
@@ -64,7 +64,7 @@ public class AddAttributeRequestHandlerTests
             .Returns(category);
 
         //Act
-        await _handler.Handle(request, default);
+        await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         _unitOfWorkMock.Verify(unitOfWork =>

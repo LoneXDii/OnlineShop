@@ -45,7 +45,7 @@ public class AddCategoryRequestHandlerTests
             .Returns(category);
 
         //Act
-        await _handler.Handle(request, default);
+        await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         Assert.Equal("new-image-url", category.ImageUrl);
@@ -72,7 +72,7 @@ public class AddCategoryRequestHandlerTests
             .Returns(category);
 
         //Act
-        await _handler.Handle(request, default);
+        await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         _unitOfWorkMock.Verify(unitOfWork =>

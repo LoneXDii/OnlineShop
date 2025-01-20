@@ -38,7 +38,7 @@ public class DeleteCategoryRequestHandlerTests
             .ReturnsAsync((Category?)null);
 
         //Act
-        var exception = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, default));
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None));
 
         //Assert
         Assert.Equal("No such category", exception.Message);
@@ -72,7 +72,7 @@ public class DeleteCategoryRequestHandlerTests
             .ReturnsAsync(products);
 
         //Act
-        var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, default));
+        var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, CancellationToken.None));
 
         //Assert
         Assert.Equal("Can't delete category that is in use", exception.Message);
@@ -101,7 +101,7 @@ public class DeleteCategoryRequestHandlerTests
             .ReturnsAsync(new List<Product>());
         
         //Act
-        await _handler.Handle(request, default);
+        await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         _unitOfWorkMock.Verify(unitOfWork =>

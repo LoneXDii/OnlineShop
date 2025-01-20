@@ -21,8 +21,15 @@ public static class EntityFactory
     {
         return _fixture.Build<Product>()
             .With(p => p.ImageUrl, imageUrl)
-            .Without(p => p.Categories)
+            .With(p => p.Categories, new List<Category>())
             .Without(p => p.Discount)
+            .Create();
+    }
+
+    public static Discount CreateDiscount()
+    {
+        return _fixture.Build<Discount>()
+            .Without(d => d.Product)
             .Create();
     }
 }

@@ -44,7 +44,7 @@ public class GetCategoryByIdRequestHandlerTests
         var request = new GetCategoryByIdRequest(category.Id);
 
         //Act
-        var result = await _handler.Handle(request, default);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         //Assert
         Assert.Equal(responseCategoryDto, result);
@@ -66,7 +66,7 @@ public class GetCategoryByIdRequestHandlerTests
             .ReturnsAsync((Category?)null);
 
         //Act
-        var exception = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, default));
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None));
         Assert.Equal("No such category", exception.Message);
         
         //Assert

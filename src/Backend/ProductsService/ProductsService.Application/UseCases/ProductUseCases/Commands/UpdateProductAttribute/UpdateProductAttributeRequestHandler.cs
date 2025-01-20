@@ -29,7 +29,7 @@ internal class UpdateProductAttributeRequestHandler(IUnitOfWork unitOfWork, ILog
 
         await unitOfWork.SaveAllAsync(cancellationToken);
 
-        logger.LogInformation($"Attribute of produtc id: {request.ProductId} succesfully updated from id: {request.OldAttributeId} to id:{request.NewAttributeId}");
+        logger.LogInformation($"Attribute of product id: {request.ProductId} successfully updated from id: {request.OldAttributeId} to id:{request.NewAttributeId}");
     }
 
     private void CheckDbData(Category? oldAttributeValue, Category? newAttributeValue, Product? product)
