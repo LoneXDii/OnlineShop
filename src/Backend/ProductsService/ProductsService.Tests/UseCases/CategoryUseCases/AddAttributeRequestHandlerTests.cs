@@ -6,6 +6,8 @@ using ProductsService.Application.Exceptions;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddAttribute;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
+using ProductsService.Tests.Factories;
+using ProductsService.Tests.Setups;
 
 namespace ProductsService.Tests.UseCases.CategoryUseCases;
 
@@ -19,6 +21,8 @@ public class AddAttributeRequestHandlerTests
     
     public AddAttributeRequestHandlerTests()
     {
+        _unitOfWorkMock.SetupUnitOfWork();
+        
         _handler = new AddAttributeRequestHandler(_unitOfWorkMock.Object, _mapperMock.Object, _loggerMock.Object);
     }
     
@@ -50,19 +54,11 @@ public class AddAttributeRequestHandlerTests
     {
         //Arrange
         var request = _fixture.Create<AddAttributeRequest>();
-        var category = _fixture.Build<Category>()
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory();
 
         _unitOfWorkMock.Setup(unitOfWork =>
                 unitOfWork.CategoryQueryRepository.GetByIdAsync(request.ParentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
-
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.AddAsync(category, It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
         
         _mapperMock.Setup(mapper => mapper.Map<Category>(It.IsAny<AddAttributeRequest>()))
             .Returns(category);

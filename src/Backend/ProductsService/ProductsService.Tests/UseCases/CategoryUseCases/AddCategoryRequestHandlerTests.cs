@@ -6,6 +6,8 @@ using ProductsService.Application.UseCases.CategoryUseCases.Commands.AddCategory
 using ProductsService.Domain.Abstractions.BlobStorage;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
+using ProductsService.Tests.Factories;
+using ProductsService.Tests.Setups;
 
 namespace ProductsService.Tests.UseCases.CategoryUseCases;
 
@@ -21,6 +23,9 @@ public class AddCategoryRequestHandlerTests
 
     public AddCategoryRequestHandlerTests()
     {
+        _unitOfWorkMock.SetupUnitOfWork();
+        _blobServiceMock.SetupBlobService();
+        
         _handler = new AddCategoryRequestHandler(
             _unitOfWorkMock.Object,
             _blobServiceMock.Object,
@@ -34,28 +39,16 @@ public class AddCategoryRequestHandlerTests
         //Arrange
         var request = new AddCategoryRequest(_fixture.Create<string>(), _streamMock.Object, "image/png");
     
-        var category = _fixture.Build<Category>()
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory();
 
         _mapperMock.Setup(mapper => mapper.Map<Category>(It.IsAny<AddCategoryRequest>()))
             .Returns(category);
-
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.AddAsync(category, It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
-        
-        _blobServiceMock.Setup(blobService =>
-                blobService.UploadAsync(request.Image, request.ImageContentType))
-            .ReturnsAsync("image-url");
 
         //Act
         await _handler.Handle(request, default);
 
         //Assert
-        Assert.Equal("image-url", category.ImageUrl);
+        Assert.Equal("new-image-url", category.ImageUrl);
 
         _unitOfWorkMock.Verify(unitOfWork =>
             unitOfWork.CategoryCommandRepository.AddAsync(category, It.IsAny<CancellationToken>()), Times.Once);
@@ -73,18 +66,10 @@ public class AddCategoryRequestHandlerTests
         //Arrange
         var request = new AddCategoryRequest(_fixture.Create<string>(), null, null);
 
-        var category = _fixture.Build<Category>()
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory();
         
         _mapperMock.Setup(mapper => mapper.Map<Category>(It.IsAny<AddCategoryRequest>()))
             .Returns(category);
-        
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.AddAsync(category, It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
 
         //Act
         await _handler.Handle(request, default);

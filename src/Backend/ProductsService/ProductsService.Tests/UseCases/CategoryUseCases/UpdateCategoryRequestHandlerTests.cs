@@ -7,6 +7,8 @@ using ProductsService.Application.UseCases.CategoryUseCases.Commands.UpdateCateg
 using ProductsService.Domain.Abstractions.BlobStorage;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
+using ProductsService.Tests.Factories;
+using ProductsService.Tests.Setups;
 
 namespace ProductsService.Tests.UseCases.CategoryUseCases;
 
@@ -22,6 +24,9 @@ public class UpdateCategoryRequestHandlerTests
 
     public UpdateCategoryRequestHandlerTests()
     {
+        _unitOfWorkMock.SetupUnitOfWork();
+        _blobServiceMock.SetupBlobService();
+        
         _handler = new UpdateCategoryRequestHandler(
             _unitOfWorkMock.Object,
             _blobServiceMock.Object,
@@ -41,27 +46,14 @@ public class UpdateCategoryRequestHandlerTests
             ImageContentType = "image/jpeg",
         };
 
-        var category = _fixture.Build<Category>()
-            .With(c => c.ImageUrl, (string?)null)
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory();
         
         _unitOfWorkMock.Setup(unitOfWork =>
                 unitOfWork.CategoryQueryRepository.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
-        
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.UpdateAsync(It.IsAny<Category>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
 
         _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UpdateCategoryRequest>(), category))
             .Verifiable();
-
-        _blobServiceMock.Setup(blobService =>
-                blobService.UploadAsync(request.Image, request.ImageContentType))
-            .ReturnsAsync("new-image-url");
 
         //Act
         await _handler.Handle(request, default);
@@ -94,31 +86,14 @@ public class UpdateCategoryRequestHandlerTests
             ImageContentType = "image/jpeg",
         };
 
-        var category = _fixture.Build<Category>()
-            .With(c => c.ImageUrl, "old-image-url")
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory("old-image-url");
         
         _unitOfWorkMock.Setup(unitOfWork =>
                 unitOfWork.CategoryQueryRepository.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
-
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.UpdateAsync(It.IsAny<Category>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
         
         _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UpdateCategoryRequest>(), category))
             .Verifiable();
-
-        _blobServiceMock.Setup(blobService =>
-                blobService.UploadAsync(request.Image, request.ImageContentType))
-            .ReturnsAsync("new-image-url");
-        
-        _blobServiceMock.Setup(blobService =>
-                blobService.DeleteAsync(It.IsAny<string>()))
-            .Returns(Task.CompletedTask);
 
         //Act
         await _handler.Handle(request, default);
@@ -175,19 +150,11 @@ public class UpdateCategoryRequestHandlerTests
             ImageContentType = null,
         };
 
-        var category = _fixture.Build<Category>()
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory();
         
         _unitOfWorkMock.Setup(unitOfWork =>
                 unitOfWork.CategoryQueryRepository.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
-
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.UpdateAsync(It.IsAny<Category>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
         
         _mapperMock.Setup(mapper => mapper.Map(It.IsAny<UpdateCategoryRequest>(), category))
             .Verifiable();

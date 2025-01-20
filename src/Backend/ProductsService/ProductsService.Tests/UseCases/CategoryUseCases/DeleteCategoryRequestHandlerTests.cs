@@ -6,6 +6,8 @@ using ProductsService.Application.Specifications.Products;
 using ProductsService.Application.UseCases.CategoryUseCases.Commands.DeleteCategory;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
+using ProductsService.Tests.Factories;
+using ProductsService.Tests.Setups;
 
 namespace ProductsService.Tests.UseCases.CategoryUseCases;
 
@@ -18,6 +20,8 @@ public class DeleteCategoryRequestHandlerTests
 
     public DeleteCategoryRequestHandlerTests()
     {
+        _unitOfWorkMock.SetupUnitOfWork();
+        
         _handler = new DeleteCategoryRequestHandler(
             _unitOfWorkMock.Object,
             _loggerMock.Object);
@@ -51,19 +55,12 @@ public class DeleteCategoryRequestHandlerTests
     {
         //Arrange
         var request = _fixture.Create<DeleteCategoryRequest>();
-        
-        var category = _fixture.Build<Category>()
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+
+        var category = EntityFactory.CreateCategory();
         
         var products = new List<Product>
         {
-            _fixture.Build<Product>()
-                .Without(p => p.Categories)
-                .Without(p => p.Discount)
-                .Create()
+            EntityFactory.CreateProduct()
         };
 
         _unitOfWorkMock.Setup(unitOfWork =>
@@ -93,11 +90,7 @@ public class DeleteCategoryRequestHandlerTests
         //Arrange
         var request = _fixture.Create<DeleteCategoryRequest>();
         
-        var category = _fixture.Build<Category>()
-            .Without(c => c.Parent)
-            .Without(c => c.Products)
-            .Without(c => c.Children)
-            .Create();
+        var category = EntityFactory.CreateCategory();
 
         _unitOfWorkMock.Setup(unitOfWork =>
                 unitOfWork.CategoryQueryRepository.GetByIdAsync(request.categoryId, It.IsAny<CancellationToken>()))
@@ -106,10 +99,6 @@ public class DeleteCategoryRequestHandlerTests
         _unitOfWorkMock.Setup(unitOfWork =>
                 unitOfWork.ProductQueryRepository.ListAsync(It.IsAny<ProductCategoryOrAtributeSpecification>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<Product>());
-
-        _unitOfWorkMock.Setup(unitOfWork =>
-                unitOfWork.CategoryCommandRepository.DeleteAsync(It.IsAny<Category>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
         
         //Act
         await _handler.Handle(request, default);
