@@ -10,12 +10,13 @@ using UserService.DAL.Services.TemporaryStorage;
 using Hangfire;
 using UserService.DAL.Services.MessageBrocker.ProducerService;
 using Microsoft.Extensions.Logging;
+using UserService.BLL.Proxy;
 
 namespace UserService.BLL.UseCases.AuthUseCases.RegisterUserUseCase;
 
 internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IBlobService blobService,
     IEmailService emailService, ICacheService cacheService, IProducerService producerService,
-    ILogger<RegisterUserRequestHandler> logger)
+    ILogger<RegisterUserRequestHandler> logger, IBackgroundJobProxy backgroundJob)
     : IRequestHandler<RegisterUserRequest>
 {
     public async Task Handle(RegisterUserRequest request, CancellationToken cancellationToken)
@@ -39,11 +40,11 @@ internal class RegisterUserRequestHandler(UserManager<AppUser> userManager, IMap
 
             var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
-            BackgroundJob.Enqueue(() => producerService.ProduceUserCreationAsync(user, default));
+            backgroundJob.Enqueue(() => producerService.ProduceUserCreationAsync(user, default));
 
-            BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
+            backgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
 
-            BackgroundJob.Schedule(() => DeleteUnconfirmedUser(user.Email), TimeSpan.FromMinutes(15));
+            backgroundJob.Schedule(() => DeleteUnconfirmedUser(user.Email), TimeSpan.FromMinutes(15));
         }
         else
         {

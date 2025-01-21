@@ -6,11 +6,12 @@ using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 using Hangfire;
 using Microsoft.Extensions.Logging;
+using UserService.BLL.Proxy;
 
 namespace UserService.BLL.UseCases.AuthUseCases.EmailConfirmationUseCase;
 
 internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager, IEmailService emailService, 
-    ICacheService cacheService, ILogger<EmailConfirmationRequestHandler> logger)
+    ICacheService cacheService, ILogger<EmailConfirmationRequestHandler> logger, IBackgroundJobProxy backgroundJob)
     : IRequestHandler<EmailConfirmationRequest>
 {
     public async Task Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
@@ -43,6 +44,6 @@ internal class EmailConfirmationRequestHandler(UserManager<AppUser> userManager,
             throw new BadRequestException($"Wrong code");
         }
 
-        BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email));
+        backgroundJob.Enqueue(() => emailService.SendEmailConfirmationSucceededNotificationAsync(user.Email));
     }
 }
