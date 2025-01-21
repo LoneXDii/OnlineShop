@@ -3,15 +3,17 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using UserService.BLL.Exceptions;
+using UserService.BLL.Proxy;
 using UserService.DAL.Entities;
 using UserService.DAL.Services.Authentication;
 using UserService.DAL.Services.EmailNotifications;
 using UserService.DAL.Services.TemporaryStorage;
 
-namespace UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
+namespace UserService.BLL.UseCases.UserUseCases.ResetPasswordUseCase;
 
 internal class ResetPasswordRequestHandler(UserManager<AppUser> userManager, ICacheService cacheService, 
-    IEmailService emailService, ITokenService tokenService, ILogger<ResetPasswordRequestHandler> logger)
+    IEmailService emailService, ITokenService tokenService, ILogger<ResetPasswordRequestHandler> logger,
+    IBackgroundJobProxy backgroundJob)
     : IRequestHandler<ResetPasswordRequest>
 {
     public async Task Handle(ResetPasswordRequest request, CancellationToken cancellationToken)
@@ -40,7 +42,7 @@ internal class ResetPasswordRequestHandler(UserManager<AppUser> userManager, ICa
 
         await userManager.AddPasswordAsync(user, request.Password);
 
-        BackgroundJob.Enqueue(() => emailService.SendPasswordResetSucceededNotificationAsync(email));
+        backgroundJob.Enqueue(() => emailService.SendPasswordResetSucceededNotificationAsync(email));
 
         await tokenService.InvalidateRefreshTokenAsync(user);
 

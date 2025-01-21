@@ -1,4 +1,4 @@
-﻿using UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
+﻿using UserService.BLL.UseCases.UserUseCases.ResetPasswordUseCase;
 using UserService.BLL.Validators;
 
 namespace UserService.Tests.UnitTests.Validators;
