@@ -1,6 +1,6 @@
 ﻿namespace ProductsService.Infrastructure.Models;
 
-internal class ProductCreationDTO
+public class ProductCreationDTO
 {
     public int Id { get; set; }
     public string Name { get; set; }

@@ -25,24 +25,24 @@ public class UnitOfWorkTests : IAsyncDisposable
     }
 
     [Fact]
-         public async Task EnableMigrationsAsync_WhenCalled_ShouldCreateDatabase()
-         {
-             //Arrange
-             await _dbContainer.StartAsync();
-             using var scope = _serviceProvider.CreateScope(); ;
-             var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-             
-             //Act
-             var isPendingMigrationsExistsBeforeMigration = dbContext.Database.GetPendingMigrations().Any();
-             
-             await unitOfWork.EnableMigrationsAsync();
-             
-             //Assert
-             Assert.True(isPendingMigrationsExistsBeforeMigration);
-             Assert.False(dbContext.Database.GetPendingMigrations().Any());
-             await _dbContainer.StopAsync();
-         }
+     public async Task EnableMigrationsAsync_WhenCalled_ShouldCreateDatabase()
+     {
+         //Arrange
+         await _dbContainer.StartAsync();
+         using var scope = _serviceProvider.CreateScope(); ;
+         var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+         
+         //Act
+         var isPendingMigrationsExistsBeforeMigration = dbContext.Database.GetPendingMigrations().Any();
+         
+         await unitOfWork.EnableMigrationsAsync();
+         
+         //Assert
+         Assert.True(isPendingMigrationsExistsBeforeMigration);
+         Assert.False(dbContext.Database.GetPendingMigrations().Any());
+         await _dbContainer.StopAsync();
+     }
     
     public async ValueTask DisposeAsync()
     {

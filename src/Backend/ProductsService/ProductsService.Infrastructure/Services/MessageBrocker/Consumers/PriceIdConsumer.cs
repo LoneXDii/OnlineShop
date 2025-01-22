@@ -31,7 +31,7 @@ internal class PriceIdConsumer : BackgroundService
         return Task.CompletedTask;
     }
 
-    private async Task ConsumeMessages(CancellationToken cancellationToken)
+    public async Task ConsumeMessages(CancellationToken cancellationToken)
     {
         //Need this because PriceIdConsumer is a singletone service, while UnitOfWork is scoped
         using var scope = _serviceScopeFactory.CreateScope();
