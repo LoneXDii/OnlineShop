@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using OrderService.Infrastructure.Models;
 using Confluent.Kafka;
+using OrderService.Infrastructure.Proxy;
 using OrderService.Infrastructure.Services.MessageBrocker.Consumers;
 using OrderService.Infrastructure.Services.MessageBrocker;
 
@@ -32,7 +33,8 @@ public static class DependencyInjection
         services.AddScoped<CustomerService>()
             .AddScoped<ProductService>()
             .AddScoped<PriceService>()
-            .AddScoped<CouponService>();
+            .AddScoped<CouponService>()
+            .AddScoped<IStripeEventUtilityProxy, StripeEventUtilityProxy>();
 
         services.AddSingleton<IOrderRepository, OrderRepository>()
             .AddScoped<IProductService, GrpcProductService>()

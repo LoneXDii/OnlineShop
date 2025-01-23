@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using OrderService.Domain.Abstractions.Payments;
 using OrderService.Domain.Entities;
 using OrderService.Infrastructure.Configuration;
+using OrderService.Infrastructure.Proxy;
 using Stripe;
 using Stripe.Checkout;
 
@@ -15,13 +16,17 @@ internal class PaymentService : IPaymentService
     private readonly ProductService _productService;
     private readonly PriceService _priceService;
     private readonly CouponService _couponService;
+    private readonly SessionService _sessionService;
+    private readonly IStripeEventUtilityProxy _eventUtility;
     private readonly ILogger<PaymentService> _logger;
 
     public PaymentService(IOptions<StripeSettings> stripeSettings, ILogger<PaymentService> logger,
         CustomerService customerService,
         ProductService productService,
         PriceService priceService,
-        CouponService couponService)
+        CouponService couponService,
+        SessionService sessionService, 
+        IStripeEventUtilityProxy eventUtility)
     {
         _stripeSettings = stripeSettings.Value;
         _logger = logger;
@@ -29,7 +34,9 @@ internal class PaymentService : IPaymentService
         _productService = productService;
         _priceService = priceService;
         _couponService = couponService;
-
+        _sessionService = sessionService;
+        _eventUtility = eventUtility;
+        
         StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
     }
 
@@ -92,9 +99,7 @@ internal class PaymentService : IPaymentService
             };
         }
 
-        var sessionService = new SessionService();
-
-        var session = await sessionService.CreateAsync(options);
+        var session = await _sessionService.CreateAsync(options);
 
         _logger.LogInformation($"Payment session for order with id: {order.Id} for customer: {customerId} successfully created");
 
@@ -138,7 +143,7 @@ internal class PaymentService : IPaymentService
     {
         _logger.LogInformation($"Checking is payment successfull");
 
-        var stripeEvent = EventUtility.ConstructEvent(eventJson, signature, _stripeSettings.Secret);
+        var stripeEvent = _eventUtility.ConstructEvent(eventJson, signature, _stripeSettings.Secret);
         
         if(stripeEvent.Type is not EventTypes.CheckoutSessionCompleted)
         {
