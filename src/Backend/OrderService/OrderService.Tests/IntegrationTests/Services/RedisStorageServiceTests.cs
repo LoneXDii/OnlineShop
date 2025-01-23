@@ -38,7 +38,7 @@ public class RedisStorageServiceTests : IAsyncLifetime
     {
         await _redisContainer.StartAsync();
 
-        _serviceProvider = IntegrationTestsEntitiesFactory.CreateServiceProviderForRedis(_redisContainer, _httpContextAccessorMock.Object);
+        _serviceProvider = IntegrationTestsEntitiesFactory.CreateServiceProviderForRedisTests(_redisContainer, _httpContextAccessorMock.Object);
         using var scope = _serviceProvider.CreateScope();
         
         _redisStorageService = scope.ServiceProvider.GetRequiredService<ITemporaryStorageService>();

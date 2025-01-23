@@ -1,20 +1,25 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using Confluent.Kafka;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Moq;
 using OrderService.Domain.Abstractions.Data;
 using OrderService.Domain.Abstractions.Payments;
 using OrderService.Domain.Entities;
+using OrderService.Infrastructure.Mapping;
 using OrderService.Infrastructure.Models;
+using OrderService.Infrastructure.Repositories;
 using OrderService.Infrastructure.Services;
 using OrderService.Infrastructure.Services.MessageBrocker;
 using OrderService.Infrastructure.Services.MessageBrocker.Consumers;
 using OrderService.Infrastructure.Services.MessageBrocker.Serialization;
 using Testcontainers.Kafka;
+using Testcontainers.MongoDb;
 using Testcontainers.Redis;
 
 namespace OrderService.Tests.Factories;
@@ -57,6 +62,28 @@ public static class IntegrationTestsEntitiesFactory
         return new ProducerService(producerConfig, mapper, httpContextAccessorMock.Object, loggerMock.Object);
     }
 
+    public static IServiceProvider CreateServiceProviderForMongoDbTests(MongoDbContainer mongoDbContainer)
+    {
+        var services = new ServiceCollection();
+        
+        services.AddSingleton(serviceProvider =>
+        {
+            var client = new MongoClient(mongoDbContainer.GetConnectionString());
+            var database = client.GetDatabase("OrdersDB");
+
+            return database.GetCollection<Order>("orders");
+        });
+        
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddExpressionMapping();
+        },typeof(OrderMappingProfile));
+
+        services.AddSingleton<IOrderRepository, OrderRepository>();
+        
+        return services.BuildServiceProvider();
+    }
+    
     internal static ProductCreationConsumer CreateTestProductCreationConsumer(KafkaContainer kafkaContainer, 
         Mock<IPaymentService> paymentServiceMock, Mock<IProducerService> producerServiceMock)
     {
@@ -112,7 +139,7 @@ public static class IntegrationTestsEntitiesFactory
             .Build();
     }
     
-    public static IServiceProvider CreateServiceProviderForRedis(RedisContainer redisContainer, IHttpContextAccessor httpContextAccessor)
+    public static IServiceProvider CreateServiceProviderForRedisTests(RedisContainer redisContainer, IHttpContextAccessor httpContextAccessor)
     {
         var services = new ServiceCollection();
         
