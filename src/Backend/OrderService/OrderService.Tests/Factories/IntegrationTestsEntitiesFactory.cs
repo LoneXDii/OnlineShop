@@ -2,6 +2,7 @@
 using AutoMapper;
 using Confluent.Kafka;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -14,6 +15,7 @@ using OrderService.Infrastructure.Services.MessageBrocker;
 using OrderService.Infrastructure.Services.MessageBrocker.Consumers;
 using OrderService.Infrastructure.Services.MessageBrocker.Serialization;
 using Testcontainers.Kafka;
+using Testcontainers.Redis;
 
 namespace OrderService.Tests.Factories;
 
@@ -88,7 +90,48 @@ public static class IntegrationTestsEntitiesFactory
         
         return new UserCreationConsumer(consumerConfig, serviceScopeFactoryMock.Object, loggerMock.Object);
     }
-
+    
+    public static IConsumer<Null, T> CreateTestConsumer<T>(KafkaContainer kafkaContainer)
+    {
+        return new ConsumerBuilder<Null, T>(
+                new ConsumerConfig
+                {
+                    BootstrapServers = kafkaContainer.GetBootstrapAddress(),
+                    GroupId = "test-consumer-group",
+                    AutoOffsetReset = AutoOffsetReset.Earliest,
+                })
+            .SetValueDeserializer(new KafkaDeserializer<T>())
+            .Build();
+    }
+    
+    public static IProducer<Null, T> CreateTestProducer<T>(KafkaContainer kafkaContainer)
+    {
+        return new ProducerBuilder<Null, T>(
+                new ProducerConfig { BootstrapServers = kafkaContainer.GetBootstrapAddress() })
+            .SetValueSerializer(new KafkaSerializer<T>())
+            .Build();
+    }
+    
+    public static IServiceProvider CreateServiceProviderForRedis(RedisContainer redisContainer, IHttpContextAccessor httpContextAccessor)
+    {
+        var services = new ServiceCollection();
+        
+        services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.Configuration = redisContainer.GetConnectionString();
+            opt.InstanceName = "cart";
+        });
+        
+        services.AddSingleton(httpContextAccessor);
+        
+        var loggerMock = new Mock<ILogger<RedisStorageService>>();
+        services.AddSingleton(loggerMock.Object);
+        
+        services.AddScoped<ITemporaryStorageService, RedisStorageService>();
+        
+        return services.BuildServiceProvider();
+    }
+    
     private static Mock<IServiceScopeFactory> CreateServiceScopeFactoryMock(Mock<IPaymentService> paymentServiceMock, Mock<IProducerService> producerServiceMock)
     {
         var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
@@ -110,26 +153,5 @@ public static class IntegrationTestsEntitiesFactory
             .ReturnsAsync("StripeId");
         
         return serviceScopeFactoryMock;
-    }
-    
-    public static IConsumer<Null, T> CreateTestConsumer<T>(KafkaContainer kafkaContainer)
-    {
-        return new ConsumerBuilder<Null, T>(
-                new ConsumerConfig
-                {
-                    BootstrapServers = kafkaContainer.GetBootstrapAddress(),
-                    GroupId = "test-consumer-group",
-                    AutoOffsetReset = AutoOffsetReset.Earliest,
-                })
-            .SetValueDeserializer(new KafkaDeserializer<T>())
-            .Build();
-    }
-    
-    public static IProducer<Null, T> CreateTestProducer<T>(KafkaContainer kafkaContainer)
-    {
-        return new ProducerBuilder<Null, T>(
-                new ProducerConfig { BootstrapServers = kafkaContainer.GetBootstrapAddress() })
-            .SetValueSerializer(new KafkaSerializer<T>())
-            .Build();
     }
 }
