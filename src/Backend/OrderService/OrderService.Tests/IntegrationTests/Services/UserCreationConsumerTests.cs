@@ -10,15 +10,15 @@ using Testcontainers.Kafka;
 
 namespace OrderService.Tests.IntegrationTests.Services;
 
-public class ProductCreationConsumerTests: IAsyncLifetime
+public class UserCreationConsumerTests : IAsyncLifetime
 {
     private readonly KafkaContainer _kafkaContainer;
     private readonly Mock<IPaymentService> _paymentServiceMock = new();
     private readonly Mock<IProducerService> _producerServiceMock = new();
-    private ProductCreationConsumer _consumer;
+    private UserCreationConsumer _consumer;
     private readonly Fixture _fixture = new();
 
-    public ProductCreationConsumerTests()
+    public UserCreationConsumerTests()
     {
         _kafkaContainer = new KafkaBuilder()
             .WithImage("confluentinc/cp-kafka:latest")
@@ -30,7 +30,7 @@ public class ProductCreationConsumerTests: IAsyncLifetime
     {
         await _kafkaContainer.StartAsync();
 
-        _consumer = IntegrationTestsEntitiesFactory.CreateTestProductCreationConsumer(_kafkaContainer, 
+        _consumer = IntegrationTestsEntitiesFactory.CreateTestUserCreationConsumer(_kafkaContainer, 
             _paymentServiceMock, _producerServiceMock);
     }
 
@@ -40,16 +40,16 @@ public class ProductCreationConsumerTests: IAsyncLifetime
     }
 
     [Fact]
-    public async Task ConsumeMessages_WhenCalled_ShouldRegisterProductInStripeAndProduceIt()
+    public async Task ConsumeMessages_WhenCalled_ShouldRegisterUserInStripeAndProduceIt()
     {
         //Arrange
-        var product = _fixture.Create<ConsumedProduct>();
+        var user = _fixture.Create<ConsumedUser>();
         
-        using var producer = IntegrationTestsEntitiesFactory.CreateTestProducer<ConsumedProduct>(_kafkaContainer);
+        using var producer = IntegrationTestsEntitiesFactory.CreateTestProducer<ConsumedUser>(_kafkaContainer);
 
-        await producer.ProduceAsync("product-creation", new Message<Null, ConsumedProduct>
+        await producer.ProduceAsync("user-creation", new Message<Null, ConsumedUser>
         {
-            Value = product
+            Value = user
         });
         
         var cancellationTokenSource = new CancellationTokenSource();
@@ -61,8 +61,8 @@ public class ProductCreationConsumerTests: IAsyncLifetime
         await Task.Delay(2000);
         
         //Assert
-        _paymentServiceMock.Verify(service => service.CreateProductAsync(product.Name, product.Price), Times.Once);
-        _producerServiceMock.Verify(producer => producer.ProduceProductPriceIdAsync(product.Id, "PriceId", It.IsAny<CancellationToken>()), 
+        _paymentServiceMock.Verify(service => service.CreateCustomerAsync(user.Email, user.Name), Times.Once);
+        _producerServiceMock.Verify(producer => producer.ProduceUserStripeIdAsync(user.Id, "StripeId", It.IsAny<CancellationToken>()), 
             Times.Once);
     }
 }

@@ -27,12 +27,12 @@ internal class ProductCreationConsumer : BackgroundService
     {
         _logger.LogInformation("Poduct creation consumer started");
 
-        Task.Run(() => ConsumeMessages(stoppingToken));
+        Task.Run(() => ConsumeMessagesAsync(stoppingToken));
 
         return Task.CompletedTask;
     }
 
-    public async Task ConsumeMessages(CancellationToken cancellationToken)
+    public async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();
 

@@ -58,6 +58,39 @@ public static class IntegrationTestsEntitiesFactory
     internal static ProductCreationConsumer CreateTestProductCreationConsumer(KafkaContainer kafkaContainer, 
         Mock<IPaymentService> paymentServiceMock, Mock<IProducerService> producerServiceMock)
     {
+        var serviceScopeFactoryMock = CreateServiceScopeFactoryMock(paymentServiceMock, producerServiceMock);
+        
+        var consumerConfig = new ConsumerConfig
+        {
+            BootstrapServers = kafkaContainer.GetBootstrapAddress(),
+            GroupId = "test-group",
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
+
+        var loggerMock = new Mock<ILogger<ProductCreationConsumer>>();
+        
+        return new ProductCreationConsumer(consumerConfig, serviceScopeFactoryMock.Object, loggerMock.Object);
+    }
+
+    internal static UserCreationConsumer CreateTestUserCreationConsumer(KafkaContainer kafkaContainer,
+        Mock<IPaymentService> paymentServiceMock, Mock<IProducerService> producerServiceMock)
+    {
+        var serviceScopeFactoryMock = CreateServiceScopeFactoryMock(paymentServiceMock, producerServiceMock);
+        
+        var consumerConfig = new ConsumerConfig
+        {
+            BootstrapServers = kafkaContainer.GetBootstrapAddress(),
+            GroupId = "test-group",
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
+
+        var loggerMock = new Mock<ILogger<UserCreationConsumer>>();
+        
+        return new UserCreationConsumer(consumerConfig, serviceScopeFactoryMock.Object, loggerMock.Object);
+    }
+
+    private static Mock<IServiceScopeFactory> CreateServiceScopeFactoryMock(Mock<IPaymentService> paymentServiceMock, Mock<IProducerService> producerServiceMock)
+    {
         var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
         var serviceScopeMock = new Mock<IServiceScope>();
         
@@ -73,17 +106,11 @@ public static class IntegrationTestsEntitiesFactory
         paymentServiceMock.Setup(service => service.CreateProductAsync(It.IsAny<string>(), It.IsAny<double>()))
             .ReturnsAsync("PriceId");
         
-        var consumerConfig = new ConsumerConfig
-        {
-            BootstrapServers = kafkaContainer.GetBootstrapAddress(),
-            GroupId = "test-group",
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
-
-        var loggerMock = new Mock<ILogger<ProductCreationConsumer>>();
+        paymentServiceMock.Setup(service => service.CreateCustomerAsync(It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync("StripeId");
         
-        return new ProductCreationConsumer(consumerConfig, serviceScopeFactoryMock.Object, loggerMock.Object);
-    }  
+        return serviceScopeFactoryMock;
+    }
     
     public static IConsumer<Null, T> CreateTestConsumer<T>(KafkaContainer kafkaContainer)
     {
