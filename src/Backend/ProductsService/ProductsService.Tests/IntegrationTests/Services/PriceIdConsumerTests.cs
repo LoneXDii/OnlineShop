@@ -60,6 +60,8 @@ public class PriceIdConsumerTests : IAsyncLifetime
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
 
+        
+        //Act
         Task.Run(() => _consumer.ConsumeMessages(cancellationTokenSource.Token));
         
         await Task.Delay(2000);
@@ -89,6 +91,7 @@ public class PriceIdConsumerTests : IAsyncLifetime
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
 
+        //Act
         Task.Run(() => _consumer.ConsumeMessages(cancellationTokenSource.Token));
         
         await Task.Delay(2000);
