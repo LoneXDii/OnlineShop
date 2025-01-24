@@ -2,14 +2,13 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using ProductsService.Domain.Abstractions.BlobStorage;
-using ProductsService.Infrastructure.Configuration;
-using ProductsService.Infrastructure.Services;
 using Testcontainers.Azurite;
+using UserService.DAL.Models;
+using UserService.DAL.Services.BlobStorage;
 
-namespace ProductsService.Tests.IntegrationTests.Services;
+namespace UserService.Tests.IntegrationTests.Services;
 
-public class BlobServiceTests : IAsyncLifetime
+public class BlobServiceTests: IAsyncLifetime
 {
     private readonly AzuriteContainer _azuriteContainer;
     private  BlobServiceClient _blobServiceClient;
@@ -30,8 +29,8 @@ public class BlobServiceTests : IAsyncLifetime
     public async Task DisposeAsync()
     {
         await _azuriteContainer.StopAsync();
-    }
-
+    } 
+    
     [Fact]
     public async Task UploadAsync_WhenCalled_ShouldUploadFileAndReturnUrl()
     {
