@@ -32,7 +32,7 @@ internal class UserCreationConsumer : BackgroundService
         return Task.CompletedTask;
     }
 
-    public async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
+    internal async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
     {
         //Need this because UserCreationConsumer is a singletone service, while PaymentService and ProducerServiec are scoped
         using var scope = _serviceScopeFactory.CreateScope();

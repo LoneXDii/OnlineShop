@@ -32,7 +32,7 @@ internal class ProductCreationConsumer : BackgroundService
         return Task.CompletedTask;
     }
 
-    public async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
+    internal async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();
 
