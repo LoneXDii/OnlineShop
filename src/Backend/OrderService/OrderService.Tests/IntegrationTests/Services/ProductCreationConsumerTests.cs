@@ -10,7 +10,7 @@ using Testcontainers.Kafka;
 
 namespace OrderService.Tests.IntegrationTests.Services;
 
-public class ProductCreationConsumerTests: IAsyncLifetime
+public class ProductCreationConsumerTests : IAsyncLifetime
 {
     private readonly KafkaContainer _kafkaContainer;
     private readonly Mock<IPaymentService> _paymentServiceMock = new();

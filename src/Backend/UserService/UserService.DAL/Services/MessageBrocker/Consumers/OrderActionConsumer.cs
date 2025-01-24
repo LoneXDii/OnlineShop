@@ -27,12 +27,12 @@ internal class OrderActionConsumer : BackgroundService
     {
         _logger.LogInformation("Order action consumer started");
 
-        Task.Run(() => ConsumeMessages(stoppingToken));
+        Task.Run(() => ConsumeMessagesAsync(stoppingToken));
 
         return Task.CompletedTask;
     }
 
-    private async Task ConsumeMessages(CancellationToken cancellationToken)
+    internal async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();
 
