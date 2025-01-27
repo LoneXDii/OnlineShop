@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.BLL.DTO;
 using UserService.BLL.Models;
-using UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
+using UserService.BLL.UseCases.UserUseCases.ResetPasswordUseCase;
 using UserService.BLL.UseCases.UserUseCases.AskForResetPasswordUseCase;
 using UserService.BLL.UseCases.UserUseCases.GetUserInfoUseCase;
 using UserService.BLL.UseCases.UserUseCases.ListUsersWithPaginationUseCase;

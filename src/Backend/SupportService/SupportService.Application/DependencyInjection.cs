@@ -4,6 +4,7 @@ using Hangfire.MySql;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SupportService.Application.Proxy;
 using SupportService.Application.RequestsPipleneBehavior;
 using System.Reflection;
 
@@ -20,6 +21,8 @@ public static class DependencyInjection
 
         services.AddHangfire(opt => opt.UseStorage(new MySqlStorage(configuration["ConnectionStrings:HangfireDbConnection"], new MySqlStorageOptions())));
         services.AddHangfireServer();
+
+        services.AddSingleton<IBackgroundJobProxy, BackgroundJobProxy>();
 
         return services;
     }

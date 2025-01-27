@@ -22,14 +22,11 @@ internal class GetOrderByIdRequestHandler(IOrderRepository orderRepository, IMap
             throw new NotFoundException("No such order"); 
         }
 
-        if (request.userId is not null)
+        if (request.userId is not null && order.UserId != request.userId)
         {
-            if(order.UserId != request.userId)
-            {
-                logger.LogError($"User with id: {request.userId} has no access to order with id: {request.orderId}");
+            logger.LogError($"User with id: {request.userId} has no access to order with id: {request.orderId}");
 
-                throw new AccessDeniedException("You dont have access to this order");
-            }
+            throw new AccessDeniedException("You dont have access to this order");
         }
 
         return mapper.Map<OrderDTO>(order);

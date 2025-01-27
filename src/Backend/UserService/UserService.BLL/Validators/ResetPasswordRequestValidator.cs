@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using UserService.BLL.UseCases.UserUseCases.ResetPaswordUseCase;
+using UserService.BLL.UseCases.UserUseCases.ResetPasswordUseCase;
 
 namespace UserService.BLL.Validators;
 

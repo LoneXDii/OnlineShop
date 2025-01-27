@@ -43,9 +43,9 @@ internal class GrpcProductService : IProductService
         var request = new ProductsListRequest();
         request.Products.AddRange(_mapper.Map<List<ProductRequest>>(products));
 
-        var resposne = await _gprcClient.TakeProductsAsync(request, null, null, cancellationToken);
+        var response = await _gprcClient.TakeProductsAsync(request, null, null, cancellationToken);
 
-        return _mapper.Map<List<ProductEntity>>(resposne.Products);
+        return _mapper.Map<List<ProductEntity>>(response.Products);
     }
 
     public async Task ReturnProductsAsync(IEnumerable<ProductEntity> products, CancellationToken cancellationToken = default)
@@ -53,6 +53,7 @@ internal class GrpcProductService : IProductService
         _logger.LogInformation("Trying to return products using gRPC");
 
         var request = new ProductsListRequest();
+        var a = _mapper.Map<List<ProductRequest>>(products);
         request.Products.AddRange(_mapper.Map<List<ProductRequest>>(products));
 
         await _gprcClient.ReturnProductsAsync(request, null, null, cancellationToken);

@@ -14,7 +14,7 @@ internal class GetCategoryAttributesRequestHandler(IUnitOfWork unitOfWork, IMapp
         var specification = new ParentCategorySpecification(request.CategoryId);
 
         var attributes = await unitOfWork.CategoryQueryRepository.ListAsync(specification, cancellationToken);
-
+        
         return mapper.Map<List<ResponseCategoryDTO>>(attributes);
     }
 }

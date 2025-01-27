@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using ProductsService.Application.Configuration;
 using Hangfire;
 using Hangfire.MySql;
+using ProductsService.Application.Proxy;
 
 namespace ProductsService.Application;
 
@@ -27,6 +28,8 @@ public static class DependencyInjection
         services.AddHangfire(opt => opt.UseStorage(new MySqlStorage(configuration["ConnectionStrings:HangfireDbConnection"], new MySqlStorageOptions())));
         services.AddHangfireServer();
 
+        services.AddSingleton<IBackgroundJobProxy, BackgroundJobProxy>();
+        
         return services;
     }
 }

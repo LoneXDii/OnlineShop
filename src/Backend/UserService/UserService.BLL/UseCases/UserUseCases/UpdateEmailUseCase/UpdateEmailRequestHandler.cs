@@ -7,12 +7,13 @@ using UserService.BLL.Exceptions;
 using UserService.DAL.Services.EmailNotifications;
 using Hangfire;
 using Microsoft.Extensions.Logging;
+using UserService.BLL.Proxy;
 using UserService.DAL.Services.TemporaryStorage;
 
 namespace UserService.BLL.UseCases.UserUseCases.UpdateEmailUseCase;
 
 internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmailService emailService, ICacheService cacheService,
-    ILogger<UpdateEmailRequestHandler> logger)
+    ILogger<UpdateEmailRequestHandler> logger, IBackgroundJobProxy backgroundJob)
     : IRequestHandler<UpdateEmailRequest>
 {
     public async Task Handle(UpdateEmailRequest request, CancellationToken cancellationToken)
@@ -37,7 +38,7 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
             throw new NotFoundException("No such user");
         }
 
-        BackgroundJob.Schedule(() => ReturnOldEmailAsync(user.Email, request.newEmail), TimeSpan.FromHours(1));
+        backgroundJob.Schedule(() => ReturnOldEmailAsync(user.Email, request.newEmail), TimeSpan.FromHours(1));
 
         user.Email = request.newEmail;
         user.UserName = request.newEmail;
@@ -46,7 +47,7 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
 
         var code = await cacheService.SetEmailConfirmationCodeAsync(user.Email);
 
-        BackgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
+        backgroundJob.Enqueue(() => emailService.SendEmailConfirmationCodeAsync(user.Email, code));
 
         logger.LogInformation($"Email for user with id: {request.userId} successfully updated");
     }
@@ -55,7 +56,7 @@ internal class UpdateEmailRequestHandler(UserManager<AppUser> userManager, IEmai
     {
         var user = await userManager.FindByEmailAsync(newEmail);
 
-        if (user.EmailConfirmed)
+        if (user is null || user.EmailConfirmed)
         {
             return;
         }

@@ -22,7 +22,7 @@ internal class DeleteCategoryRequestHandler(IUnitOfWork unitOfWork, ILogger<Dele
             throw new NotFoundException("No such category");
         }
 
-        var specification = new ProductCategoryOrAtributeSpecification(category.Id);
+        var specification = new ProductCategoryOrAttributeSpecification(category.Id);
         
         var products = await unitOfWork.ProductQueryRepository.ListAsync(specification, cancellationToken);
 

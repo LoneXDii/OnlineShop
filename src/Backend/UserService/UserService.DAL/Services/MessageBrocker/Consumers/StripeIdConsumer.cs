@@ -27,12 +27,12 @@ internal class StripeIdConsumer : BackgroundService
     {
         _logger.LogInformation("Stripe id consumer started");
 
-        Task.Run(() => ConsumeMessages(stoppingToken));
+        Task.Run(() => ConsumeMessagesAsync(stoppingToken));
 
         return Task.CompletedTask;
     }
 
-    private async Task ConsumeMessages(CancellationToken cancellationToken)
+    internal async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
     {
         //Need this because StripeIdConsumer is a singletone service, while UserManager is scoped
         using var scope = _serviceScopeFactory.CreateScope();

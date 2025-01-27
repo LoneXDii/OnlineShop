@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SupportService.Application.DTO;
 using SupportService.Application.Exceptions;
+using SupportService.Application.Proxy;
 using SupportService.Domain.Abstractions;
 
 namespace SupportService.Application.UseCases.CloseChat;
 
-internal class CloseChatRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CloseChatRequestHandler> logger)
+internal class CloseChatRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CloseChatRequestHandler> logger,
+    IBackgroundJobProxy backgroundJob)
     : IRequestHandler<CloseChatRequest, ChatDTO>
 {
     public async Task<ChatDTO> Handle(CloseChatRequest request, CancellationToken cancellationToken)
@@ -37,7 +38,7 @@ internal class CloseChatRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, I
 
         await unitOfWork.SaveAllAsync(cancellationToken);
 
-        BackgroundJob.Schedule(() => unitOfWork.ChatRepository.DeleteAsync(chat, default), TimeSpan.FromDays(7));
+        backgroundJob.Schedule(() => unitOfWork.ChatRepository.DeleteAsync(chat, default), TimeSpan.FromDays(7));
 
         logger.LogInformation($"User with id:{request.UserId} successfully closed chat with id: {request.ChatId}");
 

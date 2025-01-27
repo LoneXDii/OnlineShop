@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
-using Hangfire;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using ProductsService.Application.Exceptions;
+using ProductsService.Application.Proxy;
 using ProductsService.Application.Specifications.Discounts;
 using ProductsService.Domain.Abstractions.Database;
 using ProductsService.Domain.Entities;
 
 namespace ProductsService.Application.UseCases.DiscountUseCases.Commands.AddDiscount;
 
-internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<AddDiscountRequestHandler> logger)
+internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<AddDiscountRequestHandler> logger,
+    IBackgroundJobProxy backgroundJob)
     : IRequestHandler<AddDiscountRequest>
 {
     public async Task Handle(AddDiscountRequest request, CancellationToken cancellationToken)
@@ -33,7 +34,7 @@ internal class AddDiscountRequestHandler(IUnitOfWork unitOfWork, IMapper mapper,
 
         await unitOfWork.SaveAllAsync(cancellationToken);
 
-        BackgroundJob.Schedule(() => unitOfWork.DiscountCommandRepository.DeleteAsync(discount, default), discount.EndDate);
+        backgroundJob.Schedule(() => unitOfWork.DiscountCommandRepository.DeleteAsync(discount, default), discount.EndDate);
 
         logger.LogInformation($"Discount with id: {discount.Id} succesfully created for product with id: {request.ProductId}");
     }
