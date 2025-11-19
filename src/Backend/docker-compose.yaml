@@ -44,15 +44,11 @@ services:
     ports:
       - 9093:9093
     environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_BROKER_ID=1
-      - KAFKA_PROCESS_ROLES=broker,controller
-      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9093,INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9094
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9093,INTERNAL://kafka:9092
-      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9094
-      - KAFKA_NODE_ID=1
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9093,INTERNAL://kafka:9092
     depends_on:
       - zookeeper
     restart: always
@@ -226,6 +222,12 @@ services:
       - "5000:5000"
     networks:
       - backend
+
+  frontend:
+    container_name: frontend
+    build: ./src/Frontend
+    ports:
+      - "4200:4200"
 
 volumes: 
   mongodb_data:
