@@ -1,0 +1,82 @@
+@startuml
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #FFF9E6
+  BorderColor #333333
+}
+skinparam actor {
+  BackgroundColor #E6F3FF
+  BorderColor #333333
+}
+skinparam arrowColor #333333
+
+left to right direction
+title Use Case диаграмма системы
+
+actor "Неавторизованный\nпользователь" as guest
+actor "Авторизованный\nпользователь" as user
+actor "Администратор" as admin
+
+' =================== Общие для всех авторизованных (и админа) ===================
+usecase "Просмотр каталога товаров" as UC_ViewCatalog
+usecase "Поиск и фильтрация товаров" as UC_Search
+usecase "Добавление товара в корзину" as UC_AddToCart
+usecase "Просмотр корзины" as UC_ViewCart
+
+' =================== Только для авторизованных ===================
+usecase "Вход в систему" as UC_Login
+usecase "Регистрация" as UC_Register
+usecase "Редактирование профиля" as UC_EditProfile
+usecase "Просмотр истории заказов" as UC_OrderHistory
+usecase "Оформление заказа" as UC_Checkout
+usecase "Оплата заказа" as UC_PayOrder
+usecase "Инициирование чата поддержки" as UC_StartSupport
+
+' =================== Только для администратора ===================
+usecase "CRUD товаров" as UC_ManageProducts
+usecase "Управление заказами" as UC_ManageOrders
+usecase "Ответ в чате поддержки" as UC_RespondSupport
+usecase "Просмотр аналитики и логов" as UC_ViewAnalytics
+
+' ====================== Правильные include / extend ======================
+UC_Checkout ..> UC_ViewCart : <<include>>
+UC_Checkout ..> UC_PayOrder : <<include>>
+
+UC_PayOrder ..> UC_StartSupport : <<extend>>   (при проблемах с оплатой)
+
+' ====================== Связи ======================
+
+' Неавторизованный пользователь
+guest --> UC_ViewCatalog
+guest --> UC_Search
+guest --> UC_AddToCart
+guest --> UC_ViewCart
+guest --> UC_Register
+
+' Авторизованный пользователь
+user --> UC_ViewCatalog
+user --> UC_Search
+user --> UC_AddToCart
+user --> UC_ViewCart
+user --> UC_Login
+user --> UC_EditProfile
+user --> UC_OrderHistory
+user --> UC_Checkout
+user --> UC_StartSupport
+
+' Администратор имеет ВСЁ, что есть у авторизованного пользователя + свои кейсы
+admin --> UC_ViewCatalog
+admin --> UC_Search
+admin --> UC_AddToCart
+admin --> UC_ViewCart
+admin --> UC_Login
+admin --> UC_EditProfile
+admin --> UC_OrderHistory
+admin --> UC_Checkout
+
+admin --> UC_ManageProducts
+admin --> UC_ManageOrders
+admin --> UC_RespondSupport
+admin --> UC_ViewAnalytics
+@enduml

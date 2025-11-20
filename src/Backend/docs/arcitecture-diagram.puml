@@ -1,0 +1,102 @@
+@startuml
+skinparam nodesep 80
+skinparam ranksep 100
+skinparam shadowing false
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontSize 14
+skinparam arrowThickness 2
+
+title Архитектура системы
+
+package "Фронтенд" {
+  [Angular Application] as frontend
+}
+
+package "API Gateway" {
+  [Ocelot API Gateway] as gateway
+}
+
+package "Микросервисы (.NET 8)" {
+  [UserService] as user_svc
+  [ProductService] as product_svc
+  [OrderService] as order_svc
+  [SupportService] as support_svc
+}
+
+package "Внутренняя коммуникация" {
+  [Apache Kafka\n(Event Bus)] as kafka
+}
+
+package "Базы данных" {
+  database "MySQL\n(User, Product, Support)" as mysql
+  database "MongoDB\n(Orders)" as mongo
+}
+
+package "Кеш и временное хранение" {
+  [Redis\n• Кеш профилей (UserService)\n• Корзина, сессии заказов (OrderService)] as redis
+}
+
+package "Хранение файлов" {
+  cloud "Azure Blob Storage\n(аватары + фото товаров)" as blob
+}
+
+package "Платёжный провайдер" {
+  cloud "Stripe\n(Payments + Webhooks)" as stripe
+}
+
+package "Логирование и мониторинг" {
+  [Elasticsearch] as es
+  cloud "Kibana" as kibana
+}
+
+' ============================== Связи ==============================
+
+frontend -[#blue,bold]-> gateway : HTTPS + WebSocket
+
+gateway -[#blue,bold]-> user_svc
+gateway -[#blue,bold]-> product_svc
+gateway -[#blue,bold]-> order_svc
+gateway -[#blue,bold]-> support_svc : HTTPS + WebSocket (чат)
+
+' Kafka
+user_svc -[#green,dashed]-> kafka : produce/consume
+product_svc -[#green,dashed]-> kafka : produce/consume
+order_svc -[#green,dashed]-> kafka : produce/consume
+support_svc -[#green,dashed]-> kafka : produce/consume
+
+' Redis
+user_svc -[#purple]-> redis : StackExchange.Redis
+order_svc -[#purple,thickness=3]-> redis : корзина
+
+' БД
+user_svc -[#purple]-> mysql
+product_svc -[#purple]-> mysql
+support_svc -[#purple]-> mysql
+order_svc -[#purple]-> mongo
+
+' Blob
+user_svc -[#purple]-> blob
+product_svc -[#purple]-> blob
+
+' Stripe
+order_svc -[#blue]-> stripe : HTTPS + входящие Webhooks
+
+' Логи
+gateway -[#gray,dotted]-> es
+user_svc -[#gray,dotted]-> es
+product_svc -[#gray,dotted]-> es
+order_svc -[#gray,dotted]-> es
+support_svc -[#gray,dotted]-> es
+es --> kibana
+
+note right of kafka
+  Основная асинхронная шина
+  событий между сервисами
+end note
+
+note bottom of gateway
+  Ocelot API Gateway
+  HTTPS + WebSocket proxy
+  JWT, rate limiting, etc.
+end note
+@enduml

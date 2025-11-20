@@ -1,0 +1,170 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "API Gateway" as ApiGateway {
+  class Program
+  class HostBuilderExtension
+  class DependencyInjection
+
+  Program --> HostBuilderExtension : build & configure
+  HostBuilderExtension --> DependencyInjection : register Ocelot/auth
+}
+
+package "Order Service" as OrderService {
+  class OrderController
+  class CartController
+  class WebhookController
+  interface "IMediator" as MediatorOrder
+
+  class CreateOrderRequestHandler
+  interface "IOrderRepository" as IOrderRepository
+  class OrderRepository
+  class OrderEntity
+  class ProductEntity
+
+  interface "IProductService" as IProductService
+  class GrpcProductService
+  interface "ITemporaryStorageService" as ITemporaryStorageService
+  class RedisStorageService
+  interface "IProducerService" as IProducerService
+  class OrderProducerService
+  interface "IPaymentService" as IPaymentService
+  class PaymentService
+
+  OrderController --> MediatorOrder
+  CartController --> MediatorOrder
+  WebhookController --> MediatorOrder
+  MediatorOrder --> CreateOrderRequestHandler
+
+  CreateOrderRequestHandler --> IOrderRepository
+  IOrderRepository <|.. OrderRepository
+  OrderRepository --> OrderEntity
+  OrderEntity o-- "*" ProductEntity
+
+  CreateOrderRequestHandler --> IProductService
+  IProductService <|.. GrpcProductService
+
+  CreateOrderRequestHandler --> ITemporaryStorageService
+  ITemporaryStorageService <|.. RedisStorageService
+
+  CreateOrderRequestHandler --> IProducerService
+  IProducerService <|.. OrderProducerService
+
+  CreateOrderRequestHandler --> IPaymentService
+  IPaymentService <|.. PaymentService
+}
+
+package "Products Service" as ProductsService {
+  class ProductsController
+  class CategoriesController
+  class DiscountsController
+  interface "IMediator" as MediatorProducts
+
+  class AddProductRequestHandler
+  class ListProductsRequestHandler
+
+  interface "IUnitOfWork" as ProductsUnitOfWork
+  interface "IBlobService" as IBlobService
+  interface "IProducerService" as ProductsProducerService
+  interface "ICommandRepository<Product>" as ICommandRepositoryProduct
+  interface "IQueryRepository<Product>" as IQueryRepositoryProduct
+  class ProductCommandRepository
+  class ProductQueryRepository
+  class ProductsUnitOfWorkImpl
+
+  class Product
+  class Category
+  class Discount
+
+  ProductsController --> MediatorProducts
+  CategoriesController --> MediatorProducts
+  DiscountsController --> MediatorProducts
+
+  MediatorProducts --> AddProductRequestHandler
+  MediatorProducts --> ListProductsRequestHandler
+
+  AddProductRequestHandler --> ProductsUnitOfWork
+  AddProductRequestHandler --> IBlobService
+  AddProductRequestHandler --> ProductsProducerService
+
+  ProductsUnitOfWork <|.. ProductsUnitOfWorkImpl
+  ProductsUnitOfWorkImpl --> ICommandRepositoryProduct
+  ProductsUnitOfWorkImpl --> IQueryRepositoryProduct
+  ICommandRepositoryProduct <|.. ProductCommandRepository
+  IQueryRepositoryProduct <|.. ProductQueryRepository
+  ListProductsRequestHandler --> IQueryRepositoryProduct
+
+  Product "1" o-- "*" Category
+  Product "0..1" o-- "0..1" Discount
+}
+
+package "Support Service" as SupportService {
+  class ChatHub
+  interface "IMediator" as MediatorSupport
+  class CreateChatRequestHandler
+  interface "IUnitOfWork" as SupportUnitOfWork
+  interface "IRepository<Chat>" as IRepositoryChat
+  interface "IRepository<Message>" as IRepositoryMessage
+  class SupportUnitOfWorkImpl
+  class RepositoryChat
+  class RepositoryMessage
+  class Chat
+  class Message
+
+  ChatHub --> MediatorSupport
+  MediatorSupport --> CreateChatRequestHandler
+  CreateChatRequestHandler --> SupportUnitOfWork
+
+  SupportUnitOfWork <|.. SupportUnitOfWorkImpl
+  SupportUnitOfWorkImpl --> IRepositoryChat
+  SupportUnitOfWorkImpl --> IRepositoryMessage
+  IRepositoryChat <|.. RepositoryChat
+  IRepositoryMessage <|.. RepositoryMessage
+
+  Chat "1" o-- "*" Message
+}
+
+package "User Service" as UserService {
+  class AccountController
+  class TokenController
+  class UsersController
+  interface "IMediator" as MediatorUser
+
+  class RegisterUserRequestHandler
+  class LoginUserRequestHandler
+  class AssignAdminHandler
+  interface "ITokenService" as ITokenService
+  class TokenService
+  class IdentityUser
+  class AppUser
+
+  IdentityUser <|-- AppUser
+
+  AccountController --> MediatorUser
+  TokenController --> MediatorUser
+  UsersController --> MediatorUser
+
+  MediatorUser --> RegisterUserRequestHandler
+  MediatorUser --> LoginUserRequestHandler
+  MediatorUser --> AssignAdminHandler
+
+  RegisterUserRequestHandler --> AppUser
+  RegisterUserRequestHandler --> ITokenService
+  LoginUserRequestHandler --> ITokenService
+  ITokenService <|.. TokenService
+}
+
+' cross-service interactions
+GrpcProductService ..> ProductsController : «gRPC» product catalog
+OrderProducerService ..> UserService : «Kafka» user/stripe/order events
+ProductsProducerService ..> OrderService : «Kafka» priceId sync
+ChatHub ..> UserService : «JWT» identity & roles
+ApiGateway.Program ..> OrderController : «HTTP /api/orders»
+ApiGateway.Program ..> ProductsController : «HTTP /api/products»
+ApiGateway.Program ..> UsersController : «HTTP /api/users»
+ApiGateway.Program ..> ChatHub : «SignalR /hubs/chat»
+@enduml
+
+

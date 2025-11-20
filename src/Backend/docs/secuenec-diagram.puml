@@ -1,0 +1,99 @@
+@startuml
+skinparam backgroundColor #FEFEFE
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam maxmessagesize 140
+skinparam ParticipantPadding 30
+skinparam BoxPadding 40
+
+title Диаграмма последовательности - оформление заказа
+
+actor Пользователь as user
+participant "Angular\nFrontend" as fe
+participant "Ocelot API Gateway" as gw
+participant UserService as us
+participant ProductService as ps
+participant OrderService as os
+participant Redis as redis
+participant Stripe as stripe
+participant Kafka as kafka
+database MongoDB as mongo
+
+== 1. Авторизация и получение JWT ==
+user -> fe: Вводит логин и пароль
+fe -> gw: POST /api/auth/login
+gw -> us: login request
+us -> us: Check credentials in MySQL
+us --> gw: 200 + JWT
+gw --> fe: JWT token
+fe -> fe: Save to localStorage
+
+note right of fe: Пользователь авторизован
+
+== 2. Просмотр каталога и корзины ==
+user -> fe: Открывает каталог
+fe -> gw: GET /api/products (Bearer JWT)
+gw -> ps: forward request
+ps --> gw: List of products
+gw --> fe: JSON
+
+note right of redis
+  Корзина хранится в Redis\n  по ключу cart:{userId}
+end note
+
+fe -> gw: GET /api/orders/cart
+gw -> os: get cart
+os -> redis: GET cart:{userId}
+redis --> os: Items + quantities
+os --> gw: Cart data
+gw --> fe: Cart data
+
+== 3. Оформление заказа ==
+user -> fe: Нажимает «Оформить заказ»
+fe -> gw: POST /api/orders/create
+gw -> os: create order (items + address)
+os --> kafka: ProductReserveRequested
+
+note right of kafka
+  ProductService асинхронно\n  резервирует товар в MySQL
+end note
+
+alt Товара достаточно
+    os -> stripe: Create PaymentIntent
+    stripe --> os: client_secret
+    os --> gw: client_secret
+    gw --> fe: client_secret
+
+    user -> fe: Заполняет данные карты\nв Stripe Elements
+    fe -> stripe: confirmCardPayment(client_secret)
+    stripe --> fe: Payment result
+
+    alt Оплата успешна
+        fe -> gw: POST /api/orders/confirm {payment_intent_id}
+        gw -> os: confirm payment
+        os -> stripe: Retrieve PaymentIntent
+        stripe --> os: status: succeeded
+        os -> mongo: Save order (status = Paid)
+        os --> kafka: OrderPaid + OrderCreated
+
+        note right of kafka
+          → ProductService: списание со склада\n          → UserService: статистика\n          → Уведомления, email и т.д.
+        end note
+
+        os --> gw: 200 Order created
+        gw --> fe: 200 Order created
+        fe --> user: Спасибо за покупку!
+
+    else Оплата не удалась
+        os --> kafka: OrderPaymentFailed
+        os --> gw: Payment failed
+        gw --> fe: Payment failed
+        fe --> user: Ошибка оплаты
+    end
+
+else Недостаточно товара
+    os --> gw: 409 Conflict
+    gw --> fe: 409 Conflict
+    fe --> user: Товар закончился
+end
+@enduml
